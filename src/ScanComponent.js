@@ -9,31 +9,36 @@ import  {
     TouchableOpacity
 } from 'react-native';
 import getFlight from './getFlight';
+import EditView from './EditView';
 class ScanComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             name: null,
             age: null,
-        }
+        };
+        this.scancode="";
     }
 
     _openPage() {
         this.props.navigator.push({
-            title: 'getFlight',
+            title: '飞机起飞',
             component: getFlight
         })
     }
 
     render() {
         return (
-            <View style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF'}}>
+            <View style={{flex: 1, backgroundColor: '#FFFFFF',padding:30,}}>
                 <Text>飞机扫码</Text>
-                <TextInput
-                    value={this.state.name}
-                    onChangeText={name => this.setState({name})}
-                    placeholder={'扫码无人机上的二维码'}
-                    style={{height: 40, width: 200}}/>
+                <EditView name='扫码无人机上的二维码' onChangeText={(text) => {
+                    this.scancode = text;
+                }}/>
+                {/*<TextInput*/}
+                    {/*value={this.state.name}*/}
+                    {/*onChangeText={name => this.setState({name})}*/}
+                    {/*placeholder={'扫码无人机上的二维码'}*/}
+                    {/*style={{height: 40, width: 200}}/>*/}
 
 
                 <View style={{flex: 1, flexDirection:'row',justifyContent:'space-between', backgroundColor: '#fff'}}>
@@ -45,8 +50,20 @@ class ScanComponent extends React.Component {
                     <Text style={{width:72,height:34,alignItems: 'center', backgroundColor: '#fff'}}>其他</Text>
                 </View>
 
-                <TouchableOpacity onPress={this._openPage.bind(this)}>
-                    <Text style={{color: '#55ACEE'}}>提交</Text>
+                <TouchableOpacity style={{
+                    backgroundColor: '#313131',
+                    marginTop: 10,
+                    height: 54,
+                    borderWidth: 0.3,
+                    borderColor: '#a09f9f',
+                    borderRadius: 4,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: 17,
+                    color: '#55ACEE',
+                }} onPress={this._openPage.bind(this)}>
+                    <Text style={{color: '#fff',}}>提交</Text>
                 </TouchableOpacity>
             </View>
         )

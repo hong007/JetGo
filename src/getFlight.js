@@ -13,7 +13,7 @@ import  {
     Image,
     Switch,
 } from 'react-native';
-// import getFlight from './getFlight';
+import LeftMenuList from './LeftMenuList';
 class getFlight extends React.Component {
     state = {
         trueSwitchIsOn: true,
@@ -31,18 +31,19 @@ class getFlight extends React.Component {
 
     _openPage() {
         this.props.navigator.push({
-            component: 'getFlight'
+            title: 'LeftMenuList',
+            component: LeftMenuList
         })
     }
 
     render() {
         return (
-            <View style={{flex: 1, alignItems: 'center', backgroundColor: '#FFFFFF'}}>
+            <View style={{flex: 1, backgroundColor: '#FFFFFF',padding:18}}>
                 <View>
                     <Text>订单编号</Text>
                     <Text>1231231231231</Text>
                 </View>
-                <View style={{flex: 1, alignItems: 'center', backgroundColor: '#fff'}}>
+                <View style={{alignItems: 'center', backgroundColor: '#fff'}}>
                     <Image>
                         <Text>erteter</Text>
                         <Text>10公里</Text>
@@ -63,9 +64,20 @@ class getFlight extends React.Component {
                         onValueChange={(value) => this.setState({trueSwitchIsOn: value})}
                         value={this.state.trueSwitchIsOn}/>
                 </View>
-
-                <TouchableOpacity onPress={this._openPage.bind(this)}>
-                    <Text style={{color: '#55ACEE'}}>提交</Text>
+                <TouchableOpacity style={{
+                    backgroundColor: '#313131',
+                    marginTop: 10,
+                    height: 54,
+                    borderWidth: 0.3,
+                    borderColor: '#a09f9f',
+                    borderRadius: 4,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: 17,
+                    color: '#55ACEE',
+                }} onPress={this._openPage.bind(this)}>
+                    <Text style={{color: '#fff',}}>提交</Text>
                 </TouchableOpacity>
             </View>
         )

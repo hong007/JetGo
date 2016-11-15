@@ -25,7 +25,7 @@ class PickerComponent extends React.Component {
             <View>
                 <Picker
                     mode={'dropdown'}
-                    style={{width:200}}
+                    style={{}}
                     selectedValue={this.state.language}
                     onValueChange={(value) => this.chooseAirPorts(value)}>
                     <Picker.Item label="杭垓" value="杭垓"/>
@@ -36,11 +36,4 @@ class PickerComponent extends React.Component {
         );
     }
 }
-// const styles=StyleSheet.create({
-//     container:{
-//         flex:1,
-//         justifyContent:'center',
-//         alignItems:'center',
-//     }
-// })
 export default PickerComponent;
