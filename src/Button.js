@@ -35,7 +35,6 @@ const LoginStyles = StyleSheet.create({
             width: 30,
         },
         loginTextView: {
-            marginTop: 10,
             height: 54,
             borderWidth: 0.3,
             borderColor: '#a09f9f',
@@ -44,5 +43,6 @@ const LoginStyles = StyleSheet.create({
             justifyContent: 'center',
             alignItems: 'center',
             fontSize: 18,
+            marginTop:16,
         },
     });

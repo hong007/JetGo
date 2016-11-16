@@ -20,16 +20,36 @@ export default class navigator extends Component {
 
     _renderNavBar() {
         const styles = {
+            navigator: {
+                flex: 1,
+                backgroundColor: 'transparent',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                color:'#313131'
+            },
             title: {
-                flex: 1, alignItems: 'center', justifyContent: 'center'
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                // borderWidth: 0.3,
+                // borderColor: '#a09f9f',
+                // backgroundColor: 'blue'
             },
             button: {
-                flex: 1, width: 50, alignItems: 'center', justifyContent: 'center'
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                // backgroundColor: 'green'
             },
-            buttonText: {
-                fontSize: 18, color: '#FFFFFF', fontWeight: '400'
+            titleText: {
+                fontSize: 18,
+                color: '#313131',
+                fontWeight: '400',
+                alignItems: 'center',
+                justifyContent: 'center',
             }
-        }
+        };
 
         var routeMapper = {
             LeftButton(route, navigator, index, navState) {
@@ -40,7 +60,7 @@ export default class navigator extends Component {
                 //         </TouchableOpacity>
                 //     );
                 // } else
-                    if (index > 1) {
+                if (index > 1) {
                     return (
                         <TouchableOpacity
                             onPress={() => navigator.pop()}
@@ -54,7 +74,7 @@ export default class navigator extends Component {
                     //     <TouchableOpacity
                     //         onPress={() => navigator.pop()}
                     //         style={styles.button}>
-                    //         <Text style={styles.buttonText}>Login</Text>
+                    //         <Text style={styles.titleText}>Login</Text>
                     //     </TouchableOpacity>
                     // );
                 }
@@ -66,7 +86,7 @@ export default class navigator extends Component {
                 //         <TouchableOpacity
                 //             onPress={() => navigator.pop()}
                 //             style={styles.button}>
-                //             <Text style={styles.buttonText}></Text>
+                //             <Text style={styles.titleText}></Text>
                 //         </TouchableOpacity>
                 //     );
                 // } else {
@@ -77,7 +97,7 @@ export default class navigator extends Component {
             Title(route, navigator, index, navState) {
                 return (
                     <View style={styles.title}>
-                        <Text style={styles.buttonText}>{route.title ? route.title : ' '}</Text>
+                        <Text style={styles.titleText}>{route.title ? route.title : ' '}</Text>
                     </View>
                 );
             }
@@ -97,7 +117,7 @@ export default class navigator extends Component {
             <Navigator
                 initialRoute={{name: defaultName, component: defaultComponent}}
                 configureScene={(route) => {
-                    return Navigator.SceneConfigs.VerticalDownSwipeJump;
+                    return Navigator.SceneConfigs.FloatFromRight;
                 }}
                 renderScene={(route, navigator) => {
                     let Component = route.component;
