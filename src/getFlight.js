@@ -11,6 +11,7 @@ import  {
     TouchableOpacity,
     StyleSheet,
     Image,
+    Platform,
     Switch,
 } from 'react-native';
 import LeftMenuList from './LeftMenuList';
@@ -42,8 +43,10 @@ class getFlight extends React.Component {
     }
 
     render() {
+        console.disableYellowBox = true;
+        console.warn('YellowBox is disabled.');
         return (
-            <View style={{flex: 1, backgroundColor: '#f7f7f7'}}>
+            <View style={{flex: 1, backgroundColor: '#f7f7f7',marginTop:(Platform.OS==='android'?66:74)}}>
                 <View style={routeStyle.rContianer}>
                     <View style={[routeStyle.rItem, {marginBottom: 1, height: 50}]}>
                         <Text style={routeStyle.rTextLeft}>订单编号</Text>

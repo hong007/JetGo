@@ -7,10 +7,13 @@ import  {
     Text,
     TextInput,
     StyleSheet,
+    Platform,
+    AsyncStorage,
     TouchableOpacity
 } from 'react-native';
 import getFlight from './getFlight';
-// import EditView from './EditView';
+import NetUtil from './NetUtil';
+
 class ScanComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -21,17 +24,50 @@ class ScanComponent extends React.Component {
         };
         this.scancode = "";
     }
+    componentWillMount(){
+        // alert("取得的token是"+123);
+
+        // var token = AsyncStorage.getItem(LOGIN_TOKEN);
+        // alert(token);
+        // let url = "http://jieyan.xyitech.com/config/allroute?token?"+token;
+        // NetUtil.postJson(url,(responseText)=>{
+        //     alert(responseText);
+        //     let curdata=JSON.parse(responseText);
+        //     if (curdata.err == '0') {
+        //         this.pageJump();
+        //         this._saveValue_One("LOGIN_TOKEN",curdata.token);
+        //     } else {
+        //         alert("用户名或密码错误，请重试")
+        //     }
+        // });
+    }
+    // //初始化数据-默认从AsyncStorage中获取数据
+    // async _loadInitialState() {
+    //     try {
+    //         var value = await AsyncStorage.getItem(LOGIN_TOKEN);
+    //         if (value != null) {
+    //             this._appendMessage('从存储中获取到数据为:' + value);
+    //         } else {
+    //             this._appendMessage('存储中无数据,初始化为空数据');
+    //         }
+    //     } catch (error) {
+    //         // this._appendMessage('AsyncStorage错误' + error.message);
+    //     }
+    // }
 
     _openPage() {
         this.props.navigator.push({
             title: '飞机起飞',
+            name: 'getFlight',
             component: getFlight
         })
     }
 
     render() {
+        console.disableYellowBox = true;
+        console.warn('YellowBox is disabled.');
         return (
-            <View style={{flex: 1, backgroundColor: '#f7f7f7', paddingTop: 6,}}>
+            <View style={{flex: 1, backgroundColor: '#f7f7f7', paddingTop: 12,marginTop:(Platform.OS==='android'?66:74)}}>
                 <View style={scanStyle.TextInputView}>
                     <TextInput style={scanStyle.TextInput}
                                placeholder='扫码无人机上的二维码'

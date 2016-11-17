@@ -43,6 +43,7 @@ const LeftMenuStyles = StyleSheet.create({
         padding: 15,
         borderBottomWidth: 1,
         backgroundColor:'#1b1b1b',
+        marginTop:20,
     },
     menuImage: {
         width: 30,
@@ -55,7 +56,6 @@ const LeftMenuStyles = StyleSheet.create({
         textAlign: 'center',
         color: '#fff',
     },
-
 });
 
 

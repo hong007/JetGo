@@ -8,14 +8,21 @@ import {
     Text,
     View,
     Navigator,
-    TouchableOpacity,
     Platform,
-    Image
+    Image,
+    TouchableOpacity,
+    TouchableHighlight,
+    DrawerLayoutAndroid,
 } from 'react-native';
+import LoginPage from './LoginPage';
 import Main from './Main';
 export default class navigator extends Component {
     constructor(props) {
         super(props);
+    }
+
+    openDrawer() {
+        this.refs.drawerLayout.openDrawer()
     }
 
     _renderNavBar() {
@@ -26,21 +33,17 @@ export default class navigator extends Component {
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'row',
-                color:'#313131'
+                color: '#313131'
             },
             title: {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
-                // borderWidth: 0.3,
-                // borderColor: '#a09f9f',
-                // backgroundColor: 'blue'
             },
             button: {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
-                // backgroundColor: 'green'
             },
             titleText: {
                 fontSize: 18,
@@ -50,58 +53,55 @@ export default class navigator extends Component {
                 justifyContent: 'center',
             }
         };
-
         var routeMapper = {
             LeftButton(route, navigator, index, navState) {
-                // if (index = 1) {
-                //     return (
-                //         <TouchableOpacity
-                //         ><Image source={require('../img/category.png')}/>
-                //         </TouchableOpacity>
-                //     );
-                // } else
-                if (index > 1) {
-                    return (
-                        <TouchableOpacity
-                            onPress={() => navigator.pop()}
-                            style={styles.button}>
-                            <Image source={require('../img/ic_back.png')}/>
-                        </TouchableOpacity>
-                    );
+                if (index > 0) {
+                   if (route.name == 'Main') {
+                    } else {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => navigator.pop()}
+                                style={styles.button}>
+                                <Image source={require('../img/ic_back.png')}/>
+                            </TouchableOpacity>
+                        );
+                    }
+
                 } else {
                     return null
-                    // return (
-                    //     <TouchableOpacity
-                    //         onPress={() => navigator.pop()}
-                    //         style={styles.button}>
-                    //         <Text style={styles.titleText}>Login</Text>
-                    //     </TouchableOpacity>
-                    // );
                 }
             },
             RightButton(route, navigator, index, navState) {
                 return null
-                // if (index > 0 && route.rightButton) {
-                //     return (
-                //         <TouchableOpacity
-                //             onPress={() => navigator.pop()}
-                //             style={styles.button}>
-                //             <Text style={styles.titleText}></Text>
-                //         </TouchableOpacity>
-                //     );
-                // } else {
-                //     return null
-                // }
-
             },
             Title(route, navigator, index, navState) {
-                return (
-                    <View style={styles.title}>
-                        <Text style={styles.titleText}>{route.title ? route.title : ' '}</Text>
-                    </View>
-                );
+                if(route.name == 'Main'){
+                    return null
+                }else{
+                    return (
+                        <View style={styles.title}>
+                            <Text style={styles.titleText}>{route.title ? route.title : ' '}</Text>
+                        </View>
+                    );
+                }
+
             }
         };
+        // if (route.name == 'Main') {
+        //     return (
+        //         <Navigator.NavigationBar
+        //             style={[styles.navigator, {backgroundColor: 'blue',paddingTop:0,}]}
+        //             routeMapper={routeMapper}
+        //         />
+        //     );
+        // } else {
+        //     return (
+        //         <Navigator.NavigationBar
+        //             style={styles.navigator}
+        //             routeMapper={routeMapper}
+        //         />
+        //     );
+        // }
         return (
             <Navigator.NavigationBar
                 style={styles.navigator}
@@ -109,10 +109,9 @@ export default class navigator extends Component {
             />
         );
     }
-
     render() {
-        let defaultName = 'Main';
-        let defaultComponent = Main;
+        let defaultName = 'LoginPage';
+        let defaultComponent = LoginPage;
         return (
             <Navigator
                 initialRoute={{name: defaultName, component: defaultComponent}}
@@ -124,7 +123,6 @@ export default class navigator extends Component {
                     return <Component {...route.params} navigator={navigator}/>
                 }}
                 navigationBar={this._renderNavBar()}
-                sceneStyle={{paddingTop: (Platform.OS === 'android' ? 66 : 74)}}
             />
         );
     }
