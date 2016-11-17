@@ -10,7 +10,18 @@ import{
     View,
     Picker,
 } from 'react-native';
+var pickerdata = [
+    {title: '1', v: '1'},
+    {title: '2', v: '2'},
+    {title: '3', v: '3'},
+    {title: '4', v: '4'}
+
+];
+
 class PickerComponent extends React.Component {
+    constructor(props){
+        super(props)
+    }
     state = {
         language: '',
     };
@@ -20,7 +31,13 @@ class PickerComponent extends React.Component {
         alert(value);
     }
 
-    render() {
+    // initPicker(title, v) {
+    //     return <Picker.Item label={title} value={v}/>
+    // }
+// {pickerdata.map((title, v) => this.initPicker(title, v))}
+
+
+render() {
         return (
             <View>
                 <Picker
@@ -30,6 +47,7 @@ class PickerComponent extends React.Component {
                     onValueChange={(value) => this.chooseAirPorts(value)}>
                     <Picker.Item label="杭垓" value="杭垓"/>
                     <Picker.Item label="七管" value="七管"/>
+
                 </Picker>
                 {/*<Text>当前选择的是:{this.state.language}</Text>*/}
             </View>
