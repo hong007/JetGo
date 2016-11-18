@@ -39,11 +39,13 @@ export default class navigator extends Component {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginTop:20,
             },
             button: {
                 flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center',
+                marginTop:20,
             },
             titleText: {
                 fontSize: 18,

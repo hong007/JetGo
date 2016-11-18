@@ -36,13 +36,13 @@ const LoginStyles = StyleSheet.create({
         },
         loginTextView: {
             height: 54,
-            borderWidth: 0.3,
+            borderWidth: 1,
             borderColor: '#a09f9f',
             borderRadius: 4,
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
             fontSize: 18,
-            marginTop:16,
+            marginTop:32,
         },
     });

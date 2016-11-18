@@ -24,8 +24,11 @@ class ScanComponent extends React.Component {
         };
         this.scancode = "";
     }
-    componentWillMount(){
-        // alert("取得的token是"+123);
+
+    componentWillMount() {
+        let token=this.AsyncStorage.getItem("LOGIN_TOKEN");
+
+        alert("取得的token是"+token);
 
         // var token = AsyncStorage.getItem(LOGIN_TOKEN);
         // alert(token);
@@ -41,6 +44,7 @@ class ScanComponent extends React.Component {
         //     }
         // });
     }
+
     // //初始化数据-默认从AsyncStorage中获取数据
     // async _loadInitialState() {
     //     try {
@@ -67,10 +71,16 @@ class ScanComponent extends React.Component {
         console.disableYellowBox = true;
         console.warn('YellowBox is disabled.');
         return (
-            <View style={{flex: 1, backgroundColor: '#f7f7f7', paddingTop: 12,marginTop:(Platform.OS==='android'?66:74)}}>
+            <View style={{
+                flex: 1,
+                backgroundColor: '#f7f7f7',
+                paddingTop: 12,
+                marginTop: (Platform.OS === 'android' ? 66 : 74)
+            }}>
                 <View style={scanStyle.TextInputView}>
                     <TextInput style={scanStyle.TextInput}
-                               placeholder='扫码无人机上的二维码'
+                               underlineColorAndroid='transparent'
+                               placeholder='扫码或输入无人机上的二维码'
                                onChangeText={
                                    (text) => {
                                        this.setState({text});
@@ -80,10 +90,10 @@ class ScanComponent extends React.Component {
                     />
                 </View>
                 <View style={routeStyle.rContianer}>
-                    <View style={routeStyle.rItem}>
-                        <Text style={routeStyle.rTextLeft}>无人机编号</Text>
-                        <Text style={routeStyle.rTextRight}>131231231</Text>
-                    </View>
+                    {/*<View style={routeStyle.rItem}>*/}
+                    {/*<Text style={routeStyle.rTextLeft}>无人机编号</Text>*/}
+                    {/*<Text style={routeStyle.rTextRight}>131231231</Text>*/}
+                    {/*</View>*/}
                     <View style={routeStyle.rItem}>
                         <Text style={routeStyle.rTextLeft}>无人机行程</Text>
                         <Text style={routeStyle.rTextRight}>杭垓-七管</Text>
@@ -100,7 +110,7 @@ class ScanComponent extends React.Component {
                     </View>
                 </View>
 
-                <View style={[scanStyle.gridContainer,{flex:1,}]}>
+                <View style={[scanStyle.gridContainer, {flex: 1,}]}>
                     <Text style={scanStyle.gridTitle}>请选择货物类型(多选)</Text>
                     <View style={scanStyle.gridContent}>
                         <TouchableOpacity style={scanStyle.gridItem}><Text
@@ -109,6 +119,10 @@ class ScanComponent extends React.Component {
                             style={scanStyle.gridText}>信件</Text></TouchableOpacity>
                         <TouchableOpacity style={scanStyle.gridItem}><Text
                             style={scanStyle.gridText}>刊物</Text></TouchableOpacity>
+                    </View>
+
+                    <View style={[scanStyle.gridContent,{marginTop:-30}]}>
+
                         <TouchableOpacity style={scanStyle.gridItem}><Text
                             style={scanStyle.gridText}>包裹</Text></TouchableOpacity>
                         <TouchableOpacity style={scanStyle.gridItem}><Text
@@ -179,6 +193,7 @@ const scanStyle = StyleSheet.create({
         paddingLeft: 16,
         paddingRight: 16,
         backgroundColor: '#fff',
+        marginBottom: 1
     },
     TextInput: {
         height: 44,

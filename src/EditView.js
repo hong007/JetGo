@@ -21,8 +21,8 @@ export default class EditView extends Component {
     render() {
         return (
             <View style={LoginStyles.TextInputView}>
-                <TextInput style={LoginStyles.TextInput}
-                           placeholder={this.props.name}
+                <TextInput underlineColorAndroid='transparent'
+                           secureTextEntry={this.props.name == "password" ? true : false} style={LoginStyles.TextInput}
                            onChangeText={
                                (text) => {
                                    this.setState({text});
@@ -41,8 +41,10 @@ const LoginStyles = StyleSheet.create({
         height: 50,
         flexDirection: 'column',
         justifyContent: 'center',
-        color: '#a09f9f',
+        color: '#fff',
         fontSize: 14,
+        borderBottomWidth:1,
+        borderBottomColor:'#A09F9F',
     },
 
     TextInput: {

@@ -26,28 +26,39 @@ import Button from './Button';
 import LeftMenuList from './LeftMenuList';
 import NetUtil from './NetUtil';
 
-var token="MiMxNDc5Mzc5MDc3QGppZXlhbi54eWl0ZWNoLmNvbSNvTFdsTTdBR0hqL2tzYlFCd0F1VUtHd2RZNkE9";
+// var token="MiMxNDc5Mzc5MDc3QGppZXlhbi54eWl0ZWNoLmNvbSNvTFdsTTdBR0hqL2tzYlFCd0F1VUtHd2RZNkE9";
 export default class Main extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            // airPortsData:'123'
+        };
+        // this.airPortsData='123'
 
     }
 
-    componentDidMount() {
-        // this._loadInitialState().done();
-        let url = "http://jieyan.xyitech.com/config/allroute?token=" + token;
-        NetUtil.postJson(url, (responseText)=> {
-            // alert(responseText);
-            let curdata=JSON.parse(responseText);
-            if (curdata.err == '0') {
-                // this.pageJump();
-                alert(responseText);
-            } else {
-                alert("获取航路失败请重试")
-            }
-        });
-    }
+    // componentWillMount() {
+    //     // AsyncStorage.getItem("LOGIN_TOKEN",function(errs,result){
+    //     //     //TODO:错误处理
+    //     //     if (!errs) {
+    //     //         alert("取得的token是" + JSON.stringify(result));
+    //     //     }
+    //     // });
+    //     AsyncStorage.getItem("AIRPORTS", function (errs, result) {
+    //         //TODO:错误处理
+    //         if (!errs) {
+    //             // alert("取得的AIRPORTS是" + result);
+    //             // this.initAirPorts(result);
+    //             let result=result;
+    //             this.airPortsData=result
+    //
+    //         }
+    //     });
+    // }
+
+    // initAirPorts(data){
+    //
+    // }
 
     //初始化数据-默认从AsyncStorage中获取数据
     async _loadInitialState() {
@@ -134,10 +145,10 @@ export default class Main extends React.Component {
                 }}>
                     <View style={{
                         backgroundColor: '#fff',
-                        height: (Platform.OS === 'android' ? 46 : 50)
+                        height: (Platform.OS === 'android' ? 42 : 50)
                     }}>
                         <TouchableHighlight onPress={()=>this.openDrawer()}
-                                            style={{padding: 10,}}>
+                                            style={{paddingLeft: 10, paddingTop: 15}}>
                             <Image style={{}} source={require('../img/menu.png')}/>
                         </TouchableHighlight>
                     </View>

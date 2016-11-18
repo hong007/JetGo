@@ -19,9 +19,9 @@ import Button from './Button';
 import Main from './Main';
 import NetUtil from './NetUtil';
 
-var LOGIN_USERNAME = 'username:""';
-var LOGIN_PASSWORD = 'password:""';
-var LOGIN_TOKEN = 'token:""';
+// var LOGIN_USERNAME = '';
+// var LOGIN_PASSWORD = '';
+// var LOGIN_TOKEN = '';
 
 export default class LoginPage extends Component {
     constructor(props) {
@@ -29,54 +29,6 @@ export default class LoginPage extends Component {
         this.userName = "";
         this.password = "";
     }
-
-    //组件挂载之后回调方法
-    // componentDidMount() {
-    //     // this._loadInitialState().done();
-    //     // alert("取得的token是"+'123');
-    // }
-
-    //初始化数据-默认从AsyncStorage中获取数据
-    // async _loadInitialState() {
-    //     try {
-    //         var value = await AsyncStorage.getItem(LOGIN_USERNAME);
-    //         if (value != null) {
-    //             this._appendMessage('从存储中获取到数据为:' + value);
-    //         } else {
-    //             this._appendMessage('存储中无数据,初始化为空数据');
-    //         }
-    //     } catch (error) {
-    //         // this._appendMessage('AsyncStorage错误' + error.message);
-    //     }
-    // }
-
-    //进行储存数据_ONE
-    async _saveValue_One(n,v) {
-        // alert('保存到存储的数据为:' + n+' '+v);
-        try {
-            await AsyncStorage.setItem(n, v);
-            // alert('保存到存储的数据为:' + n+' '+v);
-            // this._appendMessage('保存到存储的数据为:' + '我是老王');
-        } catch (error) {
-            this._appendMessage('AsyncStorage错误' + error.message);
-        }
-    }
-
-    // //进行存储数据删除_ONE
-    // async _removeValue_One() {
-    //     try {
-    //         await AsyncStorage.removeItem(LOGIN_USERNAME);
-    //         this._appendMessage('数据删除成功...');
-    //     } catch (error) {
-    //         this._appendMessage('AsyncStorage错误' + error.message);
-    //     }
-    // }
-
-    //进行把message信息添加到messages数组中
-    // _appendMessage(message) {
-    //     this.setState({messages: this.state.messages.concat(message)});
-    // }
-
 
     openDrawer() {
         this.refs.drawerLayout.openDrawer()
@@ -89,12 +41,12 @@ export default class LoginPage extends Component {
             <View style={LoginStyles.loginview}>
                 <Text style={{fontSize: 22, color: '#fff',}}>用户登录</Text>
                 <View style={{paddingTop: 38,}}>
-                    <Text style={{color: '#a09f9f',}}>用户名</Text>
+                    <Text style={{color: '#a09f9f',marginTop:20,}}>用户名</Text>
                     <EditView name='' onChangeText={(text) => {
                         this.userName = text;
                     }}/>
-                    <Text style={{color: '#a09f9f',}}>密码</Text>
-                    <EditView name='' onChangeText={(text) => {
+                    <Text style={{color: '#a09f9f',marginTop:20,}}>密码</Text>
+                    <EditView name='password' onChangeText={(text) => {
                         this.passWord = text;
                     }}/>
                     <Button name='登录' onPressCallback={()=>this.onPressCallback()}/>
@@ -104,20 +56,33 @@ export default class LoginPage extends Component {
     }
 
     onPressCallback() {
-        this.pageJump();
-
-
-        // let url = "http://jieyan.xyitech.com/login/?username=" + this.userName + "&password=" + this.passWord;
-        // NetUtil.postJson(url,(responseText)=>{
-        //     let curdata=JSON.parse(responseText);
-        //     if (curdata.err == '0') {
-        //         this.pageJump();
-        //         this._saveValue_One("LOGIN_TOKEN",curdata.token);
-        //     } else {
-        //         alert("用户名或密码错误，请重试")
-        //     }
-        // });
+        // this.pageJump();
+        let url = "http://jieyan.xyitech.com/login/?username=" + this.userName + "&password=" + this.passWord;
+        NetUtil.postJson(url,(responseText)=>{
+            let curdata=JSON.parse(responseText);
+            if (curdata.err == '0') {
+                // alert('存储的token是 ' + String(curdata.token));
+                AsyncStorage.setItem("LOGIN_TOKEN",curdata.token);
+                this.getAirPorts(curdata.token);
+                // this.pageJump();
+            } else {
+                alert("用户名或密码错误，请重试")
+            }
+        });
     };
+    getAirPorts(token){
+        let url = "http://jieyan.xyitech.com/spoint/list?token="+token;
+        NetUtil.postJson(url, (responseText)=> {
+            let curdata = JSON.parse(responseText);
+            if (curdata.err == '0') {
+                let airports = JSON.stringify(curdata.msg);
+                AsyncStorage.setItem("AIRPORTS",airports);
+                this.pageJump();
+            } else {
+                alert("获取航路失败请重试");
+            }
+        });
+    }
 
     //跳转到第二个页面去
     pageJump() {
