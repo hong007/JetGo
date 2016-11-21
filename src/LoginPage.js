@@ -63,26 +63,26 @@ export default class LoginPage extends Component {
             if (curdata.err == '0') {
                 // alert('存储的token是 ' + String(curdata.token));
                 AsyncStorage.setItem("LOGIN_TOKEN",curdata.token);
-                this.getAirPorts(curdata.token);
-                // this.pageJump();
+                // this.getAirPorts(curdata.token);
+                this.pageJump();
             } else {
                 alert("用户名或密码错误，请重试")
             }
         });
     };
-    getAirPorts(token){
-        let url = "http://jieyan.xyitech.com/spoint/list?token="+token;
-        NetUtil.postJson(url, (responseText)=> {
-            let curdata = JSON.parse(responseText);
-            if (curdata.err == '0') {
-                let airports = JSON.stringify(curdata.msg);
-                AsyncStorage.setItem("AIRPORTS",airports);
-                this.pageJump();
-            } else {
-                alert("获取航路失败请重试");
-            }
-        });
-    }
+    // getAirPorts(token){
+    //     let url = "http://jieyan.xyitech.com/spoint/list?token="+token;
+    //     NetUtil.postJson(url, (responseText)=> {
+    //         let curdata = JSON.parse(responseText);
+    //         if (curdata.err == '0') {
+    //             let airports = JSON.stringify(curdata.msg);
+    //             AsyncStorage.setItem("AIRPORTS",airports);
+    //             this.pageJump();
+    //         } else {
+    //             alert("获取航路失败请重试");
+    //         }
+    //     });
+    // }
 
     //跳转到第二个页面去
     pageJump() {

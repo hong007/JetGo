@@ -15,27 +15,39 @@ import  {
     Switch,
 } from 'react-native';
 import LeftMenuList from './LeftMenuList';
-class getFlight extends React.Component {
-    state = {
-        trueSwitchIsOn: true,
-        falseSwitchIsOn: false,
-        falseSwitchIsOn1: false,
-        falseSwitchIsOn2: false,
-        falseSwitchIsOn3: false,
-        falseSwitchIsOn4: false,
-    };
+import ChildCompontent from './ChildCompontent';
 
+class getFlight extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             name: null,
             age: null,
+            initialChecked: false,
+            totalChecked: 0,
         }
     }
 
+    onChildChanged(newState) {
+        // alert(newState);
+        if (newState==true) {
+            newState = -1;
+        } else {
+            newState = 1;
+        }
+        // var newTotal = this.state.totalChecked + (newState ? 1 : -1);
+        var newTotal = this.state.totalChecked + newState;
+        this.setState({
+            totalChecked: newTotal,
+        });
+    }
 
     _openPage() {
-        alert('飞机起飞');
+        if(this.state.totalChecked==4){
+            alert('飞机起飞');
+        }else{
+            alert('你想飞？必须全部点中哦😯！');
+        }
         // this.props.navigator.push({
         //     title: 'LeftMenuList',
         //     component: LeftMenuList
@@ -45,6 +57,7 @@ class getFlight extends React.Component {
     render() {
         console.disableYellowBox = true;
         console.warn('YellowBox is disabled.');
+        var isChecked = this.state.checked ? 'yes' : 'no';
         return (
             <View style={{flex: 1, backgroundColor: '#f7f7f7', marginTop: (Platform.OS === 'android' ? 66 : 74)}}>
                 <View style={routeStyle.rContianer}>
@@ -73,44 +86,21 @@ class getFlight extends React.Component {
                         </View>
 
                     </View>
-
-                    <View style={routeStyle.rItem}>
-                        <Text style={routeStyle.rTextLeft}>联系人电话:136-1233-1234</Text>
-                        <Image style={{}} source={require('../img/phone.png')}/>
-                    </View>
-
-
+                    {/*<Text style={scanStyle.gridTitle}>How many are checked:{this.state.totalChecked}</Text>*/}
                     <Text style={scanStyle.gridTitle}>飞前准备</Text>
-                    <View style={routeStyle.rItem}>
-                        <Text style={routeStyle.rTextLeft}>货物已装载完成</Text>
-                        <Switch
-                            onValueChange={(value) => this.setState({falseSwitchIsOn: value})}
-                            style={routeStyle.rTextRight}
-                            value={this.state.falseSwitchIsOn}/>
-                    </View>
-                    <View style={routeStyle.rItem}>
-                        <Text style={routeStyle.rTextLeft}>电池已安装完成</Text>
-                        <Switch
-                            onValueChange={(value) => this.setState({falseSwitchIsOn: value})}
-                            style={routeStyle.rTextRight}
-                            value={this.state.falseSwitchIsOn1}/>
-                    </View>
-                    <View style={routeStyle.rItem}>
-                        <Text style={routeStyle.rTextLeft}>放置起降区中心</Text>
-                        <Switch
-                            onValueChange={(value) => this.setState({falseSwitchIsOn: value})}
-                            style={routeStyle.rTextRight}
-                            value={this.state.falseSwitchIsOn2}/>
-                    </View>
-                    <View style={routeStyle.rItem}>
-                        <Text style={routeStyle.rTextLeft}>起降区无人进入</Text>
-                        <Switch
-                            onValueChange={(value) => this.setState({falseSwitchIsOn: value})}
-                            style={routeStyle.rTextRight}
-                            value={this.state.falseSwitchIsOn3}/>
-                    </View>
+                    <ChildCompontent text='货物已装载完成'
+                                     initialChecked={this.state.initialChecked}
+                                     callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                    <ChildCompontent text='电池已安装完成'
+                                     initialChecked={this.state.initialChecked}
+                                     callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                    <ChildCompontent text='放置起降区中心' initialChecked={this.state.initialChecked}
+                                     callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                    <ChildCompontent text='起降区无人进入' initialChecked={this.state.initialChecked}
+                                     callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+
                 </View>
-                <View style={{alignItems:'center'}}>
+                <View style={{alignItems: 'center'}}>
                     <TouchableOpacity style={{
                         backgroundColor: '#E98B21',
                         marginTop: 20,
@@ -236,5 +226,5 @@ const scanStyle = StyleSheet.create({
         width: 72,
         textAlign: 'center',
     }
-})
+});
 export default getFlight;

@@ -12,136 +12,175 @@ import{
     AsyncStorage,
 } from 'react-native';
 import NetUtil from './NetUtil';
-// var airportsData = [
-//     {title: '1', v: '1'},
-//     {title: '2', v: '2'},
-//     {title: '3', v: '3'},
-//     {title: '4', v: '4'}
-//
-// ];
 class PickerComponent extends React.Component {
     constructor(props) {
         super(props);
-        state = {
-            language: '',
+        this.state = {
+            pickerValue: '',
+            pickerValue2: '',
             airports_status: false,
-            airportsData: [
-                {title: '1', v: '1'},
-                {title: '2', v: '2'},
-                {title: '3', v: '3'},
-                {title: '4', v: '4'}
-
-            ],
-
+            start_airports_load: false,
+            airportsData: null,
+            airportsEndData: null,
+            test: this.props.test,
         };
-
-        // this.airportsData=this.props.airportsData;
     }
-
-    // airportsData=[
-    //     {title: '1', v: '1'},
-    //     {title: '2', v: '2'},
-    //     {title: '3', v: '3'},
-    //     {title: '4', v: '4'}
-    //
-    //     ];
 
     componentDidMount() {
-        AsyncStorage.getItem("AIRPORTS", function (errs, result) {
-            //TODO:错误处理
-            if (!errs) {
-                // let result = result;
-                // airPortsData=result;
-                // alert("取得的AIRPORTS是" + result);
-
-                state.airportsData= result;
-                state.airports_status= true;
-                alert("取得的AIRPORTS是sdfdsf" + state.airportsData);
-                return state;
-                this.componentWillUnmount();
-                render();
-
-            }
-        });
-
-        // alert("取得的AIRPORTS是" + airportsData);
-        // this._loadInitialState().done();
-        // let url = "http://jieyan.xyitech.com/config/allroute?token=" + token;
-        // let url = "http://jieyan.xyitech.com/spoint/list?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9";
-        // NetUtil.postJson(url, (responseText)=> {
-        //     let curdata = JSON.parse(responseText);
-        //     if (curdata.err == '0') {
-        //         // this.pageJump();
-        //         let airports = JSON.stringify(curdata.msg);
+        // AsyncStorage.getItem("AIRPORTS", function (errs, result) {
+        //     //TODO:错误处理
+        //     if (!errs) {
+        //         // let result = result;
+        //         // airPortsData=result;
+        //         // alert("取得的AIRPORTS是" + result);
         //         this.setState({
-        //             airports_status: true,
-        //             airportsData: airports
-        //         });
-        //         // this.initAirPorts(this.state.airportsData);
-        //         // alert(this.state.airportsData);
-        //
-        //     } else {
-        //         alert("获取航路失败请重试");
+        //             airports_status:true,
+        //             airportsData:result
+        //         })
+        //         alert("取得的AIRPORTS是sdfdsf" + state.airportsData);
         //     }
         // });
+        // let url = "http://jieyan.xyitech.com/config/allroute?token=" + token;
+        let url = "http://jieyan.xyitech.com/spoint/search?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9";
+        NetUtil.postJson(url, (responseText)=> {
+            let curdata = JSON.parse(responseText);
+            if (curdata.err == '0') {
+                // this.pageJump();
+                let airports = JSON.stringify(curdata.msg);
+                airports = JSON.parse(airports);
+                console.log('airports list is ', airports);
+                this.setState({
+                    airports_status: true,
+                    airportsData: airports,
+                });
+            } else {
+                alert("获取航路失败请重试");
+            }
+        });
     }
-
-    // initAirPorts(item) {
-    //     alert(item);
-    //     // item.map((n)=><Picker.Item label={item.name} value={item.name} key={item.id}/>);
-    //     return (item.map((n)=><Picker.Item label={item.name} value={item.name} key={item.id}/>));
-    //     {/*return (<Picker.Item label={item.name} value={item.name} key={item.id}/>);*/}
-    // }
-
-    // state = {
-    //     language: '',
-    // };
 
     chooseAirPorts(value) {
-        this.setState({language: value});
-        alert(value);
+        this.setState({
+            pickerValue: value,
+            start_airports_load: false,
+        });
+        console.log("取得的站点id是", value);
+        let url = "http://jieyan.xyitech.com/route/search?sid=" + value + "&token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9";
+        NetUtil.postJson(url, (responseText)=> {
+            let curdata = JSON.parse(responseText);
+            if (curdata.err == '0') {
+                // this.pageJump();
+                let routes = JSON.stringify(curdata.msg);
+                routes = JSON.parse(routes);
+                // let airportsEnd;
+                // airportsEnd=routes.map(function(item){
+                //     return
+                // })
+                console.log('routes list is ', routes);
+                if (routes.length > 0) {
+                    this.setState({
+                        start_airports_load: true,
+                        airportsEndData: routes
+                    });
+                } else {
+                    alert("该站点有误，请重试")
+                }
+
+            } else {
+                alert("获取航路失败请重试");
+            }
+        });
+    }
+    chooseAirPortsEnd(value){
+        this.setState({
+            pickerValue2: value,
+        });
+        AsyncStorage.setItem("ROUTE_ID",value);
+
     }
 
-    initPicker(n) {
-        return <Picker.Item label={n.title} value={n.v}/>
+    initStartAirports(n) {
+        let item = n;
+        return <Picker.Item label={item.name} value={item.id} airportType="sid" sidValue="item.id"/>;
     }
 
-// {pickerdata.map((title, v) => this.initPicker(title, v))}
-// <Picker.Item label="杭垓" value="杭垓"/>
-// <Picker.Item label="七管" value="七管"/>
+    initEndAirports(n) {
+        let item = n;
+        return <Picker.Item label={item.ename} value={item.id} airportType="eid" eidValue={item.eid}
+                            routeID={item.id}/>;
+    }
 
+    // initPicker(n) {
+    //     return <Picker.Item label={n.title} value={n.v}/>
+    // }
     render() {
-        if (state.airports_status) {
-            alert(1);
-
+        if (!this.state.airports_status) {
+            console.log('页面未获得数据初始化');
             return (
                 <View>
                     <Picker
                         mode={'dropdown'}
                         style={{}}
-                        selectedValue={state.language}
+                        selectedValue={this.state.pickerValue}
                         onValueChange={(value) => this.chooseAirPorts(value)}>
-                        {state.airportsData.map((n) => this.initPicker(n))}
+                        <Picker.Item label="请选择" value="请选择" aid=""/>
                     </Picker>
+                    {/*<Text>当前选择的是:{this.state.pickerValue}</Text>*/}
+                    <Picker
+                        mode={'dropdown'}
+                        style={{}}
+                        selectedValue={this.state.pickerValue2}
+                    >
+                        <Picker.Item label="请选择" value="请选择" aid=""/>
+                    </Picker>
+                    {/*<Text>当前选择的是:{this.state.pickerValue}</Text>*/}
                 </View>
             );
         } else {
-            alert(2);
-            return (
-            <View>
-                <Picker
-                    mode={'dropdown'}
-                    style={{}}
-                    selectedValue={state.language}
-                    onValueChange={(value) => this.chooseAirPorts(value)}>
-                    <Picker.Item label="请选择" value="请选择"/>
-                    <Picker.Item label="杭垓" value="杭垓"/>
-                    {/*{state.airportsData.map((n) => this.initPicker(n))}*/}
+            console.log('页面获得数据后再次初始化');
+            if (this.state.start_airports_load) {
+                return (
+                    <View>
+                        <Picker
+                            mode={'dropdown'}
+                            style={{}}
+                            selectedValue={this.state.pickerValue}
+                            onValueChange={(value) => this.chooseAirPorts(value)}>
+                            {this.state.airportsData.map((n)=>this.initStartAirports(n))}
+                        </Picker>
+                        <Picker
+                            mode={'dropdown'}
+                            style={{}}
+                            selectedValue={this.state.pickerValue2}
+                            onValueChange={(value) => this.chooseAirPortsEnd(value)}
+                        >
+                            {this.state.airportsEndData.map((n)=>this.initEndAirports(n))}
+                        </Picker>
+                    </View>
 
-                </Picker>
-                {/*<Text>当前选择的是:{this.state.language}</Text>*/}
-            </View>
-        );
+                );
+            } else {
+                return (
+                    <View>
+                        <Picker
+                            mode={'dropdown'}
+                            style={{}}
+                            selectedValue={this.state.pickerValue}
+                            onValueChange={(value) => this.chooseAirPorts(value)}>
+                            {this.state.airportsData.map((n)=>this.initStartAirports(n))}
+                        </Picker>
+                        <Picker
+                            mode={'dropdown'}
+                            style={{}}
+                            selectedValue={this.state.pickerValue2}
+                        >
+                            <Picker.Item label="请选择" value="请选择" aid=""/>
+                        </Picker>
+                    </View>
+
+                );
+            }
+
         }
 
     }

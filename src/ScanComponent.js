@@ -13,22 +13,70 @@ import  {
 } from 'react-native';
 import getFlight from './getFlight';
 import NetUtil from './NetUtil';
+import GridChild from './GridChild';
 
 class ScanComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: null,
-            age: null,
+            scannText:'',
             text: '',
+            dataload: false,
+            sname: '',
+            ename: '',
+            distance: '',
+            duration: '',
+            initialChecked: false,
+            totalChecked: 0,
         };
-        this.scancode = "";
     }
 
-    componentWillMount() {
-        let token=this.AsyncStorage.getItem("LOGIN_TOKEN");
+    onChildChanged(newState) {
+        // alert(newState);
+        if (newState == true) {
+            newState = -1;
+        } else {
+            newState = 1;
+        }
+        // var newTotal = this.state.totalChecked + (newState ? 1 : -1);
+        var newTotal = this.state.totalChecked + newState;
+        this.setState({
+            totalChecked: newTotal,
+        });
+    }
 
-        alert("取得的token是"+token);
+    componentDidMount() {
+        let _this = this;
+        AsyncStorage.getItem("ROUTE_ID", function (errs, result) {
+            //TODO:错误处理
+            if (!errs) {
+                // alert("取得的AIRPORTS是" + result);
+                // this.initAirPorts(result);
+                let route_id = result;
+
+                let url = "http://jieyan.xyitech.com/config/route?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9&id=" + route_id;
+                NetUtil.postJson(url, (responseText)=> {
+                    let curdata = JSON.parse(responseText);
+                    console.log("获得的单个航路信息是  ", curdata);
+                    if (curdata.err == '0') {
+                        _this.setState({
+                            // sname:"121",
+                            dataload: true,
+                            sname: curdata.route.sname,
+                            ename: curdata.route.ename,
+                            distance: (curdata.route.distance / 1000).toFixed(0),
+                            duration: (curdata.route.duration / 60).toFixed(0),
+                        });
+                        // this.pageJump();
+                        // this._saveValue_One("LOGIN_TOKEN",curdata.token);
+                    } else {
+                        alert("没有该航路，请重试")
+                    }
+                });
+                // alert(route_id)
+            }
+        });
+
 
         // var token = AsyncStorage.getItem(LOGIN_TOKEN);
         // alert(token);
@@ -43,6 +91,10 @@ class ScanComponent extends React.Component {
         //         alert("用户名或密码错误，请重试")
         //     }
         // });
+    }
+
+    packageClick() {
+
     }
 
     // //初始化数据-默认从AsyncStorage中获取数据
@@ -70,84 +122,88 @@ class ScanComponent extends React.Component {
     render() {
         console.disableYellowBox = true;
         console.warn('YellowBox is disabled.');
-        return (
-            <View style={{
-                flex: 1,
-                backgroundColor: '#f7f7f7',
-                paddingTop: 12,
-                marginTop: (Platform.OS === 'android' ? 66 : 74)
-            }}>
-                <View style={scanStyle.TextInputView}>
-                    <TextInput style={scanStyle.TextInput}
-                               underlineColorAndroid='transparent'
-                               placeholder='扫码或输入无人机上的二维码'
-                               onChangeText={
-                                   (text) => {
-                                       this.setState({text});
-                                       this.props.onChangeText(text);
+        if (this.state.dataload) {
+            return (
+                <View style={{
+                    flex: 1,
+                    backgroundColor: '#f7f7f7',
+                    paddingTop: 12,
+                    marginTop: (Platform.OS === 'android' ? 66 : 74)
+                }}>
+                    <View style={scanStyle.TextInputView}>
+                        <TextInput style={scanStyle.TextInput}
+                                   underlineColorAndroid='transparent'
+                                   placeholder='扫码或输入无人机上的二维码'
+                                   onChangeText={
+                                       (scannText) => {
+                                           this.setState({scannText});
+                                       }
                                    }
-                               }
-                    />
+                        />
+                        <Text style={{height:0,}}>{this.state.scannText}</Text>
+                    </View>
+                    <View style={routeStyle.rContianer}>
+                        {/*<View style={routeStyle.rItem}>*/}
+                        {/*<Text style={routeStyle.rTextLeft}>无人机编号</Text>*/}
+                        {/*<Text style={routeStyle.rTextRight}>131231231</Text>*/}
+                        {/*</View>*/}
+                        <View style={routeStyle.rItem}>
+                            <Text style={routeStyle.rTextLeft}>无人机行程</Text>
+                            <Text style={routeStyle.rTextRight}>{this.state.sname}-{this.state.ename}</Text>
+                        </View>
+                        <View style={routeStyle.rItem}>
+                            <Text style={routeStyle.rTextLeft}>飞行距离</Text>
+                            <Text style={routeStyle.rTextRight}><Text
+                                style={routeStyle.rTextValue}>{this.state.distance}</Text><Text
+                                style={routeStyle.rTextName}>公里</Text></Text>
+                        </View>
+                        <View style={routeStyle.rItem}>
+                            <Text style={routeStyle.rTextLeft}>飞行时间</Text>
+                            <Text style={routeStyle.rTextRight}><Text
+                                style={routeStyle.rTextValue}>{this.state.duration}</Text><Text
+                                style={routeStyle.rTextName}>分钟</Text></Text>
+                        </View>
+                    </View>
+
+                    <View style={[scanStyle.gridContainer, {flex: 1,}]}>
+                        <Text style={scanStyle.gridTitle}>请选择货物类型(多选)</Text>
+                        <View style={scanStyle.gridContent}>
+                            <GridChild text="报纸" initialChecked={this.state.initialChecked} callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                            <GridChild text="信件" initialChecked={this.state.initialChecked} callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                            <GridChild text="刊物" initialChecked={this.state.initialChecked} callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+
+                        </View>
+
+                        <View style={[scanStyle.gridContent, {marginTop: -30}]}>
+                            <GridChild text="包裹" initialChecked={this.state.initialChecked} callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                            <GridChild text="其他" initialChecked={this.state.initialChecked} callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                        </View>
+                    </View>
+
+                    <TouchableOpacity style={{
+                        backgroundColor: '#313131',
+                        marginTop: 10,
+                        height: 54,
+                        borderWidth: 0.3,
+                        borderColor: '#a09f9f',
+                        borderRadius: 4,
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        fontSize: 17,
+                        color: '#55ACEE',
+                        margin: 18,
+                    }} onPress={this._openPage.bind(this)}>
+                        <Text style={{color: '#fff',}}>提交</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={routeStyle.rContianer}>
-                    {/*<View style={routeStyle.rItem}>*/}
-                    {/*<Text style={routeStyle.rTextLeft}>无人机编号</Text>*/}
-                    {/*<Text style={routeStyle.rTextRight}>131231231</Text>*/}
-                    {/*</View>*/}
-                    <View style={routeStyle.rItem}>
-                        <Text style={routeStyle.rTextLeft}>无人机行程</Text>
-                        <Text style={routeStyle.rTextRight}>杭垓-七管</Text>
-                    </View>
-                    <View style={routeStyle.rItem}>
-                        <Text style={routeStyle.rTextLeft}>飞行距离</Text>
-                        <Text style={routeStyle.rTextRight}><Text style={routeStyle.rTextValue}>10</Text><Text
-                            style={routeStyle.rTextName}>公里</Text></Text>
-                    </View>
-                    <View style={routeStyle.rItem}>
-                        <Text style={routeStyle.rTextLeft}>飞行时间</Text>
-                        <Text style={routeStyle.rTextRight}><Text style={routeStyle.rTextValue}>15</Text><Text
-                            style={routeStyle.rTextName}>分钟</Text></Text>
-                    </View>
-                </View>
+            )
+        } else {
+            return (
+                <Text>页面载入中</Text>
+            )
+        }
 
-                <View style={[scanStyle.gridContainer, {flex: 1,}]}>
-                    <Text style={scanStyle.gridTitle}>请选择货物类型(多选)</Text>
-                    <View style={scanStyle.gridContent}>
-                        <TouchableOpacity style={scanStyle.gridItem}><Text
-                            style={scanStyle.gridText}>报纸</Text></TouchableOpacity>
-                        <TouchableOpacity style={scanStyle.gridItem}><Text
-                            style={scanStyle.gridText}>信件</Text></TouchableOpacity>
-                        <TouchableOpacity style={scanStyle.gridItem}><Text
-                            style={scanStyle.gridText}>刊物</Text></TouchableOpacity>
-                    </View>
-
-                    <View style={[scanStyle.gridContent,{marginTop:-30}]}>
-
-                        <TouchableOpacity style={scanStyle.gridItem}><Text
-                            style={scanStyle.gridText}>包裹</Text></TouchableOpacity>
-                        <TouchableOpacity style={scanStyle.gridItem}><Text
-                            style={scanStyle.gridText}>其他</Text></TouchableOpacity>
-                    </View>
-                </View>
-
-                <TouchableOpacity style={{
-                    backgroundColor: '#313131',
-                    marginTop: 10,
-                    height: 54,
-                    borderWidth: 0.3,
-                    borderColor: '#a09f9f',
-                    borderRadius: 4,
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: 17,
-                    color: '#55ACEE',
-                    margin: 18,
-                }} onPress={this._openPage.bind(this)}>
-                    <Text style={{color: '#fff',}}>提交</Text>
-                </TouchableOpacity>
-            </View>
-        )
     }
 }
 const routeStyle = StyleSheet.create({
@@ -231,5 +287,6 @@ const scanStyle = StyleSheet.create({
         width: 72,
         textAlign: 'center',
     }
+
 })
 export default ScanComponent;

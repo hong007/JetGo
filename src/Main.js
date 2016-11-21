@@ -31,10 +31,8 @@ export default class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // airPortsData:'123'
+            routeid:'',
         };
-        // this.airPortsData='123'
-
     }
 
     // componentWillMount() {
@@ -54,10 +52,6 @@ export default class Main extends React.Component {
     //
     //         }
     //     });
-    // }
-
-    // initAirPorts(data){
-    //
     // }
 
     //初始化数据-默认从AsyncStorage中获取数据
@@ -107,6 +101,10 @@ export default class Main extends React.Component {
     closeDrawer() {
         this.refs.drawerLayout.closeDrawer()
     }
+    fatherGetChildData(){
+        this.refs.picker.getChildData();
+        alert("来来来！")
+    }
 
     render() {
         console.disableYellowBox = true;
@@ -154,8 +152,7 @@ export default class Main extends React.Component {
                     </View>
 
                     <TouchableOpacity style={{flex: 1, marginTop: 60, padding: 18,}}>
-                        <PickerComponent/>
-                        <PickerComponent/>
+                        <PickerComponent refs="picker"/>
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         backgroundColor: '#313131',
@@ -170,7 +167,7 @@ export default class Main extends React.Component {
                         fontSize: 17,
                         color: '#55ACEE',
                         margin: 18,
-                    }} onPress={this._openPage.bind(this)}>
+                    }} onPress={()=>{this._openPage()}}>
                         <Text style={{color: '#fff',}}>我要寄件</Text>
                     </TouchableOpacity>
                 </View>
