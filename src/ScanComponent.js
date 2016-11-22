@@ -137,19 +137,19 @@ class ScanComponent extends React.Component {
           <View style={{
             height: (Platform.OS === 'android' ? 42 : 50),
             backgroundColor: '#fff',
-            flexDeriction:'row',
-            alignItem:'center',
+            flexDeriction: 'row',
+            alignItem: 'center',
             paddingTop: 15,
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{top: 15, left: 18, position: 'absolute',zIndex:999999 }}
+              style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
 
               onPress={() => this.props.navigator.pop()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
-            <Text style={{textAlign:'center'}}>飞机扫码</Text>
+            <Text style={{textAlign: 'center'}}>飞机扫码</Text>
           </View>
           <View style={scanStyle.TextInputView}>
             <TextInput style={scanStyle.TextInput}

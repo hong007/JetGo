@@ -10,6 +10,7 @@ import {
   Navigator,
   Platform,
   Image,
+  AsyncStorage,
   TouchableOpacity,
   TouchableHighlight,
   DrawerLayoutAndroid,
@@ -20,11 +21,32 @@ import OrderListView from './OrderListView';
 export default class navigator extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      defaultName: 'LoginPage',
+      defaultComponent: LoginPage,
+    };
+  }
+
+  componentWillMount() {
+    let _this=this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      if (!errs) {
+        const TOKEN = result;
+        _this.setState({
+          defaultName: 'Main',
+          defaultComponent: Main,
+        })
+        console.log("取得的Token 是", TOKEN);
+      }else{
+        console.log('LOGIN_TOKEN 不存在，请重新登录')
+      }
+    })
   }
 
   openDrawer() {
     this.refs.drawerLayout.openDrawer()
   }
+
   pageJump() {
     this.props.navigator.push({
       title: '订单列表',
@@ -32,6 +54,7 @@ export default class navigator extends Component {
       component: OrderListView
     });
   }
+
   _renderNavBar() {
     const styles = {
       navigator: {
@@ -123,8 +146,9 @@ export default class navigator extends Component {
   }
 
   render() {
-    let defaultName = 'LoginPage';
-    let defaultComponent = LoginPage;
+    let defaultName = this.state.defaultName;
+    let defaultComponent = this.state.defaultComponent;
+    console.log("defaultName is ",defaultName,'  defaultComponent is',defaultComponent)
     return (
       <Navigator
         initialRoute={{name: defaultName, component: defaultComponent}}
