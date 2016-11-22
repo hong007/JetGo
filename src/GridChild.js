@@ -18,17 +18,14 @@ export default class GridChild extends React.Component {
 
     render() {
         return (
-            <TouchableOpacity style={this.state.checked == false ? gridStyles.gridItem:gridStyles.gridItemChoosed}
+            <TouchableOpacity style={this.state.checked == false ? gridStyles.gridItem : gridStyles.gridItemChoosed}
                               value={this.state.checked} onPress={(value)=> {
-                if (this.state.checked) {
-                    this.setState({checked: false});
-                } else {
-                    this.setState({checked: true});
-                }
+                this.setState({checked: (this.state.checked ? false : true)});
                 this.props.callbackParent(this.state.checked);
-                {/*alert(this.state.checked);*/}
+                {/*alert(this.state.checked);*/
+                }
             }}><Text
-                style={this.state.checked == false ? gridStyles.gridText:gridStyles.gridTextChoosed}>{this.props.text}</Text></TouchableOpacity>
+                style={this.state.checked == false ? gridStyles.gridText : gridStyles.gridTextChoosed}>{this.props.text}</Text></TouchableOpacity>
         )
     }
 }
@@ -60,7 +57,7 @@ const gridStyles = StyleSheet.create({
         color: '#a09f9f',
         textAlign: 'center',
     },
-    gridTextChoosed:{
+    gridTextChoosed: {
         width: 72,
         textAlign: 'center',
         color: '#fff',

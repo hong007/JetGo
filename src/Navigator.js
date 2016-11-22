@@ -3,130 +3,140 @@
  */
 import React, {Component} from 'react';
 import {
-    AppRegistry,
-    StyleSheet,
-    Text,
-    View,
-    Navigator,
-    Platform,
-    Image,
-    TouchableOpacity,
-    TouchableHighlight,
-    DrawerLayoutAndroid,
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Navigator,
+  Platform,
+  Image,
+  TouchableOpacity,
+  TouchableHighlight,
+  DrawerLayoutAndroid,
 } from 'react-native';
 import LoginPage from './LoginPage';
 import Main from './Main';
+import OrderListView from './OrderListView';
 export default class navigator extends Component {
-    constructor(props) {
-        super(props);
-    }
+  constructor(props) {
+    super(props);
+  }
 
-    openDrawer() {
-        this.refs.drawerLayout.openDrawer()
-    }
+  openDrawer() {
+    this.refs.drawerLayout.openDrawer()
+  }
+  pageJump() {
+    this.props.navigator.push({
+      title: '订单列表',
+      name: 'OrderListView',
+      component: OrderListView
+    });
+  }
+  _renderNavBar() {
+    const styles = {
+      navigator: {
+        flex: 1,
+        backgroundColor: 'transparent',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
+        color: '#313131',
+      },
+      title: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+      },
+      button: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+      },
+      titleText: {
+        fontSize: 18,
+        color: '#313131',
+        fontWeight: '400',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }
+    };
+    var routeMapper = {
+      LeftButton(route, navigator, index, navState) {
+        alert(index);
+        if (index > 0) {
+          if (route.name == 'Main') {
 
-    _renderNavBar() {
-        const styles = {
-            navigator: {
-                flex: 1,
-                backgroundColor: 'transparent',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-                color: '#313131'
-            },
-            title: {
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop:20,
-            },
-            button: {
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop:20,
-            },
-            titleText: {
-                fontSize: 18,
-                color: '#313131',
-                fontWeight: '400',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }
-        };
-        var routeMapper = {
-            LeftButton(route, navigator, index, navState) {
-                if (index > 0) {
-                   if (route.name == 'Main') {
-                    } else {
-                        return (
-                            <TouchableOpacity
-                                onPress={() => navigator.pop()}
-                                style={styles.button}>
-                                <Image source={require('../img/ic_back.png')}/>
-                            </TouchableOpacity>
-                        );
-                    }
+          } else {
+            return (
+              <TouchableOpacity
+                onPress={() => navigator.pop()}
+                style={styles.button}>
+                <Image source={require('../img/ic_back.png')}/>
+              </TouchableOpacity>
+            );
+          }
 
-                } else {
-                    return null
-                }
-            },
-            RightButton(route, navigator, index, navState) {
-                return null
-            },
-            Title(route, navigator, index, navState) {
-                if(route.name == 'Main'){
-                    return null
-                }else{
-                    return (
-                        <View style={styles.title}>
-                            <Text style={styles.titleText}>{route.title ? route.title : ' '}</Text>
-                        </View>
-                    );
-                }
+        } else {
+          return null
+        }
+      },
+      RightButton(route, navigator, index, navState) {
+        return null
 
-            }
-        };
-        // if (route.name == 'Main') {
-        //     return (
-        //         <Navigator.NavigationBar
-        //             style={[styles.navigator, {backgroundColor: 'blue',paddingTop:0,}]}
-        //             routeMapper={routeMapper}
-        //         />
-        //     );
-        // } else {
-        //     return (
-        //         <Navigator.NavigationBar
-        //             style={styles.navigator}
-        //             routeMapper={routeMapper}
-        //         />
-        //     );
-        // }
-        return (
-            <Navigator.NavigationBar
-                style={styles.navigator}
-                routeMapper={routeMapper}
-            />
-        );
-    }
-    render() {
-        let defaultName = 'LoginPage';
-        let defaultComponent = LoginPage;
-        return (
-            <Navigator
-                initialRoute={{name: defaultName, component: defaultComponent}}
-                configureScene={(route) => {
-                    return Navigator.SceneConfigs.FloatFromRight;
-                }}
-                renderScene={(route, navigator) => {
-                    let Component = route.component;
-                    return <Component {...route.params} navigator={navigator}/>
-                }}
-                navigationBar={this._renderNavBar()}
-            />
-        );
-    }
+      },
+      Title(route, navigator, index, navState) {
+        if (route.name == 'Main') {
+          return null
+        } else {
+          return (
+            <View style={styles.title}>
+              <Text style={styles.titleText}>{route.title ? route.title : ' '}</Text>
+            </View>
+          );
+        }
+
+      }
+    };
+    // if (route.name == 'Main') {
+    //     return (
+    //         <Navigator.NavigationBar
+    //             style={[styles.navigator, {backgroundColor: 'blue',paddingTop:0,}]}
+    //             routeMapper={routeMapper}
+    //         />
+    //     );
+    // } else {
+    //     return (
+    //         <Navigator.NavigationBar
+    //             style={styles.navigator}
+    //             routeMapper={routeMapper}
+    //         />
+    //     );
+    // }
+    return (
+      <Navigator.NavigationBar
+        style={styles.navigator}
+        routeMapper={routeMapper}
+      />
+    );
+  }
+
+  render() {
+    let defaultName = 'LoginPage';
+    let defaultComponent = LoginPage;
+    return (
+      <Navigator
+        initialRoute={{name: defaultName, component: defaultComponent}}
+        configureScene={(route) => {
+          return Navigator.SceneConfigs.FloatFromRight;
+        }}
+        renderScene={(route, navigator) => {
+          let Component = route.component;
+          return <Component {...route.params} navigator={navigator}/>
+        }}
+      />
+    );
+  }
 
 };
