@@ -16,7 +16,7 @@ import getFlight from './getFlight';
 import NetUtil from './NetUtil';
 import GridChild from './GridChild';
 
-class ScanComponent extends React.Component {
+export default class ScanComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -122,13 +122,17 @@ class ScanComponent extends React.Component {
       component: getFlight
     });
   }
+  showBottomDialog(value){
+    if(value=="package"){
+      return
+    }
+  }
 
   render() {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
     if (this.state.dataload) {
       return (
-
         <View style={{
           flex: 1,
           backgroundColor: '#f7f7f7',
@@ -186,7 +190,20 @@ class ScanComponent extends React.Component {
                 style={routeStyle.rTextValue}>{this.state.duration}</Text><Text
                 style={routeStyle.rTextName}>分钟</Text></Text>
             </View>
+
+            <View style={routeStyle.rItem}
+                  onPress={()=>{this.showBottomDialog.bind(this)}}
+            >
+              <Text style={routeStyle.rTextLeft}>选择货物</Text>
+              <Text style={routeStyle.rTextRight}>包裹</Text>
+            </View>
+
+            <View style={routeStyle.rItem}>
+              <Text style={routeStyle.rTextLeft}>物品重量</Text>
+              <Text style={routeStyle.rTextRight}>1公斤</Text>
+            </View>
           </View>
+          <View style={{flex: 1,}}></View>
 
           <View style={[scanStyle.gridContainer, {flex: 1,}]}>
             <Text style={scanStyle.gridTitle}>请选择货物类型(多选)</Text>
@@ -197,17 +214,16 @@ class ScanComponent extends React.Component {
                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
               <GridChild text="刊物" orderType="magzine" initialChecked={this.state.initialChecked}
                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-
-            </View>
-
-            <View style={[scanStyle.gridContent, {marginTop: -30}]}>
               <GridChild text="包裹" orderType="package" initialChecked={this.state.initialChecked}
                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+            </View>
+
+            <View style={[scanStyle.gridContent, {marginTop: -15}]}>
+
               <GridChild text="其他" orderType="other" initialChecked={this.state.initialChecked}
                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
             </View>
           </View>
-
           <TouchableOpacity style={{
             backgroundColor: '#313131',
             marginTop: 10,
@@ -226,6 +242,7 @@ class ScanComponent extends React.Component {
           }}>
             <Text style={{color: '#fff',}}>提交</Text>
           </TouchableOpacity>
+
         </View>
       )
     } else {
@@ -233,9 +250,9 @@ class ScanComponent extends React.Component {
         <Text>页面载入中</Text>
       )
     }
-
   }
 }
+
 const routeStyle = StyleSheet.create({
   rContianer: {
     flex: 1,
@@ -244,7 +261,7 @@ const routeStyle = StyleSheet.create({
   rItem: {
     flex: 1,
     paddingLeft: 18,
-    height: 44,
+    height: 34,
     paddingRight: 18,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -252,18 +269,19 @@ const routeStyle = StyleSheet.create({
     color: '#313131',
     marginBottom: 1,
     backgroundColor: '#fff',
-
   },
   rTextLeft: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    color: '#313131',
   },
   rTextRight: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'right',
+    color: '#313131',
   },
   rTextValue: {
     color: '#E98B21',
@@ -286,7 +304,14 @@ const scanStyle = StyleSheet.create({
   },
   gridContainer: {
     flex: 1,
-    marginTop: 20,
+    // marginTop: 20,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff',
+    zIndex: 9999,
+    paddingTop: 18,
   },
   gridContent: {
     flex: 1,
@@ -298,25 +323,7 @@ const scanStyle = StyleSheet.create({
   gridTitle: {
     fontSize: 16,
     color: '#313131',
-    marginBottom: 14,
+    marginBottom: 5,
     marginLeft: 16,
   },
-  gridItem: {
-    width: 72,
-    height: 36,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    backgroundColor: '#fff',
-    color: '#a09f9f',
-    marginLeft: 10,
-    marginTop: 10,
-    borderRadius: 2.4,
-    paddingTop: 8,
-  },
-  gridText: {
-    width: 72,
-    textAlign: 'center',
-  }
-
-})
-export default ScanComponent;
+});

@@ -9,12 +9,18 @@ import{
   StyleSheet,
   ListView,
   Platform,
+  RefreshControl,
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
 
 // import ListViewItem from './ListViewItem';
 import NetUtil from './NetUtil';
+const pageSize = 20;
+var pageCount = 0;
+var lastPageCount = 0;
+var pageNo = 1;
+var totalList = [];
 
 export default class OrderListView extends React.Component {
   constructor(props) {
@@ -24,12 +30,28 @@ export default class OrderListView extends React.Component {
         rowHasChanged: (row1, row2) => row1 !== row2,
       }),
       loaded: false,
+      nonedata: false,
+      isLoadingMore: false,
+      isRefreshing: false,
+      isLoadAll: false,
+      hideLoadAll: false,
     };
   }
 
+// 页面render之后请求数据
   componentDidMount() {
-    let url = "http://jieyan.xyitech.com/order/list?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9&page_no=1&page_size=20";
+    this._fetchListData(1);
+  }
+
+  _fetchListData(page) {
+    // let url = "http://jieyan.xyitech.com/order/list?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9&page_no=1&page_size=20";
     // let url = "https://raw.githubusercontent.com/facebook/react-native/master/docs/MoviesExample.json";
+    let curpageNo = page;
+    if (curpageNo == '' || !curpageNo) {
+      curpageNo = 1;
+    }
+    console.log("curpageNo is ", curpageNo);
+    let url = "http://jieyan.xyitech.com/order/search?&page_no=" + curpageNo + "&page_size=20&token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9";
     NetUtil.postJson(url, (responseText)=> {
       if (!responseText || responseText == "") {
         alert("加载中，请重新加载！")
@@ -37,90 +59,295 @@ export default class OrderListView extends React.Component {
         // let curdata = responseText;
         // console.log("默认信息是 ",responseText,'  数据类型是',typeof responseText);
         let curdata = JSON.parse(responseText);
-        console.log("返回的订单信息是  ", JSON.stringify(curdata.orders), "  数据类型是  ", typeof JSON.stringify(curdata.orders));
+        let list = curdata.msg;
+        // console.log("返回的运单信息是  ", JSON.stringify(list), "  数据类型是  ", typeof JSON.stringify(list), ' 数据长度是  ', list.length);
         if (curdata.err == '0') {
-          this.setState({
-            // dataSource: this.state.dataSource.cloneWithRows(JSON.stringify(curdata.orders)),
-            dataSource: this.state.dataSource.cloneWithRows(curdata.orders),
-            loaded: true,
-          });
+          if (curdata.msg.length == 0) {
+            console.log('数据长度是', '', curdata.msg.length);
+            this.setState({
+              nonedata: true,
+            });
+          } else {
+            for (var i = 0; i < list.length; i++) {
+              totalList.push(list[i]);
+            }
+            pageCount = totalList.length;
+            // 判断数据是否全部加载
+            if (lastPageCount < pageCount) {
+              lastPageCount = pageCount;
+              console.log("lastPageCount is ", lastPageCount);
+            } else {
+              this.setState({
+                isLoadAll: true,
+              });
+              // console.log("数据已经全部加载了哦！请先再去创建运单哦！");
+            }
+            // console.log("运单总数据是  ", JSON.stringify(totalList), "  数据类型是  ", typeof JSON.stringify(totalList), ' 数据长度是  ', totalList.length);
+
+            // 重新绑定listView数据
+            this.setState({
+              // dataSource: this.state.dataSource.cloneWithRows(curdata.msg),
+              dataSource: this.state.dataSource.cloneWithRows(totalList),
+              loaded: true,
+              isRefreshing: false,
+              isLoadingMore: false,
+            });
+            // 设置定时器，隐藏底部加载更多文字
+            this.timer = setTimeout(()=> {
+              this.setState({
+                hideLoadAll: true,
+              });
+            }, 500);
+          }
+
         } else {
-          alert("错误，请重试")
+          alert("错误，请重试");
         }
       }
     })
   }
 
-  initOrderItem(data) {
-    let curdata = data;
-    console.log("初始化的数据是 ", curdata);
-    curdata.map(function (item) {
-      return <View style={OrderListItem.container}><View style={OrderListItem.title}> <Text
-        style={OrderListItem.titleLeft}> 运单编号 {item.id} </Text><Text style={OrderListItem.titleRight}>
-        {(item)=>this.orderState(item)} </Text></View><View style={OrderListItem.content}><View
-        style={OrderListItem.Left}><Text
-        style={OrderListItem.Text}> 杭垓 </Text><Text style={OrderListItem.Text}>11月11日 </Text></View><View
-        style={OrderListItem.Image}> <Image source={require('../img/flight.png')}/> </View><View
-        style={OrderListItem.Right}> <Text style={OrderListItem.Text}>七管</Text><Text style={OrderListItem.Text}>
-        11月11日 </Text></View></View></View>
-    })
+  // 页面滑动到底部处罚事件
+  toEnd() {
+    // 判断当前是否处于刷新或加载状态
+    if (this.state.isRefreshing || this.state.isLoadingMore) {
+      return
+    } else {
+      this.loadMoreData();
+    }
+    if (this.state.isLoadAll) {
+      return
+    } else {
+      this.setState({
+        hideLoadAll: false,
+      });
+    }
   }
 
+// 加载更多数据
+  loadMoreData() {
+    this.setState({
+      isLoadingMore: true,
+    });
+    pageNo = pageCount / pageSize + 1;
+    // console.log("pageNo toEnd() --> ", pageNo);
+    this._fetchListData(pageNo + '');
+  }
+
+  // loadMoreFooter(){
+  //   if (this.state.isRefreshing || this.state.isLoadingMore) {
+  //     return null
+  //   };
+  //   if (!this.state.isLoadAll) {
+  //     //还有更多，默认显示‘正在加载更多...’
+  //     return <LoadMoreFooter />
+  //   }else{
+  //     // 加载全部
+  //     return <LoadMoreFooter isLoadAll={true}/>
+  //   }
+  // }
 
   openOrderItem() {
     alert("想先上车再买票？那你就只能想了~~~");
   }
 
-
   renderLoadingView() {
-    return (<View style={{flex: 1, marginTop: (Platform.OS === 'android' ? 66 : 74)}}>
-        <Text>Loading data......</Text>
+    return (<View style={{flex: 1,}}>
+        <View style={{
+          height: (Platform.OS === 'android' ? 42 : 50),
+          backgroundColor: '#fff',
+          flexDeriction: 'row',
+          alignItem: 'center',
+          paddingTop: 15,
+          paddingLeft: 18
+        }}>
+          <TouchableOpacity
+            style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
+            onPress={() => this.props.navigator.pop()}
+          >
+            <Image source={require('../img/ic_back.png')}/>
+          </TouchableOpacity>
+          <Text style={{textAlign: 'center'}}>我的运单</Text>
+        </View>
+        <Text
+          style={{textAlign: 'center', justifyContent: 'center'}}>{this.state.nonedata ? '没有数据' : '加载数据中......'}</Text>
       </View>
-
     );
   }
 
+// 判断运单状态
+  orderState(state) {
+    let n = state;
+    // alert(n)
+    // console.log('运单当前状态是 ', n);
+    switch (n) {
+      case 0:
+        return '未起飞';
+        break;
+      case 1:
+        return '已取消';
+        break;
+      case 2:
+        return '运送中';
+        break;
+      case 3 || 6 || 9:
+        return '异常';
+        break;
+      case 4:
+        return '已送达';
+        break;
+      case 5:
+        return '返航中';
+        break;
+      case 7:
+        return '完成';
+        break;
+      case 8:
+        return '返航中';
+        break;
+      default:
+        return '';
+    }
+  }
+
+  // 运单时间转换
+  setOrderStatusDateTime(item, type) {
+    let curstate = item.state;
+    if (curstate >= 4 && curstate != 9) {
+      if (type == "start") {
+        var curTime = item['t2'];
+      } else {
+        var curTime = item['t' + curstate];
+      }
+      // console.log('当前时间是 ', curTime, '  运单state是  ', curstate);
+
+      let unixtime = curTime * 1;
+      let unixTimestamp = new Date(unixtime * 1000 + 28800000);//东8区时间偏移量为28800000毫秒
+      // let commonTime = unixTimestamp.toLocaleString();
+      let commonTime = unixTimestamp;
+      let nYear = commonTime.getUTCFullYear();
+      let nMonth = (commonTime.getUTCMonth() + 1);
+      nMonth = nMonth < 10 ? ('0' + nMonth) : nMonth;
+      let nDay = commonTime.getUTCDate();
+      nDay = nDay < 10 ? ('0' + nDay) : nDay;
+
+      let tDate = nYear + "." + nMonth + "." + nDay;
+
+      let nHour = (commonTime.getUTCHours());
+      nHour = nHour < 10 ? ('0' + nHour) : nHour;
+      let nMinutes = commonTime.getUTCMinutes();
+      nMinutes = nMinutes < 10 ? ('0' + nMinutes) : nMinutes;
+      let nSeconds = commonTime.getUTCSeconds();
+      nSeconds = nSeconds < 10 ? ('0' + nSeconds) : nSeconds;
+
+      let tTime = nHour + ":" + nMinutes;
+
+      // let newStatusDate = nYear + "/" + nMonth + "/" + nDay + "/" + nHour + ":" + nMinutes + ":" + nSeconds;
+      return nMonth + "月" + nDay + "日" + "   (" + nHour + ":" + nMinutes + ")";
+    } else if (curstate == 2 || curstate == 3) {
+      let curTime = item['t2'];
+      // console.log('当前时间是 ', curTime, '  运单state是  ', curstate);
+
+      let unixtime = curTime * 1;
+      let unixTimestamp = new Date(unixtime * 1000 + 28800000);//东8区时间偏移量为28800000毫秒
+      // let commonTime = unixTimestamp.toLocaleString();
+      let commonTime = unixTimestamp;
+      let nYear = commonTime.getUTCFullYear();
+      let nMonth = (commonTime.getUTCMonth() + 1);
+      nMonth = nMonth < 10 ? ('0' + nMonth) : nMonth;
+      let nDay = commonTime.getUTCDate();
+      nDay = nDay < 10 ? ('0' + nDay) : nDay;
+
+      let tDate = nYear + "." + nMonth + "." + nDay;
+
+      let nHour = (commonTime.getUTCHours());
+      nHour = nHour < 10 ? ('0' + nHour) : nHour;
+      let nMinutes = commonTime.getUTCMinutes();
+      nMinutes = nMinutes < 10 ? ('0' + nMinutes) : nMinutes;
+      let nSeconds = commonTime.getUTCSeconds();
+      nSeconds = nSeconds < 10 ? ('0' + nSeconds) : nSeconds;
+      let tTime = nHour + ":" + nMinutes;
+      return nMonth + "月" + nDay + "日" + "   (" + nHour + ":" + nMinutes + ")";
+    } else {
+      return '';
+    }
+  }
+
+  // 根据运单状态更换不同图片
+  imgSource(state) {
+    let n = state;
+    if (n == 0) {
+      return require('../img/order1.png');
+    } else if (n == 2) {
+      return require('../img/order2.png');
+    }
+    else if (n == 4 || n == 7) {
+      return require('../img/order3.png');
+    } else if (n >= 5 && n != 9 && n != 10) {
+      return require('../img/order4.png');
+    } else {
+      return require('../img/order1.png');
+    }
+  }
+
+  // Listview初始化
   renderOrderList(item) {
+    var imgSource = require('../img/flight.png');
     let curitem = item;
     // curitem = JSON.stringify(curitem);
-    console.log("初始化的数据是 ", curitem, "数据类型是  ", typeof curitem);
+    // console.log("初始化的数据是 ", curitem, "数据类型是  ", typeof curitem);
     // curdata.map(function (item) {
     return (
       <TouchableOpacity onPress={()=>this.openOrderItem()}>
         <View style={OrderListItem.container}><View style={OrderListItem.title}><Text
-          style={OrderListItem.titleLeft}>运单编号{curitem.id}</Text><Text
-          style={OrderListItem.titleRight}>{(curitem)=>this.orderState(curitem)}</Text></View><View
-          style={OrderListItem.content}><View style={OrderListItem.Left}><Text style={OrderListItem.Text}>杭垓</Text><Text
-          style={OrderListItem.Text}>11月11日</Text></View><View style={OrderListItem.ImageArea}><Image
+          style={OrderListItem.titleLeft}>运单编号&nbsp;&nbsp;&nbsp;{curitem.id}</Text><Text
+          style={OrderListItem.titleRight}>{this.orderState(curitem.state)}</Text></View><View
+          style={OrderListItem.content}><View style={OrderListItem.Left}><Text
+          style={OrderListItem.Text}>{item.sname}</Text><Text
+          style={OrderListItem.Text}>{this.setOrderStatusDateTime(item, 'start')}</Text></View><View
+          style={OrderListItem.ImageArea}><Image
           style={OrderListItem.Image}
-          source={require('../img/flight.png')}/></View><View style={OrderListItem.Right}><Text
-          style={OrderListItem.Text}>七管</Text><Text
-          style={OrderListItem.Text}>11月11日</Text></View></View></View></TouchableOpacity>
+          source={this.imgSource(curitem.state)}/></View><View style={OrderListItem.Right}><Text
+          style={OrderListItem.Text}>{item.ename}</Text><Text
+          style={OrderListItem.Text}>{this.setOrderStatusDateTime(item, 'end')}</Text></View></View></View></TouchableOpacity>
     );
-
-
-    // })
-    // return (
-    //   <Text>123</Text>
-    //   <View style={styles.container}>
-    //     <Image
-    //       source={{uri: movie.posters.thumbnail}}
-    //       style={styles.thumbnail}
-    //     />
-    //     <View style={styles.rightContainer}>
-    //       <Text style={styles.title}>{movie.title}</Text>
-    //       <Text style={styles.year}>{movie.year}</Text>
-    //     </View>
-    //   </View>
-    // );
   }
 
+  // 下拉刷新运单列表
+  _onRefresh() {
+    // this.setState({isRefreshing: true});
+    this.setState({
+      isRefreshing: true,
+    });
+    setTimeout(() => {
+      this._fetchListData('1');
+      console.log('下拉刷新来不来~~~~');
+    }, 3000);
+  }
 
-  render() {
-    if (!this.state.loaded) {
-      return this.renderLoadingView();
+  // 是否显示底部文字提示
+  showOrHideFooter() {
+    if (this.state.hideLoadAll) {
+      console.log('加载更多隐藏！')
+      return null;
+    } else {
+      console.log('加载更多显示！')
+      return (
+        <View style={OrderListItem.footer}>
+          <Text style={OrderListItem.footerTitle}>{this.state.isLoadAll ? '已加载全部' : '向下滚动加载更多……'}</Text>
+        </View>
+      )
     }
 
+  }
+
+  render() {
+    if (!this.state.loaded || this.state.nonedata) {
+      return this.renderLoadingView();
+    }
+    // if (this.state.nonedata) {
+    //   return this.renderNoneData();
+    // }
     return (
       <View style={{flex: 1,}}>
         <View style={{
@@ -138,12 +365,24 @@ export default class OrderListView extends React.Component {
           >
             <Image source={require('../img/ic_back.png')}/>
           </TouchableOpacity>
-          <Text style={{textAlign: 'center'}}>运单列表</Text>
+          <Text style={{textAlign: 'center'}}>我的运单</Text>
         </View>
         <ListView
+          style={OrderListItem.listView}
           dataSource={this.state.dataSource}
           renderRow={this.renderOrderList.bind(this)}
-          style={OrderListItem.listView}
+          onEndReached={this.toEnd.bind(this)}
+          onEndReachedThreshold={20}
+          renderFooter={this.showOrHideFooter.bind(this)}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this._onRefresh.bind(this)}
+              tintColor="red"
+              colors={['#ff0000', '#00ff00', '#0000ff', '#3ad564']}
+              progressBackgroundColor="gray"
+            />
+          }
         />
       </View>
     );
@@ -172,7 +411,7 @@ const OrderListItem = StyleSheet.create({
   titleLeft: {
     flex: 1,
     color: '#A09F9F',
-    fontSize: 13,
+    fontSize: 12,
   },
   titleRight: {
     flex: 1,
@@ -185,19 +424,19 @@ const OrderListItem = StyleSheet.create({
     flexDirection: 'row',
   },
   Left: {
-    flex: 1,
+    flex: 2,
     paddingTop: 10,
     // backgroundColor: "#f01",
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
   Right: {
-    flex: 1,
+    flex: 2,
     paddingTop: 10,
     // backgroundColor: "#f12",
     alignItems: 'flex-end',
     justifyContent: 'center',
-    textAlign: "right"
+    textAlign: "right",
   },
   ImageArea: {
     flex: 1,
@@ -211,6 +450,19 @@ const OrderListItem = StyleSheet.create({
   },
   Text: {
     marginBottom: 10,
+    fontSize: 15,
+    color: '#313131',
     // backgroundColor: '#f15',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 40,
+  },
+  footerTitle: {
+    marginLeft: 10,
+    fontSize: 15,
+    color: 'gray'
   }
 });

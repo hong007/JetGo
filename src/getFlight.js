@@ -18,7 +18,7 @@ import  {
 import LeftMenuList from './LeftMenuList';
 import ChildCompontent from './ChildCompontent';
 
-class getFlight extends React.Component {
+export default class getFlight extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -291,4 +291,3 @@ const scanStyle = StyleSheet.create({
     textAlign: 'center',
   }
 });
-export default getFlight;

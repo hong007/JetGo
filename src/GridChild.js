@@ -31,8 +31,8 @@ export default class GridChild extends React.Component {
 }
 const gridStyles = StyleSheet.create({
     gridItem: {
-        width: 72,
-        height: 36,
+        width: 75,
+        height: 38,
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         backgroundColor: '#fff',
@@ -40,25 +40,27 @@ const gridStyles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 2.4,
         paddingTop: 8,
+        borderColor:'#ededed',
+        borderWidth:1,
     },
     gridItemChoosed: {
-        width: 72,
-        height: 36,
+        width: 75,
+        height: 38,
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        backgroundColor: '#e98b21',
+        backgroundColor: '#313131',
         marginLeft: 10,
         marginTop: 10,
         borderRadius: 2.4,
         paddingTop: 8,
     },
     gridText: {
-        width: 72,
+        width: 75,
         color: '#a09f9f',
         textAlign: 'center',
     },
     gridTextChoosed: {
-        width: 72,
+        width: 75,
         textAlign: 'center',
         color: '#fff',
     }
