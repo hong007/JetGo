@@ -9,6 +9,7 @@ import{
   StyleSheet,
   ListView,
   Platform,
+  AsyncStorage,
   RefreshControl,
   TouchableOpacity,
   TouchableHighlight,
@@ -16,6 +17,8 @@ import{
 
 // import ListViewItem from './ListViewItem';
 import NetUtil from './NetUtil';
+import Detail from './Detail';
+
 const pageSize = 20;
 var pageCount = 0;
 var lastPageCount = 0;
@@ -147,8 +150,15 @@ export default class OrderListView extends React.Component {
   //   }
   // }
 
-  openOrderItem() {
-    alert("想先上车再买票？那你就只能想了~~~");
+  openOrderItem(value) {
+    let id = value;
+    AsyncStorage.setItem("DETAIL_ID", id);
+    this.props.navigator.push({
+      title: 'Detail',
+      component: Detail
+    });
+    // alert("想先上车再买票？那你就只能想了~~~" + (n));
+
   }
 
   renderLoadingView() {
@@ -158,6 +168,7 @@ export default class OrderListView extends React.Component {
           backgroundColor: '#fff',
           flexDeriction: 'row',
           alignItem: 'center',
+          marginTop: 24,
           paddingTop: 15,
           paddingLeft: 18
         }}>
@@ -298,7 +309,7 @@ export default class OrderListView extends React.Component {
     // console.log("初始化的数据是 ", curitem, "数据类型是  ", typeof curitem);
     // curdata.map(function (item) {
     return (
-      <TouchableOpacity onPress={()=>this.openOrderItem()}>
+      <TouchableOpacity onPress={()=>this.openOrderItem(curitem.id)}>
         <View style={OrderListItem.container}><View style={OrderListItem.title}><Text
           style={OrderListItem.titleLeft}>运单编号&nbsp;&nbsp;&nbsp;{curitem.id}</Text><Text
           style={OrderListItem.titleRight}>{this.orderState(curitem.state)}</Text></View><View
@@ -355,6 +366,7 @@ export default class OrderListView extends React.Component {
           backgroundColor: '#fff',
           flexDeriction: 'row',
           alignItem: 'center',
+          marginTop: 24,
           paddingTop: 15,
           paddingLeft: 18
         }}>

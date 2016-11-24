@@ -19,6 +19,8 @@ import Button from './Button';
 import Main from './Main';
 import NetUtil from './NetUtil';
 
+import RealtimeOrder from './RealtimeOrder';
+
 export default class LoginPage extends Component {
     constructor(props) {
         super(props);
@@ -46,6 +48,7 @@ export default class LoginPage extends Component {
                         this.passWord = text;
                     }}/>
                     <Button name='登录' onPressCallback={()=>this.onPressCallback()}/>
+                    <Button name='test' onPressCallback={()=>this.pageJump2()}/>
                 </View>
             </View>
         )
@@ -73,6 +76,16 @@ export default class LoginPage extends Component {
                 title: '主页',
                 name: 'Main',
                 component: Main,
+            });
+        }
+    }
+    pageJump2() {
+        const {navigator} = this.props;
+        if (navigator) {
+            navigator.push({
+                title: '主页',
+                name: 'RealtimeOrder',
+                component: RealtimeOrder,
             });
         }
     }
