@@ -48,7 +48,6 @@ export default class LoginPage extends Component {
             this.passWord = text;
           }}/>
           <Button name='登录' onPressCallback={()=>this.onPressCallback()}/>
-          <Button name='test' onPressCallback={()=>this.pageJump2()}/>
         </View>
       </View>
     )
@@ -79,17 +78,19 @@ export default class LoginPage extends Component {
       });
     }
   }
+// <Button name='test' onPressCallback={()=>this.pageJump2()}/>
 
-  pageJump2() {
-    const {navigator} = this.props;
-    if (navigator) {
-      navigator.push({
-        title: '主页',
-        name: 'RealtimeOrder',
-        component: RealtimeOrder,
-      });
-    }
-  }
+
+  // pageJump2() {
+  //   const {navigator} = this.props;
+  //   if (navigator) {
+  //     navigator.push({
+  //       title: '主页',
+  //       name: 'RealtimeOrder',
+  //       component: RealtimeOrder,
+  //     });
+  //   }
+  // }
 }
 
 const LoginStyles = StyleSheet.create({

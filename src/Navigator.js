@@ -18,12 +18,15 @@ import {
 import LoginPage from './LoginPage';
 import Main from './Main';
 import OrderListView from './OrderListView';
+import HelloJetGo from './HelloJetGo';
 export default class navigator extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      defaultName: 'LoginPage',
-      defaultComponent: LoginPage,
+      defaultName: 'HelloJetGo',
+      defaultComponent: HelloJetGo,
+      // defaultName: 'LoginPage',
+      // defaultComponent: LoginPage,
     };
   }
 
