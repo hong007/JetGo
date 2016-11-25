@@ -14,10 +14,11 @@ import {
   DrawerLayoutAndroid,
   TouchableHighlight
 } from 'react-native';
-const homeImg = require('../img/home.png');
-const categoryImg = require('../img/category.png');
-const inspectionImg = require('../img/inspection.png');
-const infoImg = require('../img/info.png');
+const menu_user = require('../img/menu_user.png');
+const menu_order = require('../img/menu_order.png');
+const menu_phone = require('../img/menu_phone.png');
+const menu_lay = require('../img/menu_lay.png');
+const menu_about = require('../img/menu_about.png');
 
 
 import ScanComponent from './ScanComponent';
@@ -77,13 +78,14 @@ export default class Main extends React.Component {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
     var navigationView = (
-      <View style={{flex: 1, backgroundColor: '#1b1b1b'}}
+      <View style={{flex: 1, backgroundColor: '#1b1b1b', paddingTop: 24,}}
             onPress={()=>this.closeDrawer()}
       >
-        <LeftMenuList title='我的订单'/>
-        <LeftMenuList title='在线帮助'/>
-        <LeftMenuList title='法律条款'/>
-        <LeftMenuList title='关于捷雁'/>
+        <LeftMenuList title='犀利哥' imageSource={menu_user}/>
+        <LeftMenuList title='我的订单' imageSource={menu_order} onPress={() => this.pageJump.bind(this)}/>
+        <LeftMenuList title='在线帮助' imageSource={menu_phone}/>
+        <LeftMenuList title='法律条款' imageSource={menu_lay}/>
+        <LeftMenuList title='关于捷雁' imageSource={menu_about}/>
       </View>
     );
     return (
@@ -108,18 +110,19 @@ export default class Main extends React.Component {
           flexDirection: 'column',
           backgroundColor: '#FFF'
         }}>
+
           <View style={{
             backgroundColor: '#fff',
             height: (Platform.OS === 'android' ? 42 : 50)
           }}>
             <TouchableHighlight onPress={()=>this.openDrawer()}
-                                style={{paddingLeft: 10, paddingTop: 15,}}>
+                                style={{paddingLeft: 10, paddingTop: 15,width:34,}}>
               <Image style={{}} source={require('../img/menu.png')}/>
             </TouchableHighlight>
 
           </View>
           <TouchableOpacity
-            style={{top: 15, right: 18, position: 'absolute', }}
+            style={{top: 15, right: 18, position: 'absolute',}}
             onPress={() => this.pageJump()}
           >
             <Image source={require('../img/icon_order.png')}/>
@@ -127,6 +130,8 @@ export default class Main extends React.Component {
           <TouchableOpacity style={{flex: 1, marginTop: 60, padding: 18,}}>
             <PickerComponent refs="picker"/>
           </TouchableOpacity>
+
+          {/*<View style={{zIndex:9999,backgroundColor:'#f10'}}>*/}
           <TouchableOpacity style={{
             backgroundColor: '#313131',
             marginTop: 10,
@@ -140,11 +145,24 @@ export default class Main extends React.Component {
             fontSize: 17,
             color: '#55ACEE',
             margin: 18,
+            zIndex: 9999,
           }} onPress={()=> {
             this._openPage()
           }}>
             <Text style={{color: '#fff',}}>我要寄件</Text>
           </TouchableOpacity>
+          {/*</View>*/}
+          <Image style={{
+            zIndex: -1,
+            position: 'absolute',
+            top: 34,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            resizeMode: Image.resizeMode.contain
+          }} source={require('../img/bg.png')}>
+          </Image>
+
         </View>
       </DrawerLayoutAndroid>
     );

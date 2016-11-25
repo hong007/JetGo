@@ -15,7 +15,7 @@ import  {
 import getFlight from './getFlight';
 import NetUtil from './NetUtil';
 import GridChild from './GridChild';
-
+var Token;
 export default class ScanComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -55,11 +55,20 @@ export default class ScanComponent extends React.Component {
 
   componentDidMount() {
     let _this = this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      //TODO:错误处理
+      if (!errs) {
+        // let Token = result;
+        Token = result;
+        console.log("取得缓存中的Token是  ", Token, "  ");
+      }
+    });
+
     AsyncStorage.getItem("ROUTE_ID", function (errs, result) {
       //TODO:错误处理
       if (!errs) {
         let route_id = result;
-        let url = "http://jieyan.xyitech.com/config/route?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9&id=" + route_id;
+        let url = "http://jieyan.xyitech.com/config/route?token=" + Token + "&id=" + route_id;
         NetUtil.postJson(url, (responseText)=> {
           let curdata = JSON.parse(responseText);
           console.log("获得的单个航路信息是  ", curdata);
@@ -93,7 +102,7 @@ export default class ScanComponent extends React.Component {
         // alert("取得的AIRPORTS是" + result);
         // this.initAirPorts(result);
         let route_id = result;
-        let url = "http://jieyan.xyitech.com/order/create?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9&routeid=" + route_id + "&remark=1&fid=" + _this.fid + "&weight=1" + "&paper=1&letter=1&magzine=1&package=1&other=1";
+        let url = "http://jieyan.xyitech.com/order/create?token=" + Token + "&routeid=" + route_id + "&remark=1&fid=" + _this.fid + "&weight=1" + "&paper=1&letter=1&magzine=1&package=1&other=1";
         console.log("提交的信息是  ", url);
         if (_this.fid == "") {
           alert("飞机id不能为空");
@@ -107,7 +116,7 @@ export default class ScanComponent extends React.Component {
               let curdata = JSON.parse(responseText);
               console.log("返回的信息是  ", curdata, "  数据类型是  ", typeof curdata, "  订单id是 ", curdata.id);
               if (curdata.err == '0') {
-                console.log("存储缓存中的ORDER_ID是  ", JSON.stringify(curdata.id));
+                // console.log("存储缓存中的ORDER_ID是  ", JSON.stringify(curdata.id));
                 // AsyncStorage.setItem("ORDER_ID", JSON.stringify(curdata.id));
                 AsyncStorage.setItem("DETAIL_ID", JSON.stringify(curdata.id));
                 _this.pageJump();
@@ -192,7 +201,7 @@ export default class ScanComponent extends React.Component {
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
-              <Text style={{textAlign: 'center'}}>飞机扫码</Text>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
             </View>
             <View style={scanStyle.TextInputView}>
               <TextInput style={scanStyle.TextInput}
@@ -293,7 +302,7 @@ export default class ScanComponent extends React.Component {
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
-              <Text style={{textAlign: 'center'}}>飞机扫码</Text>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
             </View>
             <View style={scanStyle.TextInputView}>
               <TextInput style={scanStyle.TextInput}
@@ -374,7 +383,8 @@ export default class ScanComponent extends React.Component {
             </TouchableOpacity>
             <View style={scanStyle.gridContainer}>
               <Text style={scanStyle.gridTitle}>请选择货物类型(多选)</Text>
-              <Image style={{position: 'absolute', right: 18, top: 20,zIndex:999999999}} source={require('../img/close.png')}
+              <Image style={{position: 'absolute', right: 18, top: 20, zIndex: 999999999}}
+                     source={require('../img/close.png')}
                      onPress={()=> {
                        this.setState({isShowing: false})
                      }}
@@ -420,7 +430,7 @@ export default class ScanComponent extends React.Component {
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
-              <Text style={{textAlign: 'center'}}>飞机扫码</Text>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
             </View>
             <View style={scanStyle.TextInputView}>
               <TextInput style={scanStyle.TextInput}
@@ -498,7 +508,8 @@ export default class ScanComponent extends React.Component {
             </TouchableOpacity>
             <View style={scanStyle.gridContainer}>
               <Text style={scanStyle.gridTitle}>请选择货物重量</Text>
-              <Image style={{position: 'absolute', right: 18, top: 20,zIndex:999999999}} source={require('../img/close.png')}
+              <Image style={{position: 'absolute', right: 18, top: 20, zIndex: 999999999}}
+                     source={require('../img/close.png')}
                      onPress={()=> {
                        this.setState({isPackage: false})
                      }}
@@ -542,7 +553,7 @@ export default class ScanComponent extends React.Component {
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
-            <Text style={{textAlign: 'center'}}>飞机扫码</Text>
+            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
           </View>
           <Text
             style={{textAlign: 'center', justifyContent: 'center', alignItem: 'center'}}>加载数据中......</Text>
@@ -625,6 +636,6 @@ const scanStyle = StyleSheet.create({
     color: '#313131',
     marginBottom: 5,
     marginLeft: 16,
-    zIndex:-1,
+    zIndex: -1,
   },
 });

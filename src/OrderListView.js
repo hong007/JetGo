@@ -18,12 +18,15 @@ import{
 // import ListViewItem from './ListViewItem';
 import NetUtil from './NetUtil';
 import Detail from './Detail';
+import RealtimeOrder from './RealtimeOrder';
+import Main from './Main';
 
 const pageSize = 20;
 var pageCount = 0;
 var lastPageCount = 0;
-var pageNo = 1;
+var pageNo = 0;
 var totalList = [];
+var Token;
 
 export default class OrderListView extends React.Component {
   constructor(props) {
@@ -43,7 +46,16 @@ export default class OrderListView extends React.Component {
 
 // 页面render之后请求数据
   componentDidMount() {
-    this._fetchListData(1);
+    let _this = this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      //TODO:错误处理
+      if (!errs) {
+        // let Token = result;
+        Token = result;
+        console.log("取得缓存中的Token是  ", Token, "  ");
+        _this._fetchListData(0);
+      }
+    });
   }
 
   _fetchListData(page) {
@@ -51,10 +63,10 @@ export default class OrderListView extends React.Component {
     // let url = "https://raw.githubusercontent.com/facebook/react-native/master/docs/MoviesExample.json";
     let curpageNo = page;
     if (curpageNo == '' || !curpageNo) {
-      curpageNo = 1;
+      curpageNo = 0;
     }
     console.log("curpageNo is ", curpageNo);
-    let url = "http://jieyan.xyitech.com/order/search?&page_no=" + curpageNo + "&page_size=20&token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9";
+    let url = "http://jieyan.xyitech.com/order/search?&page_no=" + curpageNo + "&page_size=20&token=" + Token;
     NetUtil.postJson(url, (responseText)=> {
       if (!responseText || responseText == "") {
         alert("加载中，请重新加载！")
@@ -150,15 +162,30 @@ export default class OrderListView extends React.Component {
   //   }
   // }
 
-  openOrderItem(value) {
+  openOrderItem(value, state) {
     let id = value;
+    let curstate = state;
     AsyncStorage.setItem("DETAIL_ID", id);
-    this.props.navigator.push({
-      title: 'Detail',
-      component: Detail
-    });
+    if (curstate == 2) {
+      this.props.navigator.push({
+        title: 'RealtimeOrder',
+        component: RealtimeOrder
+      });
+    } else {
+      this.props.navigator.push({
+        title: 'Detail',
+        component: Detail
+      });
+    }
     // alert("想先上车再买票？那你就只能想了~~~" + (n));
+  }
 
+  pageJump() {
+    this.props.navigator.push({
+      // title: '',
+      name: 'Main',
+      component: Main
+    });
   }
 
   renderLoadingView() {
@@ -178,7 +205,7 @@ export default class OrderListView extends React.Component {
           >
             <Image source={require('../img/ic_back.png')}/>
           </TouchableOpacity>
-          <Text style={{textAlign: 'center'}}>我的运单</Text>
+          <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
         </View>
         <Text
           style={{textAlign: 'center', justifyContent: 'center'}}>{this.state.nonedata ? '没有数据' : '加载数据中......'}</Text>
@@ -309,7 +336,7 @@ export default class OrderListView extends React.Component {
     // console.log("初始化的数据是 ", curitem, "数据类型是  ", typeof curitem);
     // curdata.map(function (item) {
     return (
-      <TouchableOpacity onPress={()=>this.openOrderItem(curitem.id)}>
+      <TouchableOpacity onPress={()=>this.openOrderItem(curitem.id, curitem.state)}>
         <View style={OrderListItem.container}><View style={OrderListItem.title}><Text
           style={OrderListItem.titleLeft}>运单编号&nbsp;&nbsp;&nbsp;{curitem.id}</Text><Text
           style={OrderListItem.titleRight}>{this.orderState(curitem.state)}</Text></View><View
@@ -372,12 +399,11 @@ export default class OrderListView extends React.Component {
         }}>
           <TouchableOpacity
             style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-
-            onPress={() => this.props.navigator.pop()}
+            onPress={() => this.pageJump()}
           >
             <Image source={require('../img/ic_back.png')}/>
           </TouchableOpacity>
-          <Text style={{textAlign: 'center'}}>我的运单</Text>
+          <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
         </View>
         <ListView
           style={OrderListItem.listView}

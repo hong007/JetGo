@@ -28,21 +28,29 @@ class PickerComponent extends React.Component {
 
   componentDidMount() {
     // let url = "http://jieyan.xyitech.com/config/allroute?token=" + token;
-    let url = "http://jieyan.xyitech.com/spoint/search?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9";
-    NetUtil.postJson(url, (responseText)=> {
-      let curdata = JSON.parse(responseText);
-      if (curdata.err == '0') {
-        let airports = JSON.stringify(curdata.msg);
-        airports = JSON.parse(airports);
-        console.log('airports list is ', airports);
-        this.setState({
-          airports_status: true,
-          airportsData: airports,
+    let _this = this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      //TODO:错误处理
+      if (!errs) {
+        let Token = result;
+        console.log("取得缓存中的Token是  ", Token, "  ");
+        let url = "http://jieyan.xyitech.com/spoint/search?token=" + Token;
+        NetUtil.postJson(url, (responseText)=> {
+          let curdata = JSON.parse(responseText);
+          if (curdata.err == '0') {
+            let airports = JSON.stringify(curdata.msg);
+            airports = JSON.parse(airports);
+            console.log('airports list is ', airports);
+            _this.setState({
+              airports_status: true,
+              airportsData: airports,
+            });
+          } else {
+            alert("获取航路失败请重试");
+          }
         });
-      } else {
-        alert("获取航路失败请重试");
       }
-    });
+    })
   }
 
   chooseAirPorts(value) {
@@ -51,24 +59,32 @@ class PickerComponent extends React.Component {
       start_airports_load: false,
     });
     console.log("取得的站点id是", value);
-    let url = "http://jieyan.xyitech.com/route/search?sid=" + value + "&token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9";
-    NetUtil.postJson(url, (responseText)=> {
-      let curdata = JSON.parse(responseText);
-      if (curdata.err == '0') {
-        let routes = JSON.stringify(curdata.msg);
-        routes = JSON.parse(routes);
-        console.log('routes list is ', routes,'  ',typeof routes);
-        if (routes.length > 0) {
-          this.setState({
-            start_airports_load: true,
-            airportsEndData: routes
-          });
-        } else {
-          alert("该站点有误，请重试")
-        }
+    let _this = this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      //TODO:错误处理
+      if (!errs) {
+        let Token = result;
+        console.log("取得缓存中的Token是  ", Token, "  ");
+        let url = "http://jieyan.xyitech.com/route/search?sid=" + value + "&token=" + Token;
+        NetUtil.postJson(url, (responseText)=> {
+          let curdata = JSON.parse(responseText);
+          if (curdata.err == '0') {
+            let routes = JSON.stringify(curdata.msg);
+            routes = JSON.parse(routes);
+            console.log('routes list is ', routes, '  ', typeof routes);
+            if (routes.length > 0) {
+              _this.setState({
+                start_airports_load: true,
+                airportsEndData: routes
+              });
+            } else {
+              alert("该站点有误，请重试")
+            }
 
-      } else {
-        alert("获取航路失败请重试");
+          } else {
+            alert("获取航路失败请重试");
+          }
+        });
       }
     });
   }
@@ -96,10 +112,10 @@ class PickerComponent extends React.Component {
     if (!this.state.airports_status) {
       // console.log('页面未获得数据初始化');
       return (
-        <View>
+        <View style={{backgroundColor: '#fff', zIndex: 99999}}>
           <Picker
             mode={'dropdown'}
-            style={{marginTop: 40,}}
+            style={{borderBottomColor: '#f2f2f2', borderBottomWidth: 1,}}
             selectedValue={this.state.pickerValue}
             onValueChange={(value) => this.chooseAirPorts(value)}>
             <Picker.Item label="请选择" value="请选择" aid=""/>
@@ -119,10 +135,10 @@ class PickerComponent extends React.Component {
       // console.log('页面获得数据后再次初始化');
       if (this.state.start_airports_load) {
         return (
-          <View>
+          <View style={{backgroundColor: '#fff', zIndex: 99999,}}>
             <Picker
               mode={'dropdown'}
-              style={{marginTop: 40,}}
+              style={{borderBottomColor: '#f2f2f2', borderBottomWidth: 1,}}
               selectedValue={this.state.pickerValue}
               onValueChange={(value) => this.chooseAirPorts(value)}>
               {this.state.airportsData.map((n)=>this.initStartAirports(n))}
@@ -140,10 +156,10 @@ class PickerComponent extends React.Component {
         );
       } else {
         return (
-          <View>
+          <View style={{backgroundColor: '#fff', zIndex: 99999,}}>
             <Picker
               mode={'dropdown'}
-              style={{marginTop: 40,}}
+              style={{borderBottomColor: '#f2f2f2', borderBottomWidth: 1,}}
               selectedValue={this.state.pickerValue}
               onValueChange={(value) => this.chooseAirPorts(value)}>
               {this.state.airportsData.map((n)=>this.initStartAirports(n))}
@@ -164,4 +180,5 @@ class PickerComponent extends React.Component {
 
   }
 }
+
 export default PickerComponent;

@@ -148,7 +148,7 @@ export default class navigator extends Component {
   render() {
     let defaultName = this.state.defaultName;
     let defaultComponent = this.state.defaultComponent;
-    console.log("defaultName is ",defaultName,'  defaultComponent is',defaultComponent)
+    // console.log("defaultName is ",defaultName,'  defaultComponent is',defaultComponent)
     return (
       <Navigator
         initialRoute={{name: defaultName, component: defaultComponent}}

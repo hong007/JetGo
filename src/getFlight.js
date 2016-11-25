@@ -11,6 +11,7 @@ import  {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Alert,
   Platform,
   Switch,
   AsyncStorage,
@@ -18,6 +19,9 @@ import  {
 import LeftMenuList from './LeftMenuList';
 import NetUtil from './NetUtil';
 import SwitchComp from './SwitchComp';
+import Main from './Main';
+import RealtimeOrder from './RealtimeOrder';
+var Token;
 
 export default class getFlight extends React.Component {
   constructor(props) {
@@ -33,6 +37,14 @@ export default class getFlight extends React.Component {
 
   componentDidMount() {
     let _this = this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      //TODO:错误处理
+      if (!errs) {
+        // let Token = result;
+        Token = result;
+        console.log("取得缓存中的Token是  ", Token, "  ");
+      }
+    });
     AsyncStorage.getItem("DETAIL_ID", function (errs, result) {
       //TODO:错误处理
       if (!errs) {
@@ -42,6 +54,7 @@ export default class getFlight extends React.Component {
         // });
         _this.getOrderDetail(curfid);
         console.log("取得缓存中的order_detail_id是  ", curfid, "  ");
+
       }
     });
   }
@@ -49,7 +62,7 @@ export default class getFlight extends React.Component {
   getOrderDetail(id) {
     let _this = this;
     let curId = id;
-    let url = "http://jieyan.xyitech.com/order/detail?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9&id=" + curId;
+    let url = "http://jieyan.xyitech.com/order/detail?token=" + Token + "&id=" + curId;
     NetUtil.postJson(url, (responseText)=> {
       let curdata = JSON.parse(responseText);
       console.log('取得的运单详情是 ', curdata);
@@ -155,9 +168,46 @@ export default class getFlight extends React.Component {
     });
   }
 
-  _openPage() {
+  CreateOrder() {
     if (this.state.totalChecked == 4) {
-      alert('飞机起飞');
+      // alert('飞机起飞');
+      let _this = this;
+      let curId = this.state.detailData.order.id;
+      let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
+      NetUtil.postJson(url, (responseText)=> {
+        let curdata = JSON.parse(responseText);
+        console.log('发送起飞指令返回数据 ', curdata);
+        if (curdata.err == '0') {
+          if (curdata.state != 2) {
+            Alert.alert(
+              '温馨提示',
+              '起飞失败，请重试，或联系客服！',
+              [
+                {text: '确定',}
+              ]
+            );
+          } else {
+            console.log('起飞成功后 ', curdata);
+            Alert.alert(
+              '温馨提示',
+              '起飞成功',
+              [
+                {text: '确定', onPress: ()=>this.pageJump('order')}
+              ]
+            );
+          }
+        } else {
+          Alert.alert(
+            '温馨提示',
+            '起飞故障，请联系客服！',
+            [
+              {text: '确定',}
+            ]
+          );
+          // alert("起飞失败，请重试，或联系客服！");
+        }
+      });
+
     } else {
       alert('你想飞？必须全部点中哦😯！');
     }
@@ -165,6 +215,23 @@ export default class getFlight extends React.Component {
     //     title: 'LeftMenuList',
     //     component: LeftMenuList
     // })
+  }
+
+  pageJump(value) {
+    let n = value;
+    if (n == "order") {
+      this.props.navigator.push({
+        title: '实时运单',
+        name: 'RealtimeOrder',
+        component: RealtimeOrder
+      });
+    } else {
+      this.props.navigator.push({
+        // title: '',
+        name: 'Main',
+        component: Main
+      });
+    }
   }
 
   render() {
@@ -186,11 +253,11 @@ export default class getFlight extends React.Component {
             <TouchableOpacity
               style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
 
-              onPress={() => this.props.navigator.pop()}
+              onPress={() => this.pageJump()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
-            <Text style={{textAlign: 'center'}}>飞机起飞</Text>
+            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
           </View>
           <View style={routeStyle.rContianer}>
             <View style={[routeStyle.rItem, {marginBottom: 1, height: 50}]}>
@@ -201,15 +268,18 @@ export default class getFlight extends React.Component {
 
               <View style={{height: 95, flex: 3, flexDirection: 'column'}}>
                 <View style={[routeStyle.rItem, {height: 20}]}>
-                  <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.fid}</Text>
-                  <Text style={routeStyle.rTextRight}><Text style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
+                  <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
+                  <Text style={routeStyle.rTextRight}><Text
+                    style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>公里</Text></Text>
                 </View>
                 <View style={[routeStyle.rItem, {height: 16}]}>
+                  <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
                 </View>
 
                 <View style={[routeStyle.rItem, {height: 16}]}>
+                  <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
                   <Text style={routeStyle.rTextRight}><Text
                     style={[routeStyle.rTextValue, {fontSize: 22}]}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
@@ -221,15 +291,15 @@ export default class getFlight extends React.Component {
             {/*<Text style={scanStyle.gridTitle}>How many are checked:{this.state.totalChecked}</Text>*/}
             <Text style={scanStyle.gridTitle}>飞前准备</Text>
             <SwitchComp text='货物已装载完成'
-                             initialChecked={this.state.initialChecked}
-                             callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                        initialChecked={this.state.initialChecked}
+                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
             <SwitchComp text='电池已安装完成'
-                             initialChecked={this.state.initialChecked}
-                             callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                        initialChecked={this.state.initialChecked}
+                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
             <SwitchComp text='放置起降区中心' initialChecked={this.state.initialChecked}
-                             callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
             <SwitchComp text='起降区无人进入' initialChecked={this.state.initialChecked}
-                             callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
 
           </View>
           <View style={{alignItems: 'center'}}>
@@ -245,7 +315,7 @@ export default class getFlight extends React.Component {
               alignItems: 'center',
               fontSize: 22,
               color: '#fff',
-            }} onPress={this._openPage.bind(this)}>
+            }} onPress={this.CreateOrder.bind(this)}>
               <Text style={{color: '#fff',}}>起飞</Text>
             </TouchableOpacity>
             <Text style={{
@@ -272,11 +342,11 @@ export default class getFlight extends React.Component {
           }}>
             <TouchableOpacity
               style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-              onPress={() => this.props.navigator.pop()}
+              onLongPress={() => this.pageJump()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
-            <Text style={{textAlign: 'center'}}>运单详情</Text>
+            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
           </View>
           <Text
             style={{textAlign: 'center', justifyContent: 'center', alignItem: 'center'}}>加载数据中......</Text>

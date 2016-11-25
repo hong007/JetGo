@@ -16,9 +16,13 @@ import  {
   Image,
   Platform,
   Switch,
+  Alert,
   AsyncStorage,
 } from 'react-native';
 import NetUtil from './NetUtil';
+import OrderListView from './OrderListView';
+import getFlight from './getFlight';
+var Token;
 export default class Detail extends React.Component {
   constructor(props) {
     super(props);
@@ -31,6 +35,14 @@ export default class Detail extends React.Component {
 
   componentDidMount() {
     let _this = this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      //TODO:错误处理
+      if (!errs) {
+        // let Token = result;
+        Token = result;
+        console.log("取得缓存中的Token是  ", Token, "  ");
+      }
+    });
     AsyncStorage.getItem("DETAIL_ID", function (errs, result) {
       //TODO:错误处理
       if (!errs) {
@@ -43,21 +55,22 @@ export default class Detail extends React.Component {
       }
     });
   }
+
   openOrderItem() {
     // let id = value;
     // AsyncStorage.setItem("DETAIL_ID", id);
-    // this.props.navigator.push({
-    //   title: 'Detail',
-    //   component: Detail
-    // });
-    alert("想先上车再买票？那你就只能想了~~~");
+    this.props.navigator.push({
+      title: 'getFlight',
+      component: getFlight
+    });
+    // alert("想先上车再买票？那你就只能想了~~~");
 
   }
 
   getOrderDetail(id) {
     let _this = this;
     let curId = id;
-    let url = "http://jieyan.xyitech.com/order/detail?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9&id=" + curId;
+    let url = "http://jieyan.xyitech.com/order/detail?token=" + Token + "&id=" + curId;
     NetUtil.postJson(url, (responseText)=> {
       let curdata = JSON.parse(responseText);
       console.log('取得的运单详情是 ', curdata);
@@ -148,6 +161,40 @@ export default class Detail extends React.Component {
     }
   }
 
+  pageJump() {
+    this.props.navigator.push({
+      // title: '',
+      name: 'OrderListView',
+      component: OrderListView
+    });
+  }
+
+  orderCansle() {
+    Alert.alert(
+      '温馨提示',
+      '您确定要取消运单吗？',
+      [
+        {text: '取消', onPress: () => console.log('Cancel Pressed!')},
+        {text: '确定', onPress: ()=>this.confirmOrderCansel()}
+      ]
+    );
+  }
+
+  confirmOrderCansel() {
+    let _this = this;
+    let curId = this.state.detailData.order.id;
+    let url = "http://jieyan.xyitech.com/order/update?token=" + Token + "&id=" + curId + "&state=1";
+    NetUtil.postJson(url, (responseText)=> {
+      let curdata = JSON.parse(responseText);
+      console.log('返回数据是 ', curdata);
+      if (curdata.err == '0') {
+        this.pageJump();
+      } else {
+        alert("暂时无法取消，请重试！");
+      }
+    });
+  }
+
   render() {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
@@ -166,11 +213,14 @@ export default class Detail extends React.Component {
             }}>
               <TouchableOpacity
                 style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-                onPress={() => this.props.navigator.pop()}
+                onPress={() => this.pageJump()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
-              <Text style={{textAlign: 'center'}}>运单详情</Text>
+              <Text style={{flex: 1, textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+              <Text style={{top: 18, right: 18, position: 'absolute', zIndex: 99999999, color: '#313131'}}
+
+                    onPress={()=>{this.orderCansle()}}>取消运单</Text>
             </View>
             <View style={routeStyle.rContianer}>
               <View style={[routeStyle.rItem, {marginBottom: 15}]}>
@@ -254,11 +304,11 @@ export default class Detail extends React.Component {
             }}>
               <TouchableOpacity
                 style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-                onPress={() => this.props.navigator.pop()}
+                onPress={() => this.pageJump()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
-              <Text style={{textAlign: 'center'}}>运单详情</Text>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
             </View>
             <View style={routeStyle.rContianer}>
               <View style={[routeStyle.rItem, {marginBottom: 15}]}>
@@ -351,11 +401,11 @@ export default class Detail extends React.Component {
           }}>
             <TouchableOpacity
               style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-              onPress={() => this.props.navigator.pop()}
+              onPress={() => this.pageJump()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
-            <Text style={{textAlign: 'center'}}>运单详情</Text>
+            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
           </View>
           <Text
             style={{textAlign: 'center', justifyContent: 'center', alignItem: 'center'}}>加载数据中......</Text>
