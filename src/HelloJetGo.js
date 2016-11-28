@@ -9,10 +9,13 @@ import {
   View,
   ViewPagerAndroid,
   Image,
+  AsyncStorage,
   ToastAndroid,
   TouchableHighlight,
 } from 'react-native';
 import LoginPage from './LoginPage';
+import Main from './Main';
+
 export default class HelloJetGo extends React.Component {
   constructor(props) {
     super(props);
@@ -29,10 +32,27 @@ export default class HelloJetGo extends React.Component {
     ToastAndroid.show('CurrentPage: ' + e.nativeEvent.position, ToastAndroid.SHORT);
   }
   pageJump() {
-    this.props.navigator.push({
-      name: 'LoginPage',
-      component: LoginPage
-    });
+    let _this=this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      if (!errs) {
+        const TOKEN = result;
+        // _this.setState({
+        //   defaultName: 'Main',
+        //   defaultComponent: Main,
+        // })
+        _this.props.navigator.push({
+          name: 'Main',
+          component: Main
+        });
+        console.log("取得的Token 是", TOKEN);
+      }else{
+        _this.props.navigator.push({
+          name: 'LoginPage',
+          component: LoginPage
+        });
+        console.log('LOGIN_TOKEN 不存在，请重新登录')
+      }
+    })
   }
 
   render() {

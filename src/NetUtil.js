@@ -2,14 +2,18 @@
  * Created by hongty on 2016/11/15.
  */
 let NetUtil = {
-    postJson(url, callback){
-        fetch(url, callback)
-            .then((response) => response.text())
-            .then((responseText) => {
-                //  callback(JSON.parse(responseText));
-                callback(responseText);
-            }).done();
-    },
+  postJson(url, callback){
+    fetch(url, callback)
+      .then((response) => response.text())
+      .then((responseText) => {
+        //  callback(JSON.parse(responseText));
+        callback(responseText);
+      })
+      .catch((err)=> {
+        console.error(err);
+        alert("请求超时，请重试");
+      }).done();
+  },
 
 // postJson(url, data, callback){
 //     var fetchOptions = {

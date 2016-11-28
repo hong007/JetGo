@@ -152,7 +152,7 @@ export default class ScanComponent extends React.Component {
         if (pWeight == '') {
           pWeight = 1;
         }
-        let url = "http://jieyan.xyitech.com/order/create?token=" + Token + "&routeid=" + route_id + "&remark=1&fid=" + _this.fid + "&weight=1" + "&paper=1&letter=1&magzine=1&package=1&other=1";
+        let url = "http://jieyan.xyitech.coms/order/creatde?token=" + Token + "&routeid=" + route_id + "&remark=1&fid=" + _this.fid + "&weight=1" + "&paper=1&letter=1&magzine=1&package=1&other=1";
         console.log("提交的信息是  ", url);
         if (_this.fid == "") {
           alert("飞机id不能为空");
