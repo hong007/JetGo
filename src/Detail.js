@@ -85,7 +85,7 @@ export default class Detail extends React.Component {
           })
         }
         // AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
-        // this.pageJump();
+        // this._onBack();
       } else {
         // alert("用户名或密码错误，请重试");
       }
@@ -161,12 +161,16 @@ export default class Detail extends React.Component {
     }
   }
 
-  pageJump() {
-    this.props.navigator.push({
-      // title: '',
-      name: 'OrderListView',
-      component: OrderListView
-    });
+  _onBack() {
+    // this.props.navigator.push({
+    //   // title: '',
+    //   name: 'OrderListView',
+    //   component: OrderListView
+    // });
+    const {navigator} = this.props;
+    if (navigator) {
+      navigator.pop();
+    }
   }
 
   orderCansle() {
@@ -188,7 +192,7 @@ export default class Detail extends React.Component {
       let curdata = JSON.parse(responseText);
       console.log('返回数据是 ', curdata);
       if (curdata.err == '0') {
-        this.pageJump();
+        this._onBack();
       } else {
         alert("暂时无法取消，请重试！");
       }
@@ -213,14 +217,16 @@ export default class Detail extends React.Component {
             }}>
               <TouchableOpacity
                 style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-                onPress={() => this.pageJump()}
+                onPress={() => this._onBack()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
               <Text style={{flex: 1, textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
               <Text style={{top: 18, right: 18, position: 'absolute', zIndex: 99999999, color: '#313131'}}
 
-                    onPress={()=>{this.orderCansle()}}>取消运单</Text>
+                    onPress={()=> {
+                      this.orderCansle()
+                    }}>取消运单</Text>
             </View>
             <View style={routeStyle.rContianer}>
               <View style={[routeStyle.rItem, {marginBottom: 15}]}>
@@ -304,7 +310,7 @@ export default class Detail extends React.Component {
             }}>
               <TouchableOpacity
                 style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-                onPress={() => this.pageJump()}
+                onPress={() => this._onBack()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
@@ -359,6 +365,8 @@ export default class Detail extends React.Component {
               </View>
               <View style={routeStyle.content}>
                 <View style={routeStyle.ImageArea}>
+                  <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
+
                   <Image style={routeStyle.Image1} source={require('../img/detail02.png')}/>
                   <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                 </View>
@@ -372,6 +380,8 @@ export default class Detail extends React.Component {
               </View>
               <View style={routeStyle.content}>
                 <View style={routeStyle.ImageArea}>
+                  <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
+
                   <Image style={routeStyle.Image1} source={require('../img/detail02.png')}/>
                   <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                 </View>
@@ -401,14 +411,15 @@ export default class Detail extends React.Component {
           }}>
             <TouchableOpacity
               style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-              onPress={() => this.pageJump()}
+              onPress={() => this._onBack()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
           </View>
-          <Text
-            style={{textAlign: 'center', justifyContent: 'center', alignItem: 'center'}}>加载数据中......</Text>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <Text>加载数据中......</Text>
+          </View>
         </View>
       )
     }

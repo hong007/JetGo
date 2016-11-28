@@ -69,7 +69,7 @@ export default class OrderListView extends React.Component {
     let url = "http://jieyan.xyitech.com/order/search?&page_no=" + curpageNo + "&page_size=20&token=" + Token;
     NetUtil.postJson(url, (responseText)=> {
       if (!responseText || responseText == "") {
-        alert("加载中，请重新加载！")
+        // alert("加载中，请重新加载！")
       } else {
         // let curdata = responseText;
         // console.log("默认信息是 ",responseText,'  数据类型是',typeof responseText);
@@ -116,7 +116,7 @@ export default class OrderListView extends React.Component {
           }
 
         } else {
-          alert("错误，请重试");
+          // alert("错误，请重试");
         }
       }
     })
@@ -180,12 +180,16 @@ export default class OrderListView extends React.Component {
     // alert("想先上车再买票？那你就只能想了~~~" + (n));
   }
 
-  pageJump() {
-    this.props.navigator.push({
-      // title: '',
-      name: 'Main',
-      component: Main
-    });
+  _onBack() {
+    // this.props.navigator.push({
+    //   // title: '',
+    //   name: 'Main',
+    //   component: Main
+    // });
+    const {navigator} = this.props;
+    if (navigator) {
+      navigator.pop();
+    }
   }
 
   renderLoadingView() {
@@ -207,8 +211,9 @@ export default class OrderListView extends React.Component {
           </TouchableOpacity>
           <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
         </View>
-        <Text
-          style={{textAlign: 'center', justifyContent: 'center'}}>{this.state.nonedata ? '没有数据' : '加载数据中......'}</Text>
+        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+          <Text>{this.state.nonedata ? '没有数据' : '加载数据中......'}</Text>
+        </View>
       </View>
     );
   }
@@ -399,7 +404,7 @@ export default class OrderListView extends React.Component {
         }}>
           <TouchableOpacity
             style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-            onPress={() => this.pageJump()}
+            onPress={() => this._onBack()}
           >
             <Image source={require('../img/ic_back.png')}/>
           </TouchableOpacity>

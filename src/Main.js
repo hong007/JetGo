@@ -9,6 +9,8 @@ import {
   Text,
   Image,
   Platform,
+  Dimensions,
+  ToastAndroid,
   AsyncStorage,
   TouchableOpacity,
   DrawerLayoutAndroid,
@@ -43,6 +45,13 @@ export default class Main extends React.Component {
     if (navigator) {
       navigator.pop();
     }
+  }
+
+  componentDidMount() {
+    this.setState({
+      loginStatus: false,
+    });
+    ToastAndroid.show('登录成功', ToastAndroid.SHORT);
   }
 
   pageJump() {
@@ -116,7 +125,7 @@ export default class Main extends React.Component {
             height: (Platform.OS === 'android' ? 42 : 50)
           }}>
             <TouchableHighlight onPress={()=>this.openDrawer()}
-                                style={{paddingLeft: 10, paddingTop: 15,width:34,}}>
+                                style={{paddingLeft: 10, paddingTop: 15, width: 34,}}>
               <Image style={{}} source={require('../img/menu.png')}/>
             </TouchableHighlight>
 
@@ -127,9 +136,9 @@ export default class Main extends React.Component {
           >
             <Image source={require('../img/icon_order.png')}/>
           </TouchableOpacity>
-          <TouchableOpacity style={{flex: 1, marginTop: 60, padding: 18,}}>
+          <View style={{flex: 1, marginTop: 60, padding: 18,}}>
             <PickerComponent refs="picker"/>
-          </TouchableOpacity>
+          </View>
 
           {/*<View style={{zIndex:9999,backgroundColor:'#f10'}}>*/}
           <TouchableOpacity style={{
@@ -159,7 +168,8 @@ export default class Main extends React.Component {
             left: 0,
             right: 0,
             bottom: 0,
-            resizeMode: Image.resizeMode.contain
+            width:Dimensions.get('window').width,
+            height:Dimensions.get('window').height,
           }} source={require('../img/bg.png')}>
           </Image>
 

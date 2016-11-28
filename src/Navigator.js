@@ -19,6 +19,7 @@ import LoginPage from './LoginPage';
 import Main from './Main';
 import OrderListView from './OrderListView';
 import HelloJetGo from './HelloJetGo';
+// import PushyReact from './PushyReact';
 export default class navigator extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +28,8 @@ export default class navigator extends Component {
       defaultComponent: HelloJetGo,
       // defaultName: 'LoginPage',
       // defaultComponent: LoginPage,
+      // defaultName: 'PushyReact',
+      // defaultComponent: PushyReact,
     };
   }
 

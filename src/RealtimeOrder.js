@@ -14,9 +14,12 @@ import  {
   Alert,
   Platform,
   AsyncStorage,
+  ProgressBarAndroid,
 } from 'react-native';
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
+import LoadingViewProgress from './LoadingViewProgress';
+
 var Token;
 
 export default class getFlight extends React.Component {
@@ -364,8 +367,10 @@ export default class getFlight extends React.Component {
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
           </View>
-          <Text
-            style={{textAlign: 'center', justifyContent: 'center', alignItem: 'center'}}>加载数据中......</Text>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <Text
+              style={{textAlign: 'center', justifyContent: 'center', alignItem: 'center'}}>加载数据中......</Text>
+          </View>
         </View>
       )
     }

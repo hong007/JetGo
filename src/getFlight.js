@@ -348,8 +348,9 @@ export default class getFlight extends React.Component {
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
           </View>
-          <Text
-            style={{textAlign: 'center', justifyContent: 'center', alignItem: 'center'}}>加载数据中......</Text>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <Text>加载数据中......</Text>
+          </View>
         </View>
       )
     }

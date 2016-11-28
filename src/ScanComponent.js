@@ -144,13 +144,13 @@ export default class ScanComponent extends React.Component {
         // alert("取得的AIRPORTS是" + result);
         // this.initAirPorts(result);
         let route_id = result;
-        let pWeight=_this.state.packageWeight;
+        let pWeight = _this.state.packageWeight;
         // if(typeof pWeight!="number"){
         //   alert("重量必须为数字");
         //   return false;
         // }
-        if(pWeight==''){
-          pWeight=1;
+        if (pWeight == '') {
+          pWeight = 1;
         }
         let url = "http://jieyan.xyitech.com/order/create?token=" + Token + "&routeid=" + route_id + "&remark=1&fid=" + _this.fid + "&weight=1" + "&paper=1&letter=1&magzine=1&package=1&other=1";
         console.log("提交的信息是  ", url);
@@ -179,11 +179,13 @@ export default class ScanComponent extends React.Component {
       }
     });
   }
-  _textInputFocus(){
+
+  _textInputFocus() {
     this.setState({
-      isPackageType:false,
+      isPackageType: false,
     })
   }
+
   pageJump() {
     this.props.navigator.push({
       title: '飞机起飞',
@@ -305,11 +307,13 @@ export default class ScanComponent extends React.Component {
 
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>物品重量</Text>
-                <TextInput style={[scanStyle.TextInput, {marginRight: 10, width: 60}]}
+                <TextInput style={[scanStyle.TextInput, {marginRight: 10, width: 60,textAlign:'right'}]}
                            underlineColorAndroid='transparent'
                            placeholder='1kg'
                            onFocus={
-                             ()=>{this._textInputFocus()}
+                             ()=> {
+                               this._textInputFocus()
+                             }
                            }
                            onChangeText={
                              (packageWeight) => {
@@ -415,11 +419,13 @@ export default class ScanComponent extends React.Component {
 
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>物品重量</Text>
-                <TextInput style={[scanStyle.TextInput, {width: 60,textAlign:'right'}]}
+                <TextInput style={[scanStyle.TextInput, {width: 60, textAlign: 'right'}]}
                            underlineColorAndroid='transparent'
                            placeholder='1kg'
                            onFocus={
-                             ()=>{this._textInputFocus()}
+                             ()=> {
+                               this._textInputFocus()
+                             }
                            }
                            onChangeText={
                              (packageWeight) => {
@@ -497,8 +503,9 @@ export default class ScanComponent extends React.Component {
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
           </View>
-          <Text
-            style={{textAlign: 'center', justifyContent: 'center', alignItem: 'center'}}>加载数据中......</Text>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <Text>加载数据中......</Text>
+          </View>
         </View>
       )
     }

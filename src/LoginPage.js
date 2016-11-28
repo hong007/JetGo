@@ -12,29 +12,55 @@ import {
   TextInput,
   Platform,
   AsyncStorage,
+  ProgressBarAndroid,
   TouchableOpacity
 } from 'react-native';
 import EditView from './EditView';
 import Button from './Button';
 import Main from './Main';
 import NetUtil from './NetUtil';
+import LoadingViewProgress from './LoadingViewProgress';
+// import LoadingView from './LoadingView';
 
-import RealtimeOrder from './RealtimeOrder';
+
+// import RealtimeOrder from './RealtimeOrder';
 
 export default class LoginPage extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showLoading: false,
+    };
     this.userName = "";
     this.password = "";
+
   }
+
 
   openDrawer() {
     this.refs.drawerLayout.openDrawer()
   }
 
+  // _showLoading() {
+  //   this.setState({
+  //     showLoading: true
+  //   })
+  // }
+  //
+  // _closeLoading() {
+  //   this.setState({
+  //     showLoading: false
+  //   })
+  // }
+
   render() {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
+    if (this.state.loginStatus) {
+      return (
+          <LoadingViewProgress/>
+      )
+    }
     return (
       <View style={LoginStyles.loginview}>
         <Text style={{fontSize: 22, color: '#fff',}}>用户登录</Text>
@@ -55,14 +81,28 @@ export default class LoginPage extends Component {
 
   onPressCallback() {
     // this.pageJump();
+
+    let _this = this;
+    this.setState({
+      loginStatus: true,
+    });
     let url = "http://jieyan.xyitech.com/login/?username=" + this.userName + "&password=" + this.passWord;
+
     NetUtil.postJson(url, (responseText)=> {
       let curdata = JSON.parse(responseText);
       if (curdata.err == '0') {
         AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
-        this.pageJump();
+        this.timer = setTimeout(
+          ()=> {
+            _this.pageJump();
+          },
+          300
+        );
       } else {
-        alert("用户名或密码错误，请重试")
+        this.setState({
+          loginStatus: false,
+        });
+        alert("用户名或密码错误，请重试");
       }
     });
   };
@@ -78,6 +118,7 @@ export default class LoginPage extends Component {
       });
     }
   }
+
 // <Button name='test' onPressCallback={()=>this.pageJump2()}/>
 
 
@@ -99,5 +140,6 @@ const LoginStyles = StyleSheet.create({
     padding: 30,
     paddingTop: (Platform.OS === 'android' ? 102 : 110),
     backgroundColor: '#313131',
+    zIndex:-1,
   },
 });
