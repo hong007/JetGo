@@ -28,6 +28,8 @@ export default class navigator extends Component {
       defaultComponent: HelloJetGo,
       // defaultName: 'LoginPage',
       // defaultComponent: LoginPage,
+      // defaultName: 'Main',
+      // defaultComponent: Main,
       // defaultName: 'PushyReact',
       // defaultComponent: PushyReact,
     };
@@ -37,13 +39,20 @@ export default class navigator extends Component {
     let _this=this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       if (!errs) {
-        const TOKEN = result;
-        _this.setState({
-          defaultName: 'Main',
-          defaultComponent: Main,
-        })
+        let TOKEN = result;
+        // alert(TOKEN);
+        if(TOKEN!=''){
+          _this.setState({
+            defaultName: 'Main',
+            defaultComponent: Main,
+          })
+        }
         console.log("取得的Token 是", TOKEN);
       }else{
+        _this.setState({
+          defaultName: 'LoginPage',
+          defaultComponent: LoginPage,
+        })
         console.log('LOGIN_TOKEN 不存在，请重新登录')
       }
     })

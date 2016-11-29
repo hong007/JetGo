@@ -271,10 +271,10 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
+              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
               onPress={() => this.pageJump()}
             >
-              <Image source={require('../img/ic_back.png')}/>
+              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
           </View>
@@ -351,10 +351,10 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
+              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
               onPress={() => this.pageJump()}
             >
-              <Image source={require('../img/ic_back.png')}/>
+              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
           </View>
@@ -368,62 +368,61 @@ export default class getFlight extends React.Component {
   }
 }
 
-const
-  routeStyle = StyleSheet.create({
-    rContianer: {
-      flex: 1,
-      backgroundColor: '#f7f7f7',
-    },
-    rItem: {
-      paddingLeft: 18,
-      height: 34,
-      paddingRight: 18,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      color: '#313131',
-      marginBottom: 1,
-      backgroundColor: '#fff',
-    },
-    rTextLeft: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: '#313131',
-    },
-    rTextRight: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: '#313131',
-      textAlign: 'right',
-    },
-    button1: {
-      backgroundColor: '#ddd',
-      marginTop: 10,
-      height: 54,
-      borderWidth: 0.3,
-      borderColor: '#a09f9f',
-      borderRadius: 4,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontSize: 17,
-      color: '#55ACEE',
-      margin: 18,
-    },
-    button2: {
-      backgroundColor: '#313131',
-      marginTop: 10,
-      height: 54,
-      borderWidth: 0.3,
-      borderColor: '#a09f9f',
-      borderRadius: 4,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      fontSize: 17,
-      color: '#55ACEE',
-      margin: 18,
-    }
-  });
+const routeStyle = StyleSheet.create({
+  rContianer: {
+    flex: 1,
+    backgroundColor: '#f7f7f7',
+  },
+  rItem: {
+    paddingLeft: 18,
+    height: 34,
+    paddingRight: 18,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#313131',
+    marginBottom: 1,
+    backgroundColor: '#fff',
+  },
+  rTextLeft: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#313131',
+  },
+  rTextRight: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: '#313131',
+    textAlign: 'right',
+  },
+  button1: {
+    backgroundColor: '#ddd',
+    marginTop: 10,
+    height: 54,
+    borderWidth: 0.3,
+    borderColor: '#a09f9f',
+    borderRadius: 4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 17,
+    color: '#55ACEE',
+    margin: 18,
+  },
+  button2: {
+    backgroundColor: '#313131',
+    marginTop: 10,
+    height: 54,
+    borderWidth: 0.3,
+    borderColor: '#a09f9f',
+    borderRadius: 4,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 17,
+    color: '#55ACEE',
+    margin: 18,
+  }
+});

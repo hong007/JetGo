@@ -17,6 +17,7 @@ import  {
 import getFlight from './getFlight';
 import NetUtil from './NetUtil';
 import GridChild from './GridChild';
+import BarcodeScanner from './BarcodeScanner';
 var Token;
 var orderTypeList = [];
 var packagetype = [];
@@ -41,6 +42,8 @@ export default class ScanComponent extends React.Component {
       isPackageType: false,
 
       setChoosedType: '包裹',
+
+      barcodeResult: '',
     };
     this.fid = '';
   }
@@ -275,7 +278,12 @@ export default class ScanComponent extends React.Component {
   //   }
   //
   // }
-
+// <Text onPress={()=> {
+//   this.props.navigator.push({
+//     name: 'BarcodeScanner',
+//     component: BarcodeScanner
+//   })
+// }}> 二维码扫码测试</Text>
   render() {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
@@ -297,14 +305,14 @@ export default class ScanComponent extends React.Component {
               paddingLeft: 18
             }}>
               <TouchableOpacity
-                style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-
+                style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
                 onPress={() => this.props.navigator.pop()}
               >
-                <Image source={require('../img/ic_back.png')}/>
+                <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
               <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
             </View>
+
             <View style={scanStyle.TextInputView}>
               <TextInput style={scanStyle.TextInput}
                          underlineColorAndroid='transparent'
@@ -404,11 +412,10 @@ export default class ScanComponent extends React.Component {
               paddingLeft: 18
             }}>
               <TouchableOpacity
-                style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-
+                style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
                 onPress={() => this.props.navigator.pop()}
               >
-                <Image source={require('../img/ic_back.png')}/>
+                <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
               <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
             </View>
@@ -495,12 +502,12 @@ export default class ScanComponent extends React.Component {
             </TouchableOpacity>
             <View style={scanStyle.gridContainer}>
               <Text style={scanStyle.gridTitle}>请选择货物类型(多选)</Text>
-              <Image style={{position: 'absolute', right: 18, top: 20, zIndex: 999999999}}
-                     source={require('../img/close.png')}
-                     onPress={()=> {
-                       this.setState({isPackageType: false})
-                     }}
-              />
+              <Image source={require('../img/close.png')}
+                     style={{position: 'absolute', right: 18, top: 20, zIndex: 999999999}}>
+                <Text onPress={()=> {
+                  this.setState({isPackageType: false})
+                }}></Text>
+              </Image>
               <View style={scanStyle.gridContent}>
                 <GridChild text="报纸" orderName="报纸" orderType="paper" initialChecked={this.state.initialChecked}
                            callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "报纸", "paper")}/>
@@ -534,10 +541,10 @@ export default class ScanComponent extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
+              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
               onPress={() => this.props.navigator.pop()}
             >
-              <Image source={require('../img/ic_back.png')}/>
+              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
           </View>

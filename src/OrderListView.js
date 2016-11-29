@@ -200,9 +200,9 @@ export default class OrderListView extends React.Component {
     this.setState({
       isRefreshing: true,
     });
-    let _this=this;
+    let _this = this;
     setTimeout(() => {
-      totalList=[];
+      totalList = [];
       _this._fetchListData('0');
       console.log('下拉刷新来不来~~~~');
     }, 500);

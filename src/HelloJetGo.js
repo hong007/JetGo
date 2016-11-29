@@ -102,7 +102,7 @@ export default class HelloJetGo extends React.Component {
             <Image source={require('../img/bg1.jpg')} style={styles.image}/>
             <Text style={styles.welcome}>
               欢迎使用JetGo无人机{'\n'}
-              我在，阻隔不在
+              我在，阻隔不再
             </Text>
             <TouchableHighlight style={{
               backgroundColor: '#313131',

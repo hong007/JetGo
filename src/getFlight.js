@@ -249,11 +249,10 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-
+              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
               onPress={() => this.pageJump()}
             >
-              <Image source={require('../img/ic_back.png')}/>
+              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
           </View>
@@ -339,10 +338,10 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
-              onLongPress={() => this.pageJump()}
+              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+              onPress={() => this.pageJump()}
             >
-              <Image source={require('../img/ic_back.png')}/>
+              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
           </View>

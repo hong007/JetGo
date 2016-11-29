@@ -29,6 +29,10 @@ import Button from './Button';
 import LeftMenuList from './LeftMenuList';
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
+import LoginPage from './LoginPage';
+import OnlineHelp from './OnlineHelp';
+import Lawyer from './Lawyer';
+import AboutUS from './AboutUS';
 
 // var token="MiMxNDc5Mzc5MDc3QGppZXlhbi54eWl0ZWNoLmNvbSNvTFdsTTdBR0hqL2tzYlFCd0F1VUtHd2RZNkE9";
 export default class Main extends React.Component {
@@ -83,6 +87,37 @@ export default class Main extends React.Component {
     alert("来来来！")
   }
 
+  _openLeftMenuPage(name) {
+    // alert(name);
+    let curPage = name;
+    if (curPage == "LoginPage") {
+      this.props.navigator.push({
+        name: "LoginPage",
+        component: LoginPage,
+      });
+    } else if (curPage == "OrderListView") {
+      this.props.navigator.push({
+        name: "OrderListView",
+        component: OrderListView,
+      });
+    } else if (curPage == "OnlineHelp") {
+      this.props.navigator.push({
+        name: "OnlineHelp",
+        component: OnlineHelp,
+      });
+    } else if (curPage == "Lawyer") {
+      this.props.navigator.push({
+        name: "Lawyer",
+        component: Lawyer,
+      });
+    } else if (curPage == "AboutUS") {
+      this.props.navigator.push({
+        name: "AboutUS",
+        component: AboutUS,
+      });
+    }
+  }
+
   render() {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
@@ -90,11 +125,21 @@ export default class Main extends React.Component {
       <View style={{flex: 1, backgroundColor: '#1b1b1b', paddingTop: 24,}}
             onPress={()=>this.closeDrawer()}
       >
-        <LeftMenuList title='犀利哥' imageSource={menu_user}/>
-        <LeftMenuList title='我的订单' imageSource={menu_order} onPress={() => this.pageJump.bind(this)}/>
-        <LeftMenuList title='在线帮助' imageSource={menu_phone}/>
-        <LeftMenuList title='法律条款' imageSource={menu_lay}/>
-        <LeftMenuList title='关于捷雁' imageSource={menu_about}/>
+        <LeftMenuList title='犀利哥/登录' pageName="LoginPage" imageSource={menu_user} _leftMenuPress={(pageName)=> {
+          this._openLeftMenuPage(pageName)
+        }}/>
+        <LeftMenuList title='我的订单' pageName="OrderListView" imageSource={menu_order} _leftMenuPress={(pageName)=> {
+          this._openLeftMenuPage(pageName)
+        }}/>
+        <LeftMenuList title='在线帮助' pageName="OnlineHelp" imageSource={menu_phone} _leftMenuPress={(pageName)=> {
+          this._openLeftMenuPage(pageName)
+        }}/>
+        <LeftMenuList title='法律条款' pageName="Lawyer" imageSource={menu_lay} _leftMenuPress={(pageName)=> {
+          this._openLeftMenuPage(pageName)
+        }}/>
+        <LeftMenuList title='关于捷雁' pageName="AboutUS" imageSource={menu_about} _leftMenuPress={(pageName)=> {
+          this._openLeftMenuPage(pageName)
+        }}/>
       </View>
     );
     return (
@@ -131,10 +176,10 @@ export default class Main extends React.Component {
 
           </View>
           <TouchableOpacity
-            style={{top: 15, right: 18, position: 'absolute',}}
+            style={{height:42,width:42,top: 0, right: 0, position: 'absolute',}}
             onPress={() => this.pageJump()}
           >
-            <Image source={require('../img/icon_order.png')}/>
+            <Image style={{marginTop:15,}} source={require('../img/icon_order.png')}/>
           </TouchableOpacity>
           <View style={{flex: 1, marginTop: 60, padding: 18,}}>
             <PickerComponent refs="picker"/>
@@ -168,8 +213,8 @@ export default class Main extends React.Component {
             left: 0,
             right: 0,
             bottom: 0,
-            width:Dimensions.get('window').width,
-            height:Dimensions.get('window').height,
+            width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height,
           }} source={require('../img/bg.png')}>
           </Image>
 

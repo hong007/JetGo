@@ -15,15 +15,26 @@ import{
   TouchableOpacity,
   TouchableHighlight
 } from 'react-native';
+import LoginPage from './LoginPage';
+import OrderListView from './OrderListView';
+import OnlineHelp from './OnlineHelp';
+import Lawyer from './Lawyer';
+import AboutUS from './AboutUS';
+
 export default class LeftMenuList extends Component {
   constructor(props) {
     super(props);
-    this.state = {text: ''};
+    this.state = {
+      text: '',
+      pageName: this.props.pageName,
+    };
   }
 
   render() {
     return (
-      <TouchableOpacity style={LeftMenuStyles.menuContainer}>
+      <TouchableOpacity value={this.props.pageName} style={LeftMenuStyles.menuContainer} onPress={(value)=> {
+        this.props._leftMenuPress(this.state.pageName)
+      }}>
         <Image
           style={LeftMenuStyles.menuImage}
           source={this.props.imageSource}
