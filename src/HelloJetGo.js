@@ -31,41 +31,33 @@ export default class HelloJetGo extends React.Component {
     console.log('CurrentPage: ' + e.nativeEvent.position);
     ToastAndroid.show('CurrentPage: ' + e.nativeEvent.position, ToastAndroid.SHORT);
   }
+
   pageJump() {
-    let _this=this;
-    _this.props.navigator.push({
-      name: 'LoginPage',
-      component: LoginPage
-    });
-    // AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
-    //   if (!errs) {
-    //     let TOKEN = result;
-    //     // _this.setState({
-    //     //   defaultName: 'Main',
-    //     //   defaultComponent: Main,
-    //     // })
-    //     // alert(TOKEN);
-    //     if(TOKEN!=""){
-    //       _this.props.navigator.push({
-    //         name: 'Main',
-    //         component: Main
-    //       });
-    //     }else{
-    //       _this.props.navigator.push({
-    //         name: 'LoginPage',
-    //         component: LoginPage
-    //       });
-    //     }
-    //
-    //     console.log("取得的Token 是", TOKEN);
-    //   }else{
-    //     _this.props.navigator.push({
-    //       name: 'LoginPage',
-    //       component: LoginPage
-    //     });
-    //     console.log('LOGIN_TOKEN 不存在，请重新登录')
-    //   }
-    // })
+    let _this = this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      if (!errs) {
+        let TOKEN = result;
+        // alert(TOKEN);
+        if (TOKEN && TOKEN != "") {
+          _this.props.navigator.push({
+            name: 'Main',
+            component: Main
+          });
+        } else {
+          _this.props.navigator.push({
+            name: 'LoginPage',
+            component: LoginPage
+          });
+        }
+        console.log("取得的Token 是", TOKEN);
+      } else {
+        _this.props.navigator.push({
+          name: 'LoginPage',
+          component: LoginPage
+        });
+        console.log('LOGIN_TOKEN 不存在，请重新登录')
+      }
+    })
   }
 
   render() {
@@ -106,7 +98,7 @@ export default class HelloJetGo extends React.Component {
             </Text>
             <TouchableHighlight style={{
               backgroundColor: '#313131',
-              width:200,
+              width: 200,
               marginTop: 10,
               height: 54,
               borderWidth: 0.3,
@@ -120,7 +112,7 @@ export default class HelloJetGo extends React.Component {
             }} onPress={()=> {
               this.pageJump()
             }}>
-              <Text style={{color: '#fff',fontSize: 20,}}>启动</Text>
+              <Text style={{color: '#fff', fontSize: 20,}}>启动</Text>
             </TouchableHighlight>
           </View>
 
