@@ -11,6 +11,7 @@ import {
   Image,
   TextInput,
   Platform,
+  ToastAndroid,
   AsyncStorage,
   ProgressBarAndroid,
   TouchableOpacity
@@ -91,6 +92,8 @@ export default class LoginPage extends Component {
     NetUtil.postJson(url, (responseText)=> {
       let curdata = JSON.parse(responseText);
       if (curdata.err == '0') {
+        AsyncStorage.setItem("LOGIN_USERNAME", curdata.token);
+        AsyncStorage.setItem("LOGIN_USERPWD", curdata.token);
         AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
         this.timer = setTimeout(
           ()=> {
@@ -102,7 +105,8 @@ export default class LoginPage extends Component {
         this.setState({
           loginStatus: false,
         });
-        alert("用户名或密码错误，请重试");
+        // alert("用户名或密码错误，请重试");
+        ToastAndroid.show('用户名或密码错误，请重试', ToastAndroid.SHORT);
       }
     });
   };

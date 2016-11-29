@@ -10,6 +10,7 @@ import  {
   Platform,
   Image,
   Picker,
+  ToastAndroid,
   AsyncStorage,
   TouchableOpacity
 } from 'react-native';
@@ -18,12 +19,13 @@ import NetUtil from './NetUtil';
 import GridChild from './GridChild';
 var Token;
 var orderTypeList = [];
+var packagetype = [];
 export default class ScanComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       scannText: '',
-      packageWeight: '',
+      packageWeight: '1',
       text: '',
       dataload: false,
       sname: '',
@@ -53,7 +55,7 @@ export default class ScanComponent extends React.Component {
       let curItem = value;
       for (var i = 0; i < orderTypeList.length; i++) {
         if (curItem == orderTypeList[i]) {
-          return false
+          return false;
           break;
         }
       }
@@ -126,7 +128,8 @@ export default class ScanComponent extends React.Component {
             console.log("存储缓存中的route是  ", JSON.stringify(curdata.route));
             AsyncStorage.setItem("SINGLE_ROUTE", JSON.stringify(curdata.route));
           } else {
-            alert("没有该航路，请重试")
+            // alert("没有该航路，请重试");
+            ToastAndroid.show('没有该航路，请重试', ToastAndroid.SHORT);
           }
         });
         // alert(route_id)
@@ -145,23 +148,65 @@ export default class ScanComponent extends React.Component {
         // this.initAirPorts(result);
         let route_id = result;
         let pWeight = _this.state.packageWeight;
+        let reg = /^([1-9]\d*|0)(\.\d{1,2})?$/;
+        if (!reg.test(pWeight)) {
+          // alert(123)
+          // alert("重量必须为数字，不能含有中英文字符");
+          ToastAndroid.show('重量必须为数字，不能含有中英文字符!', ToastAndroid.SHORT);
+          return false;
+        }
+        if (pWeight > 5) {
+          // alert("包裹重量不能大于5公斤");
+          ToastAndroid.show('包裹重量不能大于5公斤!', ToastAndroid.SHORT);
+          return false;
+        }
         // if(typeof pWeight!="number"){
         //   alert("重量必须为数字");
         //   return false;
         // }
-        if (pWeight == '') {
+        if (pWeight == '' || !pWeight) {
           pWeight = 1;
         }
-        let url = "http://jieyan.xyitech.coms/order/creatde?token=" + Token + "&routeid=" + route_id + "&remark=1&fid=" + _this.fid + "&weight=1" + "&paper=1&letter=1&magzine=1&package=1&other=1";
+        let curtype = orderTypeList;
+        let packageList = '';
+        packagetype = [];
+        for (let i = 0; i < curtype.length; i++) {
+          if (curtype[i] == "报纸") {
+            packagetype.push("paper=1");
+          }
+          if (curtype[i] == "信件") {
+            packagetype.push("letter=1");
+          }
+          if (curtype[i] == "刊物") {
+            packagetype.push("magzine=1");
+          }
+          if (curtype[i] == "包裹") {
+            packagetype.push("package=1");
+          }
+          if (curtype[i] == "其他") {
+            packagetype.push("other=1");
+          }
+        }
+        if (packagetype.length == 0) {
+          packageList = "package=1"
+        } else {
+          packageList = packagetype.join("&");
+        }
+        // alert(packageList)
+        let url = "http://jieyan.xyitech.com/order/create?token=" + Token + "&routeid=" + route_id + "&remark=1&fid=" + _this.fid + "&weight=" + pWeight + "&" + packageList;
         console.log("提交的信息是  ", url);
+        // alert("提交的信息是  " + url);
         if (_this.fid == "") {
-          alert("飞机id不能为空");
+          // alert("飞机id不能为空");
+          ToastAndroid.show('飞机id不能为空!', ToastAndroid.SHORT);
         } else if (!_this.fid) {
-          alert("飞机id不存在");
+          // alert("飞机id不存在");
+          ToastAndroid.show('飞机id不存在!', ToastAndroid.SHORT);
         } else {
           NetUtil.postJson(url, (responseText)=> {
             if (!responseText || responseText == "") {
-              alert("提交失败，请重试！")
+              // alert("提交失败，请重试！");
+              ToastAndroid.show('提交失败，请重试!', ToastAndroid.SHORT);
             } else {
               let curdata = JSON.parse(responseText);
               console.log("返回的信息是  ", curdata, "  数据类型是  ", typeof curdata, "  订单id是 ", curdata.id);
@@ -171,7 +216,8 @@ export default class ScanComponent extends React.Component {
                 AsyncStorage.setItem("DETAIL_ID", JSON.stringify(curdata.id));
                 _this.pageJump();
               } else {
-                alert("错误，请重试")
+                // alert("错误，请重试");
+                ToastAndroid.show('错误，请重试!', ToastAndroid.SHORT);
               }
             }
           })
@@ -274,10 +320,6 @@ export default class ScanComponent extends React.Component {
               <Text style={{height: 0,}}>{this.state.scannText}</Text>
             </View>
             <View style={routeStyle.rContianer}>
-              {/*<View style={routeStyle.rItem}>*/}
-              {/*<Text style={routeStyle.rTextLeft}>无人机编号</Text>*/}
-              {/*<Text style={routeStyle.rTextRight}>131231231</Text>*/}
-              {/*</View>*/}
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>无人机行程</Text>
                 <Text style={routeStyle.rTextRight}>{this.state.sname}-{this.state.ename}</Text>
@@ -307,7 +349,7 @@ export default class ScanComponent extends React.Component {
 
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>物品重量</Text>
-                <TextInput style={[scanStyle.TextInput, {marginRight: 10, width: 60,textAlign:'right'}]}
+                <TextInput style={[scanStyle.TextInput, {marginRight: 10, width: 60, textAlign: 'right'}]}
                            underlineColorAndroid='transparent'
                            placeholder='1kg'
                            onFocus={
@@ -385,10 +427,6 @@ export default class ScanComponent extends React.Component {
               <Text style={{height: 0,}}>{this.state.scannText}</Text>
             </View>
             <View style={routeStyle.rContianer}>
-              {/*<View style={routeStyle.rItem}>*/}
-              {/*<Text style={routeStyle.rTextLeft}>无人机编号</Text>*/}
-              {/*<Text style={routeStyle.rTextRight}>131231231</Text>*/}
-              {/*</View>*/}
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>无人机行程</Text>
                 <Text style={routeStyle.rTextRight}>{this.state.sname}-{this.state.ename}</Text>
@@ -465,19 +503,19 @@ export default class ScanComponent extends React.Component {
               />
               <View style={scanStyle.gridContent}>
                 <GridChild text="报纸" orderName="报纸" orderType="paper" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName)=>this.onChildChanged(initialChecked, "报纸")}/>
+                           callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "报纸", "paper")}/>
                 <GridChild text="信件" orderName="信件" orderType="letter" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName)=>this.onChildChanged(initialChecked, "信件")}/>
+                           callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "信件", "letter")}/>
                 <GridChild text="刊物" orderName="刊物" orderType="magzine" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName)=>this.onChildChanged(initialChecked, "刊物")}/>
+                           callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "刊物", "magzine")}/>
                 <GridChild text="包裹" orderName="包裹" orderType="package" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName)=>this.onChildChanged(initialChecked, "包裹")}/>
+                           callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "包裹", "package")}/>
               </View>
 
               <View style={[scanStyle.gridContent, {marginTop: -15}]}>
 
                 <GridChild text="其他" orderName="其他" orderType="other" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName)=>this.onChildChanged(initialChecked, "其他")}/>
+                           callbackParent={(initialChecked, orderName, orderType)=>this.onChildChanged(initialChecked, "其他", "other")}/>
               </View>
             </View>
           </View>
@@ -564,7 +602,6 @@ const scanStyle = StyleSheet.create({
   },
   gridContainer: {
     flex: 1,
-    // marginTop: 20,
     position: 'absolute',
     bottom: 0,
     left: 0,

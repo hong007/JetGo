@@ -9,6 +9,7 @@ import{
   StyleSheet,
   ListView,
   Platform,
+  ToastAndroid,
   AsyncStorage,
   RefreshControl,
   TouchableOpacity,
@@ -75,7 +76,7 @@ export default class OrderListView extends React.Component {
         // console.log("默认信息是 ",responseText,'  数据类型是',typeof responseText);
         let curdata = JSON.parse(responseText);
         let list = curdata.msg;
-        // console.log("返回的运单信息是  ", JSON.stringify(list), "  数据类型是  ", typeof JSON.stringify(list), ' 数据长度是  ', list.length);
+        console.log("返回的运单信息是  ", JSON.stringify(list), "  数据类型是  ", typeof JSON.stringify(list), ' 数据长度是  ', list.length);
         if (curdata.err == '0') {
           if (curdata.msg.length == 0) {
             console.log('数据长度是', '', curdata.msg.length);
@@ -117,6 +118,7 @@ export default class OrderListView extends React.Component {
 
         } else {
           // alert("错误，请重试");
+          ToastAndroid.show('错误，请重试', ToastAndroid.SHORT);
         }
       }
     })
@@ -181,15 +183,29 @@ export default class OrderListView extends React.Component {
   }
 
   _onBack() {
-    // this.props.navigator.push({
-    //   // title: '',
-    //   name: 'Main',
-    //   component: Main
-    // });
-    const {navigator} = this.props;
-    if (navigator) {
-      navigator.pop();
-    }
+    this.props.navigator.push({
+      // title: '',
+      name: 'Main',
+      component: Main
+    });
+    // const {navigator} = this.props;
+    // if (navigator) {
+    //   navigator.pop();
+    // }
+  }
+
+  // 下拉刷新运单列表
+  _onRefresh() {
+    // this.setState({isRefreshing: true});
+    this.setState({
+      isRefreshing: true,
+    });
+    let _this=this;
+    setTimeout(() => {
+      totalList=[];
+      _this._fetchListData('0');
+      console.log('下拉刷新来不来~~~~');
+    }, 500);
   }
 
   renderLoadingView() {
@@ -356,17 +372,6 @@ export default class OrderListView extends React.Component {
     );
   }
 
-  // 下拉刷新运单列表
-  _onRefresh() {
-    // this.setState({isRefreshing: true});
-    this.setState({
-      isRefreshing: true,
-    });
-    setTimeout(() => {
-      this._fetchListData('1');
-      console.log('下拉刷新来不来~~~~');
-    }, 3000);
-  }
 
   // 是否显示底部文字提示
   showOrHideFooter() {

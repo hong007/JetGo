@@ -13,6 +13,7 @@ import  {
   Image,
   Alert,
   Platform,
+  ToastAndroid,
   AsyncStorage,
   ProgressBarAndroid,
 } from 'react-native';
@@ -215,19 +216,8 @@ export default class getFlight extends React.Component {
     }
   }
 
-  _openPage() {
-    if (this.state.totalChecked == 4) {
-      alert('飞机起飞');
-    } else {
-      alert('你想飞？必须全部点中哦😯！');
-    }
-    // this.props.navigator.push({
-    //     title: 'LeftMenuList',
-    //     component: LeftMenuList
-    // })
-  }
-
   pageJump() {
+    clearInterval(this.timer);
     this.props.navigator.push({
       // title: '',
       name: 'OrderListView',
@@ -258,7 +248,8 @@ export default class getFlight extends React.Component {
       })
     }
     else {
-      alert("暂时无法确认，请稍后重试！")
+      // alert("暂时无法确认，请稍后重试！");
+      ToastAndroid.show('暂时无法确认，请稍后重试！', ToastAndroid.SHORT);
     }
   }
 

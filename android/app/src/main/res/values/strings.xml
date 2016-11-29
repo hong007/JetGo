@@ -1,3 +1,4 @@
 <resources>
+    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">XZh4YJSqYZDBHYHw_uCCh2e8OcsvNkIE6kSMz</string>
     <string name="app_name">JetGo</string>
 </resources>

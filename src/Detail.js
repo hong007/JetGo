@@ -17,6 +17,7 @@ import  {
   Platform,
   Switch,
   Alert,
+  ToastAndroid,
   AsyncStorage,
 } from 'react-native';
 import NetUtil from './NetUtil';
@@ -30,6 +31,7 @@ export default class Detail extends React.Component {
       detailDataLoaded: false,
       detailData: null,
       noFlighting: false,
+      isOrderCansle:false,
     }
   }
 
@@ -82,6 +84,11 @@ export default class Detail extends React.Component {
         if (curdata.order.state == '0') {
           this.setState({
             noFlighting: true,
+          })
+        }
+        if(curdata.order.state=="1"){
+          this.setState({
+            isOrderCansle:true,
           })
         }
         // AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
@@ -194,7 +201,8 @@ export default class Detail extends React.Component {
       if (curdata.err == '0') {
         this._onBack();
       } else {
-        alert("暂时无法取消，请重试！");
+        // alert("暂时无法取消，请重试！");
+        ToastAndroid.show('暂时无法取消，请重试！', ToastAndroid.SHORT);
       }
     });
   }
@@ -297,6 +305,93 @@ export default class Detail extends React.Component {
           </View>
         )
       } else {
+        if(this.state.isOrderCansle){
+          return(
+            <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+              <View style={{
+                height: (Platform.OS === 'android' ? 42 : 50),
+                backgroundColor: '#fff',
+                flexDeriction: 'row',
+                alignItem: 'center',
+                marginTop: 24,
+                paddingTop: 15,
+                paddingLeft: 18
+              }}>
+                <TouchableOpacity
+                  style={{top: 15, left: 18, position: 'absolute', zIndex: 999999}}
+                  onPress={() => this._onBack()}
+                >
+                  <Image source={require('../img/ic_back.png')}/>
+                </TouchableOpacity>
+                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+              </View>
+              <View style={routeStyle.rContianer}>
+                <View style={[routeStyle.rItem, {marginBottom: 15}]}>
+                  <Text style={routeStyle.rTextLeft}>运单编号&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
+                  <Text style={routeStyle.rTextRight}>{this.orderState(this.state.detailData.order.state)}</Text>
+                </View>
+                <View style={routeStyle.rItem}>
+                  <Text style={routeStyle.rTextLeft}>无人机编号</Text>
+                  <Text style={routeStyle.rTextRight}>{this.state.detailData.order.fid}</Text>
+                </View>
+                <View style={routeStyle.rItem}>
+                  <Text style={routeStyle.rTextLeft}>无人机行程</Text>
+                  <Text
+                    style={routeStyle.rTextRight}>{this.state.detailData.order.route.airport[0].name}-{this.state.detailData.order.route.airport[1].name}</Text>
+                </View>
+                <View style={routeStyle.rItem}>
+                  <Text style={routeStyle.rTextLeft}>预计飞行距离</Text>
+                  <Text style={routeStyle.rTextRight}><Text
+                    style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
+                    style={routeStyle.rTextName}>公里</Text></Text>
+                </View>
+                <View style={routeStyle.rItem}>
+                  <Text style={routeStyle.rTextLeft}>预计飞行时间</Text>
+                  <Text style={routeStyle.rTextRight}><Text
+                    style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
+                    style={routeStyle.rTextName}>分钟</Text></Text>
+                </View>
+                <View style={routeStyle.rItem}>
+                  <Text style={routeStyle.rTextLeft}>联系人电话 {this.state.detailData.order.route.airport[1].phone}</Text>
+                  <Image source={require('../img/phone.png')}/>
+                </View>
+              </View>
+
+              <View style={routeStyle.container}>
+                <Text style={routeStyle.gridTitle}>包裹动态</Text>
+                <View style={routeStyle.content}>
+                  <View style={routeStyle.ImageArea}>
+                    <Image style={routeStyle.Image1} source={require('../img/detail01.png')}/>
+                    <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
+                  </View>
+                  <View style={routeStyle.Left}>
+                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{this.setOrderStatusDateTime('t1', 'date')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{this.setOrderStatusDateTime('t1', 'time')}</Text>
+                  </View>
+                  <View style={routeStyle.Right}>
+                    <Text style={routeStyle.Text}>您的运单已取消</Text>
+                  </View>
+                </View>
+                <View style={routeStyle.content}>
+                  <View style={routeStyle.ImageArea}>
+                    <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
+
+                    <Image style={routeStyle.Image1} source={require('../img/detail02.png')}/>
+                    <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
+                  </View>
+                  <View style={routeStyle.Left}>
+                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{this.setOrderStatusDateTime('t0', 'date')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{this.setOrderStatusDateTime('t0', 'time')}</Text>
+                  </View>
+                  <View style={routeStyle.Right}>
+                    <Text style={routeStyle.Text}>成功创建无人机运单</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          )
+        }else{
+
         return (
           <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
             <View style={{
@@ -396,6 +491,8 @@ export default class Detail extends React.Component {
             </View>
           </View>
         )
+        }
+
       }
     } else {
       return (

@@ -11,7 +11,7 @@ let NetUtil = {
       })
       .catch((err)=> {
         console.error(err);
-        alert("请求超时，请重试");
+        // alert("请求超时，请重试");
       }).done();
   },
 

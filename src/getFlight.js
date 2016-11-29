@@ -14,6 +14,7 @@ import  {
   Alert,
   Platform,
   Switch,
+  ToastAndroid,
   AsyncStorage,
 } from 'react-native';
 import LeftMenuList from './LeftMenuList';
@@ -209,12 +210,9 @@ export default class getFlight extends React.Component {
       });
 
     } else {
-      alert('你想飞？必须全部点中哦😯！');
+      // alert('你想飞？必须全部点中哦😯！');
+      ToastAndroid.show('你想飞？必须全部点中哦😯！', ToastAndroid.SHORT);
     }
-    // this.props.navigator.push({
-    //     title: 'LeftMenuList',
-    //     component: LeftMenuList
-    // })
   }
 
   pageJump(value) {

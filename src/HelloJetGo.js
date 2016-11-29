@@ -33,26 +33,39 @@ export default class HelloJetGo extends React.Component {
   }
   pageJump() {
     let _this=this;
-    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
-      if (!errs) {
-        const TOKEN = result;
-        // _this.setState({
-        //   defaultName: 'Main',
-        //   defaultComponent: Main,
-        // })
-        _this.props.navigator.push({
-          name: 'Main',
-          component: Main
-        });
-        console.log("取得的Token 是", TOKEN);
-      }else{
-        _this.props.navigator.push({
-          name: 'LoginPage',
-          component: LoginPage
-        });
-        console.log('LOGIN_TOKEN 不存在，请重新登录')
-      }
-    })
+    _this.props.navigator.push({
+      name: 'LoginPage',
+      component: LoginPage
+    });
+    // AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+    //   if (!errs) {
+    //     let TOKEN = result;
+    //     // _this.setState({
+    //     //   defaultName: 'Main',
+    //     //   defaultComponent: Main,
+    //     // })
+    //     // alert(TOKEN);
+    //     if(TOKEN!=""){
+    //       _this.props.navigator.push({
+    //         name: 'Main',
+    //         component: Main
+    //       });
+    //     }else{
+    //       _this.props.navigator.push({
+    //         name: 'LoginPage',
+    //         component: LoginPage
+    //       });
+    //     }
+    //
+    //     console.log("取得的Token 是", TOKEN);
+    //   }else{
+    //     _this.props.navigator.push({
+    //       name: 'LoginPage',
+    //       component: LoginPage
+    //     });
+    //     console.log('LOGIN_TOKEN 不存在，请重新登录')
+    //   }
+    // })
   }
 
   render() {
