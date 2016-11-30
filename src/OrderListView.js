@@ -54,7 +54,11 @@ export default class OrderListView extends React.Component {
         // let Token = result;
         Token = result;
         console.log("取得缓存中的Token是  ", Token, "  ");
-        _this._fetchListData(0);
+        _this.timer=setTimeout(
+          ()=>{
+            _this._fetchListData(0);
+          },500
+        );
       }
     });
   }

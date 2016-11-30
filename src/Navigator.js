@@ -25,12 +25,12 @@ export default class navigator extends Component {
     super(props);
     this.state = {
       isLogin:false,
-      defaultName: 'HelloJetGo',
-      defaultComponent: HelloJetGo,
+      // defaultName: 'HelloJetGo',
+      // defaultComponent: HelloJetGo,
       // defaultName: 'LoginPage',
       // defaultComponent: LoginPage,
-      // defaultName: 'Main',
-      // defaultComponent: Main,
+      defaultName: 'Main',
+      defaultComponent: Main,
       // defaultName: 'PushyReact',
       // defaultComponent: PushyReact,
     };
