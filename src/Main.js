@@ -10,6 +10,7 @@ import {
   Image,
   Platform,
   Dimensions,
+  StatusBar,
   ToastAndroid,
   AsyncStorage,
   TouchableOpacity,
@@ -52,6 +53,7 @@ export default class Main extends React.Component {
   }
 
   componentDidMount() {
+    StatusBar.setBackgroundColor('#000', true);
     this.setState({
       loginStatus: false,
     });

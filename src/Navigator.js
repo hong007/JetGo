@@ -10,6 +10,7 @@ import {
   Navigator,
   Platform,
   Image,
+  StatusBar,
   AsyncStorage,
   TouchableOpacity,
   TouchableHighlight,
@@ -25,15 +26,19 @@ export default class navigator extends Component {
     super(props);
     this.state = {
       isLogin:false,
-      // defaultName: 'HelloJetGo',
-      // defaultComponent: HelloJetGo,
+      defaultName: 'HelloJetGo',
+      defaultComponent: HelloJetGo,
       // defaultName: 'LoginPage',
       // defaultComponent: LoginPage,
-      defaultName: 'Main',
-      defaultComponent: Main,
+      // defaultName: 'Main',
+      // defaultComponent: Main,
       // defaultName: 'PushyReact',
       // defaultComponent: PushyReact,
     };
+  }
+
+  componentDidMount() {
+    StatusBar.setBackgroundColor('#000', true);
   }
   openDrawer() {
     this.refs.drawerLayout.openDrawer()

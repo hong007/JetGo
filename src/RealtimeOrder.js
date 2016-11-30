@@ -13,6 +13,8 @@ import  {
   Image,
   Alert,
   Platform,
+  StatusBar,
+  Dimensions,
   ToastAndroid,
   AsyncStorage,
   ProgressBarAndroid,
@@ -20,6 +22,7 @@ import  {
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
 import LoadingViewProgress from './LoadingViewProgress';
+import DialPhone from './DialPhone';
 
 var Token;
 
@@ -42,6 +45,7 @@ export default class getFlight extends React.Component {
   }
 
   componentDidMount() {
+    StatusBar.setBackgroundColor('#000', true);
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
@@ -280,17 +284,14 @@ export default class getFlight extends React.Component {
           </View>
           <View style={routeStyle.rContianer}>
             <View style={{flex: 3,}}>
-              <Image style={{alignItems: 'center', justifyContent: 'flex-end', resizeMode: Image.resizeMode.cover}}
+              <Image style={{alignItems: 'center', justifyContent: 'flex-end', width: Dimensions.get('window').width,}}
                      source={require('../img/orderrealtime.png')}><Text
                 style={{textAlign: 'center', color: '#fff', marginBottom: 50,}}>预计<Text
                 style={{fontSize: 22,}} value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>
             </View>
 
-            <View style={[routeStyle.rItem, {marginTop: 0,marginBottom:20,}]}>
-              <Text
-                style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
-              <Image source={require('../img/phone.png')}/>
-            </View>
+            <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
+                       title={this.state.detailData.order.route.airport[1].phone}/>
 
             <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
               <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>

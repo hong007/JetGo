@@ -14,6 +14,7 @@ import  {
   Alert,
   Platform,
   Switch,
+  StatusBar,
   ToastAndroid,
   AsyncStorage,
 } from 'react-native';
@@ -22,6 +23,8 @@ import NetUtil from './NetUtil';
 import SwitchComp from './SwitchComp';
 import Main from './Main';
 import RealtimeOrder from './RealtimeOrder';
+import DialPhone from './DialPhone';
+
 var Token;
 
 export default class getFlight extends React.Component {
@@ -37,6 +40,7 @@ export default class getFlight extends React.Component {
   }
 
   componentDidMount() {
+    StatusBar.setBackgroundColor('#000', true);
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
@@ -257,7 +261,7 @@ export default class getFlight extends React.Component {
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
           </View>
           <View style={routeStyle.rContianer}>
-            <View style={[routeStyle.rItem, {marginBottom: 1,marginTop:1, height: 40}]}>
+            <View style={[routeStyle.rItem, {marginBottom: 1, marginTop: 1, height: 40}]}>
               <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
             </View>
             <View style={[routeStyle.rItem, {height: 95}]}>
@@ -269,26 +273,26 @@ export default class getFlight extends React.Component {
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>公里</Text></Text>
                 </View>
-                <View style={[routeStyle.rItem, {height: 16,marginTop:-10,}]}>
+                <View style={[routeStyle.rItem, {height: 16, marginTop: -10,}]}>
                   <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
                 </View>
 
-                <View style={[routeStyle.rItem, {height: 16,marginTop:-15,}]}>
+                <View style={[routeStyle.rItem, {height: 16, marginTop: -15,}]}>
                   <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
                   <Text style={routeStyle.rTextRight}><Text
-                    style={[routeStyle.rTextValue, {fontSize: 22,color:'#E98B21'}]}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
+                    style={[routeStyle.rTextValue, {
+                      fontSize: 22,
+                      color: '#E98B21'
+                    }]}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
               </View>
 
             </View>
-            <View style={[routeStyle.rItem, {height: 40}]}>
-              <Text
-                style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
-              <Image source={require('../img/phone.png')}/>
-            </View>
+            <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
+                       title={this.state.detailData.order.route.airport[1].phone}/>
             <Text style={routeStyle.rTitle}>飞前准备</Text>
             <SwitchComp text='货物已装载完成'
                         initialChecked={this.state.initialChecked}
@@ -408,7 +412,7 @@ const routeStyle = StyleSheet.create({
   rTitle: {
     fontSize: 16,
     color: '#313131',
-    fontWeight:'bold',
+    fontWeight: 'bold',
     marginTop: 15,
     marginBottom: 15,
     marginLeft: 16,

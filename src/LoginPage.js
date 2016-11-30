@@ -11,6 +11,7 @@ import {
   Image,
   TextInput,
   Platform,
+  StatusBar,
   ToastAndroid,
   AsyncStorage,
   ProgressBarAndroid,
@@ -37,7 +38,9 @@ export default class LoginPage extends Component {
 
   }
 
-
+  componentDidMount() {
+    StatusBar.setBackgroundColor('#000', true);
+  }
   openDrawer() {
     this.refs.drawerLayout.openDrawer()
   }

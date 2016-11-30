@@ -9,6 +9,7 @@ import{
   StyleSheet,
   ListView,
   Platform,
+  StatusBar,
   ToastAndroid,
   AsyncStorage,
   RefreshControl,
@@ -47,6 +48,7 @@ export default class OrderListView extends React.Component {
 
 // 页面render之后请求数据
   componentDidMount() {
+    StatusBar.setBackgroundColor('#000', true);
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理

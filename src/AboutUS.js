@@ -12,12 +12,16 @@ import {
   Platform,
   Vibration,
   View,
+  StatusBar,
   Image,
   TouchableOpacity
 } from 'react-native';
 export default class BarcodeScanner extends Component {
   constructor(props) {
     super(props);
+  }
+  componentDidMount() {
+    StatusBar.setBackgroundColor('#000', true);
   }
   render() {
     return (

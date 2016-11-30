@@ -10,6 +10,7 @@ import  {
   Platform,
   Image,
   Picker,
+  StatusBar,
   ToastAndroid,
   AsyncStorage,
   TouchableOpacity
@@ -47,6 +48,48 @@ export default class ScanComponent extends React.Component {
     };
     this.fid = '';
   }
+
+  componentDidMount() {
+    StatusBar.setBackgroundColor('#000', true);
+    let _this = this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      //TODO:错误处理
+      if (!errs) {
+        // let Token = result;
+        Token = result;
+        console.log("取得缓存中的Token是  ", Token, "  ");
+      }
+    });
+
+    AsyncStorage.getItem("ROUTE_ID", function (errs, result) {
+      //TODO:错误处理
+      if (!errs) {
+        let route_id = result;
+        let url = "http://jieyan.xyitech.com/config/route?token=" + Token + "&id=" + route_id;
+        NetUtil.postJson(url, (responseText)=> {
+          let curdata = JSON.parse(responseText);
+          console.log("获得的单个航路信息是  ", curdata);
+          if (curdata.err == '0') {
+            _this.setState({
+              // sname:"121",
+              dataload: true,
+              sname: curdata.route.sname,
+              ename: curdata.route.ename,
+              distance: (curdata.route.distance / 1000).toFixed(0),
+              duration: (curdata.route.duration / 60).toFixed(0),
+            });
+            console.log("存储缓存中的route是  ", JSON.stringify(curdata.route));
+            AsyncStorage.setItem("SINGLE_ROUTE", JSON.stringify(curdata.route));
+          } else {
+            // alert("没有该航路，请重试");
+            ToastAndroid.show('没有该航路，请重试', ToastAndroid.SHORT);
+          }
+        });
+        // alert(route_id)
+      }
+    });
+  }
+
 
   onChildChanged(newState, value) {
     // alert(newState);
@@ -98,46 +141,6 @@ export default class ScanComponent extends React.Component {
       })
     }
 
-  }
-
-  componentDidMount() {
-    let _this = this;
-    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
-      //TODO:错误处理
-      if (!errs) {
-        // let Token = result;
-        Token = result;
-        console.log("取得缓存中的Token是  ", Token, "  ");
-      }
-    });
-
-    AsyncStorage.getItem("ROUTE_ID", function (errs, result) {
-      //TODO:错误处理
-      if (!errs) {
-        let route_id = result;
-        let url = "http://jieyan.xyitech.com/config/route?token=" + Token + "&id=" + route_id;
-        NetUtil.postJson(url, (responseText)=> {
-          let curdata = JSON.parse(responseText);
-          console.log("获得的单个航路信息是  ", curdata);
-          if (curdata.err == '0') {
-            _this.setState({
-              // sname:"121",
-              dataload: true,
-              sname: curdata.route.sname,
-              ename: curdata.route.ename,
-              distance: (curdata.route.distance / 1000).toFixed(0),
-              duration: (curdata.route.duration / 60).toFixed(0),
-            });
-            console.log("存储缓存中的route是  ", JSON.stringify(curdata.route));
-            AsyncStorage.setItem("SINGLE_ROUTE", JSON.stringify(curdata.route));
-          } else {
-            // alert("没有该航路，请重试");
-            ToastAndroid.show('没有该航路，请重试', ToastAndroid.SHORT);
-          }
-        });
-        // alert(route_id)
-      }
-    });
   }
 
   orderCreate() {

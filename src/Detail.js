@@ -16,6 +16,7 @@ import  {
   Image,
   Platform,
   Switch,
+  StatusBar,
   Alert,
   ToastAndroid,
   AsyncStorage,
@@ -23,6 +24,7 @@ import  {
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
 import getFlight from './getFlight';
+import DialPhone from './DialPhone';
 var Token;
 export default class Detail extends React.Component {
   constructor(props) {
@@ -36,6 +38,7 @@ export default class Detail extends React.Component {
   }
 
   componentDidMount() {
+    StatusBar.setBackgroundColor('#000', true);
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
@@ -258,11 +261,8 @@ export default class Detail extends React.Component {
                   style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
                   style={routeStyle.rTextName}>分钟</Text></Text>
               </View>
-              <View style={routeStyle.rItem}>
-                <Text
-                  style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
-                <Image source={require('../img/phone.png')}/>
-              </View>
+              <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
+                         title={this.state.detailData.order.route.airport[1].phone}/>
             </View>
 
             <View style={routeStyle.container}>
@@ -348,11 +348,8 @@ export default class Detail extends React.Component {
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
-                <View style={routeStyle.rItem}>
-                  <Text
-                    style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
-                  <Image source={require('../img/phone.png')}/>
-                </View>
+                <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
+                           title={this.state.detailData.order.route.airport[1].phone}/>
               </View>
 
               <View style={routeStyle.container}>
@@ -434,11 +431,8 @@ export default class Detail extends React.Component {
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
-                <View style={routeStyle.rItem}>
-                  <Text
-                    style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
-                  <Image source={require('../img/phone.png')}/>
-                </View>
+                <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
+                           title={this.state.detailData.order.route.airport[1].phone}/>
               </View>
 
               <View style={routeStyle.container}>
