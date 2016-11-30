@@ -49,9 +49,6 @@ export default class Detail extends React.Component {
       //TODO:错误处理
       if (!errs) {
         let curfid = result;
-        // _this.setState({
-        //   fid: curfid,
-        // });
         _this.getOrderDetail(curfid);
         console.log("取得缓存中的order_detail_id是  ", curfid, "  ");
       }
@@ -66,7 +63,6 @@ export default class Detail extends React.Component {
       component: getFlight
     });
     // alert("想先上车再买票？那你就只能想了~~~");
-
   }
 
   getOrderDetail(id) {
@@ -237,8 +233,8 @@ export default class Detail extends React.Component {
                     }}>取消运单</Text>
             </View>
             <View style={routeStyle.rContianer}>
-              <View style={[routeStyle.rItem, {marginBottom: 15}]}>
-                <Text style={routeStyle.rTextLeft}>运单编号&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
+              <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
+                <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
                 <Text style={routeStyle.rTextRight}>{this.orderState(this.state.detailData.order.state)}</Text>
               </View>
               <View style={routeStyle.rItem}>
@@ -256,14 +252,15 @@ export default class Detail extends React.Component {
                   style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
                   style={routeStyle.rTextName}>公里</Text></Text>
               </View>
-              <View style={routeStyle.rItem}>
+              <View style={[routeStyle.rItem, {marginBottom: 20,}]}>
                 <Text style={routeStyle.rTextLeft}>预计飞行时间</Text>
                 <Text style={routeStyle.rTextRight}><Text
                   style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
                   style={routeStyle.rTextName}>分钟</Text></Text>
               </View>
               <View style={routeStyle.rItem}>
-                <Text style={routeStyle.rTextLeft}>联系人电话 {this.state.detailData.order.route.airport[1].phone}</Text>
+                <Text
+                  style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
                 <Image source={require('../img/phone.png')}/>
               </View>
             </View>
@@ -326,8 +323,8 @@ export default class Detail extends React.Component {
                 <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
               </View>
               <View style={routeStyle.rContianer}>
-                <View style={[routeStyle.rItem, {marginBottom: 15}]}>
-                  <Text style={routeStyle.rTextLeft}>运单编号&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
+                <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
+                  <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
                   <Text style={routeStyle.rTextRight}>{this.orderState(this.state.detailData.order.state)}</Text>
                 </View>
                 <View style={routeStyle.rItem}>
@@ -345,14 +342,15 @@ export default class Detail extends React.Component {
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>公里</Text></Text>
                 </View>
-                <View style={routeStyle.rItem}>
+                <View style={[routeStyle.rItem, {marginBottom: 20,}]}>
                   <Text style={routeStyle.rTextLeft}>预计飞行时间</Text>
                   <Text style={routeStyle.rTextRight}><Text
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
                 <View style={routeStyle.rItem}>
-                  <Text style={routeStyle.rTextLeft}>联系人电话 {this.state.detailData.order.route.airport[1].phone}</Text>
+                  <Text
+                    style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
                   <Image source={require('../img/phone.png')}/>
                 </View>
               </View>
@@ -411,8 +409,8 @@ export default class Detail extends React.Component {
                 <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
               </View>
               <View style={routeStyle.rContianer}>
-                <View style={[routeStyle.rItem, {marginBottom: 15}]}>
-                  <Text style={routeStyle.rTextLeft}>运单编号&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
+                <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
+                  <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
                   <Text style={routeStyle.rTextRight}>{this.orderState(this.state.detailData.order.state)}</Text>
                 </View>
                 <View style={routeStyle.rItem}>
@@ -430,14 +428,15 @@ export default class Detail extends React.Component {
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>公里</Text></Text>
                 </View>
-                <View style={routeStyle.rItem}>
+                <View style={[routeStyle.rItem, {marginBottom: 20}]}>
                   <Text style={routeStyle.rTextLeft}>飞行时间</Text>
                   <Text style={routeStyle.rTextRight}><Text
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
                 <View style={routeStyle.rItem}>
-                  <Text style={routeStyle.rTextLeft}>联系人电话 {this.state.detailData.order.route.airport[1].phone}</Text>
+                  <Text
+                    style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
                   <Image source={require('../img/phone.png')}/>
                 </View>
               </View>
@@ -460,7 +459,6 @@ export default class Detail extends React.Component {
                 <View style={routeStyle.content}>
                   <View style={routeStyle.ImageArea}>
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
-
                     <Image style={routeStyle.Image1} source={require('../img/detail02.png')}/>
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
@@ -491,7 +489,6 @@ export default class Detail extends React.Component {
             </View>
           )
         }
-
       }
     } else {
       return (
@@ -524,7 +521,7 @@ export default class Detail extends React.Component {
 
 const routeStyle = StyleSheet.create({
   rContianer: {
-    flex: 1,
+    flex: 3,
     backgroundColor: '#f7f7f7',
   },
   rItem: {
@@ -535,21 +532,21 @@ const routeStyle = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#313131',
     marginBottom: 1,
     backgroundColor: '#fff',
-
   },
   rTextLeft: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    color: '#313131',
   },
   rTextRight: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'right',
+    color: '#313131',
   },
   rTextValue: {
     color: '#E98B21',
@@ -557,9 +554,10 @@ const routeStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'right',
+    fontSize: 22,
   },
   container: {
-    flex: 1,
+    flex: 2,
     flexDirection: 'column',
     paddingLeft: 18,
     paddingRight: 18,
@@ -572,35 +570,30 @@ const routeStyle = StyleSheet.create({
   },
   ImageArea: {
     flex: 1,
-    // backgroundColor: "#0f2",
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 60,
     marginLeft: -20,
   },
-  Image2: {
-    // marginLeft:10,
-  },
   Left: {
     flex: 2,
     paddingTop: 10,
-    // backgroundColor: "#f00",
     alignItems: 'flex-start',
     justifyContent: 'center',
+    color: '#313131',
   },
   Right: {
     flex: 4,
     paddingTop: 10,
-    // backgroundColor: "#00f",
     alignItems: 'flex-start',
     justifyContent: 'center',
+    color: '#313131',
   },
   Text: {
     marginBottom: 10,
     fontSize: 15,
     color: '#313131',
-    // backgroundColor: '#f15',
   },
   Text1: {
     marginBottom: -2,
@@ -609,12 +602,12 @@ const routeStyle = StyleSheet.create({
   },
   Text2: {
     fontSize: 18,
+    fontWeight: 'bold',
   },
   gridTitle: {
     fontSize: 16,
     color: '#313131',
     marginTop: 7,
     marginBottom: 7,
-    // marginLeft: 16,
   },
 });

@@ -243,41 +243,6 @@ export default class ScanComponent extends React.Component {
     });
   }
 
-  // showBottomDialog() {
-  //   // if (value == "package") {
-  //   //   return
-  //   // }
-  //   // (value)=> {
-  //   //   this.setState({isPackageType: (this.state.isPackageType ? false : true)})
-  //   // }
-  //   // let n=value;
-  //   if (this.state.isPackageType) {
-  //     alert(1);
-  //     this._isShowUp();
-  //   } else {
-  //     alert(2);
-  //   }
-  // }
-  //
-  // _isShowUp() {
-  //   if (this.state.isPackageType) {
-  //     return (
-  //       <View style={scanStyle.gridContent}>
-  //         <GridChild text="报纸" orderName="报纸" orderType="paper" initialChecked={this.state.initialChecked}
-  //                    callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-  //         <GridChild text="信件" orderName="信件" orderType="letter" initialChecked={this.state.initialChecked}
-  //                    callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-  //         <GridChild text="刊物" orderName="刊物" orderType="magzine" initialChecked={this.state.initialChecked}
-  //                    callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-  //         <GridChild text="包裹" orderName="包裹" orderType="package" initialChecked={this.state.initialChecked}
-  //                    callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-  //       </View>
-  //     )
-  //   } else {
-  //     return null
-  //   }
-  //
-  // }
 // <Text onPress={()=> {
 //   this.props.navigator.push({
 //     name: 'BarcodeScanner',
@@ -330,7 +295,7 @@ export default class ScanComponent extends React.Component {
             <View style={routeStyle.rContianer}>
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>无人机行程</Text>
-                <Text style={routeStyle.rTextRight}>{this.state.sname}-{this.state.ename}</Text>
+                <Text style={routeStyle.rTextRight}>{this.state.sname}&nbsp;-&nbsp;{this.state.ename}</Text>
               </View>
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>飞行距离</Text>
@@ -345,10 +310,9 @@ export default class ScanComponent extends React.Component {
                   style={routeStyle.rTextName}>分钟</Text></Text>
               </View>
 
-              <View style={routeStyle.rItem}
-              >
-                <Text style={routeStyle.rTextLeft}>选择货物</Text>
-                <Text style={routeStyle.rTextRight}
+              <View style={[routeStyle.rItem,{marginTop:20,}]}>
+              <Text style={routeStyle.rTextLeft}>选择货物</Text>
+                <Text style={[routeStyle.rTextRight,routeStyle.Textgray]}
                       onPress={()=> {
                         this.setState({isPackageType: (this.state.isPackageType ? false : true)})
                       }}>{this.state.setChoosedType}</Text>
@@ -359,7 +323,8 @@ export default class ScanComponent extends React.Component {
                 <Text style={routeStyle.rTextLeft}>物品重量</Text>
                 <TextInput style={[scanStyle.TextInput, {marginRight: 10, width: 60, textAlign: 'right'}]}
                            underlineColorAndroid='transparent'
-                           placeholder='1kg'
+                           placeholder='1公斤'
+                           placeholderTextColor='#a09f9f'
                            onFocus={
                              ()=> {
                                this._textInputFocus()
@@ -436,7 +401,7 @@ export default class ScanComponent extends React.Component {
             <View style={routeStyle.rContianer}>
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>无人机行程</Text>
-                <Text style={routeStyle.rTextRight}>{this.state.sname}-{this.state.ename}</Text>
+                <Text style={routeStyle.rTextRight}>{this.state.sname}&nbsp;-&nbsp;{this.state.ename}</Text>
               </View>
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>飞行距离</Text>
@@ -451,10 +416,9 @@ export default class ScanComponent extends React.Component {
                   style={routeStyle.rTextName}>分钟</Text></Text>
               </View>
 
-              <View style={routeStyle.rItem}
-              >
-                <Text style={routeStyle.rTextLeft}>选择货物</Text>
-                <Text style={routeStyle.rTextRight}
+              <View style={[routeStyle.rItem,{marginTop:20,}]}>
+              <Text style={routeStyle.rTextLeft}>选择货物</Text>
+                <Text style={[routeStyle.rTextRight,routeStyle.Textgray]}
                       onPress={()=> {
                         this.setState({isPackageType: (this.state.isPackageType ? false : true)})
                       }}>{this.state.setChoosedType}</Text>
@@ -466,7 +430,8 @@ export default class ScanComponent extends React.Component {
                 <Text style={routeStyle.rTextLeft}>物品重量</Text>
                 <TextInput style={[scanStyle.TextInput, {width: 60, textAlign: 'right'}]}
                            underlineColorAndroid='transparent'
-                           placeholder='1kg'
+                           placeholder='1公斤'
+                           placeholderTextColor='#a09f9f'
                            onFocus={
                              ()=> {
                                this._textInputFocus()
@@ -588,8 +553,12 @@ const routeStyle = StyleSheet.create({
     textAlign: 'right',
     color: '#313131',
   },
+  Textgray:{
+    color:'#A09F9F',
+  },
   rTextValue: {
     color: '#E98B21',
+    fontSize:22,
   }
 })
 const scanStyle = StyleSheet.create({
@@ -601,6 +570,7 @@ const scanStyle = StyleSheet.create({
     fontSize: 14,
     paddingLeft: 16,
     paddingRight: 16,
+    marginTop:20,
     backgroundColor: '#fff',
     marginBottom: 1
   },

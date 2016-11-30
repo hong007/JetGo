@@ -359,8 +359,8 @@ export default class OrderListView extends React.Component {
     return (
       <TouchableOpacity onPress={()=>this.openOrderItem(curitem.id, curitem.state)}>
         <View style={OrderListItem.container}><View style={OrderListItem.title}><Text
-          style={OrderListItem.titleLeft}>运单编号&nbsp;&nbsp;&nbsp;{curitem.id}</Text><Text
-          style={OrderListItem.titleRight}>{this.orderState(curitem.state)}</Text></View><View
+          style={curitem.state == 0 || curitem.state == 1 ? OrderListItem.titleLeft1 : OrderListItem.titleLeft2}>运单编号&nbsp;&nbsp;&nbsp;{curitem.id}</Text><Text
+          style={curitem.state == 0 || curitem.state == 1 ? OrderListItem.titleRight1 : OrderListItem.titleRight2}>{this.orderState(curitem.state)}</Text></View><View
           style={OrderListItem.content}><View style={OrderListItem.Left}><Text
           style={OrderListItem.Text}>{item.sname}</Text><Text
           style={OrderListItem.Text}>{this.setOrderStatusDateTime(item, 'start')}</Text></View><View
@@ -372,30 +372,25 @@ export default class OrderListView extends React.Component {
     );
   }
 
-
   // 是否显示底部文字提示
   showOrHideFooter() {
     if (this.state.hideLoadAll) {
-      console.log('加载更多隐藏！')
+      console.log('加载更多隐藏！');
       return null;
     } else {
-      console.log('加载更多显示！')
+      console.log('加载更多显示！');
       return (
         <View style={OrderListItem.footer}>
           <Text style={OrderListItem.footerTitle}>{this.state.isLoadAll ? '已加载全部' : '向下滚动加载更多……'}</Text>
         </View>
       )
     }
-
   }
 
   render() {
     if (!this.state.loaded || this.state.nonedata) {
       return this.renderLoadingView();
     }
-    // if (this.state.nonedata) {
-    //   return this.renderNoneData();
-    // }
     return (
       <View style={{flex: 1,}}>
         <View style={{
@@ -456,14 +451,25 @@ const OrderListItem = StyleSheet.create({
     paddingBottom: 5,
     borderBottomColor: '#f7f7f7',
   },
-  titleLeft: {
+  titleLeft1: {
     flex: 1,
     color: '#A09F9F',
     fontSize: 12,
   },
-  titleRight: {
+  titleRight1: {
     flex: 1,
     color: '#A09F9F',
+    textAlign: 'right',
+    fontSize: 13,
+  },
+  titleLeft2: {
+    flex: 1,
+    color: '#313131',
+    fontSize: 12,
+  },
+  titleRight2: {
+    flex: 1,
+    color: '#313131',
     textAlign: 'right',
     fontSize: 13,
   },
@@ -474,21 +480,18 @@ const OrderListItem = StyleSheet.create({
   Left: {
     flex: 2,
     paddingTop: 10,
-    // backgroundColor: "#f01",
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
   Right: {
     flex: 2,
     paddingTop: 10,
-    // backgroundColor: "#f12",
     alignItems: 'flex-end',
     justifyContent: 'center',
     textAlign: "right",
   },
   ImageArea: {
     flex: 1,
-    // backgroundColor: "#0f2",
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -500,7 +503,6 @@ const OrderListItem = StyleSheet.create({
     marginBottom: 10,
     fontSize: 15,
     color: '#313131',
-    // backgroundColor: '#f15',
   },
   footer: {
     flexDirection: 'row',

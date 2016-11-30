@@ -42,7 +42,6 @@ const switchStyle = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        color: '#313131',
         marginBottom: 1,
         backgroundColor: '#fff',
 
@@ -51,11 +50,13 @@ const switchStyle = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
+        color: '#313131',
     },
     rTextRight: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         textAlign: 'right',
+        color: '#313131',
     },
 })

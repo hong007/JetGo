@@ -164,24 +164,40 @@ export default class Main extends React.Component {
           flexDirection: 'column',
           backgroundColor: '#FFF'
         }}>
-
           <View style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            height: (Platform.OS === 'android' ? 42 : 50),
             backgroundColor: '#fff',
-            height: (Platform.OS === 'android' ? 42 : 50)
+            paddingLeft: 18,
+            paddingRight: 18
           }}>
-            <TouchableHighlight onPress={()=>this.openDrawer()}
-                                style={{paddingLeft: 10, paddingTop: 15, width: 34,}}>
-              <Image style={{}} source={require('../img/menu.png')}/>
-            </TouchableHighlight>
-
+            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
+                width: 34,
+                alignItems: 'flex-start',
+                justifyContent: 'center',
+                height: (Platform.OS === 'android' ? 42 : 50)
+              }}
+                                onPress={()=>this.openDrawer()}>
+                <Image style={{}} source={require('../img/menu.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+              <Image source={require('../img/jy_logo.png')}/>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
+                alignItems: 'flex-start',
+                justifyContent: 'center',
+                height: (Platform.OS === 'android' ? 42 : 50)
+              }} onPress={() => this.pageJump()}>
+                <Image source={require('../img/icon_order.png')}/>
+              </TouchableOpacity>
+            </View>
           </View>
-          <TouchableOpacity
-            style={{height:42,width:42,top: 0, right: 0, position: 'absolute',}}
-            onPress={() => this.pageJump()}
-          >
-            <Image style={{marginTop:15,}} source={require('../img/icon_order.png')}/>
-          </TouchableOpacity>
-          <View style={{flex: 1, marginTop: 60, padding: 18,}}>
+
+          <View style={{flex: 4, marginTop: 60, padding: 18,}}>
             <PickerComponent refs="picker"/>
           </View>
 

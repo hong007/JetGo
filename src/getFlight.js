@@ -257,36 +257,39 @@ export default class getFlight extends React.Component {
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
           </View>
           <View style={routeStyle.rContianer}>
-            <View style={[routeStyle.rItem, {marginBottom: 1, height: 50}]}>
+            <View style={[routeStyle.rItem, {marginBottom: 1,marginTop:1, height: 40}]}>
               <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
             </View>
             <View style={[routeStyle.rItem, {height: 95}]}>
               <Image source={require('../img/flight.png')}/>
-
               <View style={{height: 95, flex: 3, flexDirection: 'column'}}>
-                <View style={[routeStyle.rItem, {height: 20}]}>
+                <View style={[routeStyle.rItem, {height: 20,}]}>
                   <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
                   <Text style={routeStyle.rTextRight}><Text
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>公里</Text></Text>
                 </View>
-                <View style={[routeStyle.rItem, {height: 16}]}>
+                <View style={[routeStyle.rItem, {height: 16,marginTop:-10,}]}>
                   <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
                 </View>
 
-                <View style={[routeStyle.rItem, {height: 16}]}>
+                <View style={[routeStyle.rItem, {height: 16,marginTop:-15,}]}>
                   <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
                   <Text style={routeStyle.rTextRight}><Text
-                    style={[routeStyle.rTextValue, {fontSize: 22}]}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
+                    style={[routeStyle.rTextValue, {fontSize: 22,color:'#E98B21'}]}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
               </View>
 
             </View>
-            {/*<Text style={scanStyle.gridTitle}>How many are checked:{this.state.totalChecked}</Text>*/}
-            <Text style={scanStyle.gridTitle}>飞前准备</Text>
+            <View style={[routeStyle.rItem, {height: 40}]}>
+              <Text
+                style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
+              <Image source={require('../img/phone.png')}/>
+            </View>
+            <Text style={routeStyle.rTitle}>飞前准备</Text>
             <SwitchComp text='货物已装载完成'
                         initialChecked={this.state.initialChecked}
                         callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
@@ -301,7 +304,7 @@ export default class getFlight extends React.Component {
           </View>
           <View style={{alignItems: 'center'}}>
             <TouchableOpacity style={{
-              backgroundColor: '#E98B21',
+              backgroundColor: '#313131',
               marginTop: 20,
               height: 80,
               width: 80,
@@ -367,24 +370,23 @@ const routeStyle = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#313131',
     marginBottom: 1,
     backgroundColor: '#fff',
-
   },
   rTextLeft: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    color: '#313131',
   },
   rTextRight: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'right',
+    color: '#313131',
   },
   rTextValue: {
-    color: '#E98B21',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -394,61 +396,21 @@ const routeStyle = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    color: '#313131',
   },
   rRightView: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'right',
-  }
-})
-const scanStyle = StyleSheet.create({
-  TextInputView: {
-    height: 44,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    color: '#a09f9f',
-    fontSize: 14,
-    paddingLeft: 16,
-    paddingRight: 16,
-    backgroundColor: '#fff',
-    marginBottom: 30,
+    color: '#313131',
   },
-  TextInput: {
-    height: 44,
-  },
-  gridContainer: {
-    flex: 1,
-    marginTop: 20,
-  },
-  gridContent: {
-    flex: 1,
-    height: 60,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingLeft: 10,
-  },
-  gridTitle: {
+  rTitle: {
     fontSize: 16,
     color: '#313131',
-    marginTop: 7,
-    marginBottom: 7,
+    fontWeight:'bold',
+    marginTop: 15,
+    marginBottom: 15,
     marginLeft: 16,
   },
-  gridItem: {
-    width: 72,
-    height: 36,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    backgroundColor: '#fff',
-    color: '#a09f9f',
-    marginLeft: 10,
-    marginTop: 10,
-    borderRadius: 2.4,
-    paddingTop: 8,
-  },
-  gridText: {
-    width: 72,
-    textAlign: 'center',
-  }
 });

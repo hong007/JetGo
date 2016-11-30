@@ -286,7 +286,7 @@ export default class getFlight extends React.Component {
                 style={{fontSize: 22,}} value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>
             </View>
 
-            <View style={[routeStyle.rItem, {marginTop: 0}]}>
+            <View style={[routeStyle.rItem, {marginTop: 0,marginBottom:20,}]}>
               <Text
                 style={routeStyle.rTextLeft}>联系人电话:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.route.airport[1].phone}</Text>
               <Image source={require('../img/phone.png')}/>

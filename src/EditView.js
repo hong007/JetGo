@@ -3,51 +3,51 @@
  */
 import React, {Component} from 'react';
 import {
-    ToolbarAndroid,
-    AppRegistry,
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    TextInput,
-    TouchableOpacity
+  ToolbarAndroid,
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  TouchableOpacity
 } from 'react-native';
 export default class EditView extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {text: ''};
-    }
+  constructor(props) {
+    super(props);
+    this.state = {text: ''};
+  }
 
-    render() {
-        return (
-            <View style={LoginStyles.TextInputView}>
-                <TextInput underlineColorAndroid='transparent'
-                           secureTextEntry={this.props.name == "password" ? true : false} style={LoginStyles.TextInput}
-                           onChangeText={
-                               (text) => {
-                                   this.setState({text});
-                                   this.props.onChangeText(text);
-                               }
-                           }
-                />
-            </View>
-        );
-    }
+  render() {
+    return (
+      <View style={LoginStyles.TextInputView}>
+        <TextInput underlineColorAndroid='transparent'
+                   secureTextEntry={this.props.name == "password" ? true : false} style={LoginStyles.TextInput}
+                   onChangeText={
+                     (text) => {
+                       this.setState({text});
+                       this.props.onChangeText(text);
+                     }
+                   }
+        />
+      </View>
+    );
+  }
 }
 
 
 const LoginStyles = StyleSheet.create({
-    TextInputView: {
-        height: 50,
-        flexDirection: 'column',
-        justifyContent: 'center',
-        color: '#fff',
-        fontSize: 14,
-        borderBottomWidth:1,
-        borderBottomColor:'#A09F9F',
-    },
+  TextInputView: {
+    height: 50,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#A09F9F',
+  },
 
-    TextInput: {
-        height: 54,
-    },
+  TextInput: {
+    height: 54,
+    color: '#fff',
+    fontSize: 22,
+  },
 });
