@@ -44,6 +44,7 @@ export default class LoginPage extends Component {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
   }
+
   openDrawer() {
     this.refs.drawerLayout.openDrawer()
   }
@@ -65,18 +66,18 @@ export default class LoginPage extends Component {
     console.warn('YellowBox is disabled.');
     if (this.state.loginStatus) {
       return (
-          <LoadingViewProgress/>
+        <LoadingViewProgress/>
       )
     }
     return (
       <View style={LoginStyles.loginview}>
-        <Text style={{fontSize: 22*Ctrl.pxToDp(), color: '#fff',}}>用户登录</Text>
+        <Text style={{fontSize: 22 * Ctrl.pxToDp(), color: '#fff',}}>用户登录</Text>
         <View style={{paddingTop: 38,}}>
-          <Text style={{color: '#a09f9f', marginTop: 20,fontSize:14*Ctrl.pxToDp()}}>用户名</Text>
+          <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>用户名</Text>
           <EditView name='' onChangeText={(text) => {
             this.userName = text;
           }}/>
-          <Text style={{color: '#a09f9f', marginTop: 20,fontSize:14*Ctrl.pxToDp()}}>密码</Text>
+          <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>密码</Text>
           <EditView name='password' onChangeText={(text) => {
             this.passWord = text;
           }}/>
@@ -150,6 +151,6 @@ const LoginStyles = StyleSheet.create({
     padding: 30,
     paddingTop: (Platform.OS === 'android' ? 102 : 110),
     backgroundColor: '#313131',
-    zIndex:-1,
+    zIndex: -1,
   },
 });

@@ -53,7 +53,7 @@ const LeftMenuStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    height: 80*Ctrl.pxToDp(),
+    height: 80 * Ctrl.pxToDp(),
     paddingLeft: 30,
     borderBottomWidth: 1,
     backgroundColor: '#1b1b1b',
@@ -65,7 +65,7 @@ const LeftMenuStyles = StyleSheet.create({
     // marginTop:3,
   },
   menuText: {
-    fontSize: 16*Ctrl.pxToDp(),
+    fontSize: 16 * Ctrl.pxToDp(),
     marginLeft: 15,
     textAlign: 'center',
     justifyContent: 'center',

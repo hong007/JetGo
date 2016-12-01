@@ -39,7 +39,7 @@ export default class EditView extends Component {
 
 const LoginStyles = StyleSheet.create({
   TextInputView: {
-    height: 50*Ctrl.pxToDp(),
+    height: 50 * Ctrl.pxToDp(),
     flexDirection: 'column',
     justifyContent: 'center',
     borderBottomWidth: 1,
@@ -47,8 +47,8 @@ const LoginStyles = StyleSheet.create({
   },
 
   TextInput: {
-    height: 54*Ctrl.pxToDp(),
+    height: 54 * Ctrl.pxToDp(),
     color: '#fff',
-    fontSize: 22*Ctrl.pxToDp(),
+    fontSize: 22 * Ctrl.pxToDp(),
   },
 });

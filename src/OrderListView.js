@@ -16,14 +16,12 @@ import{
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
-
 // import ListViewItem from './ListViewItem';
 import NetUtil from './NetUtil';
 import Detail from './Detail';
 import RealtimeOrder from './RealtimeOrder';
 import Main from './Main';
 import Ctrl from './Ctrl';
-
 
 const pageSize = 20;
 var pageCount = 0;
@@ -53,40 +51,24 @@ export default class OrderListView extends React.Component {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
     let _this = this;
-    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
-      //TODO:错误处理
+    AsyncStorage.getItem('LOGIN_TOKEN', function (errs, result) {
       if (!errs) {
-        // let Token = result;
+        let curdata = result;
+        // Token = result[0][1];
         Token = result;
-        console.log("取得缓存中的Token是  ", Token, "  ");
-        _this.timer=setTimeout(
-          ()=>{
+        // 延迟加载数据
+        totalList = [];
+        _this.timer = setTimeout(
+          ()=> {
             _this._fetchListData(0);
-          },500
+          }, 500
         );
+        // alert("返回数据是  " + curdata + "  " + "  数据类型是  " + typeof curdata + "   token是" + Token + "  DETAIL_ID  是    " + curfid);
       }
-    });
-    AsyncStorage.getItem("ORDER_CONFIRM", function (errs, result) {
-      //TODO:错误处理
-      if (!errs) {
-        // let Token = result;
-        let ORDER_CONFIRM = result;
-        console.log("取得缓存中的ORDER_CONFIRM是  ", ORDER_CONFIRM);
-        if(!errs){
-          totalList = [];
-          _this.timer=setTimeout(
-            ()=>{
-              _this._fetchListData(0);
-            },500
-          );
-        }
-      }
-    });
+    })
   }
 
   _fetchListData(page) {
-    // let url = "http://jieyan.xyitech.com/order/list?token=MiMxNDc2MjUzOTU4QGppZXlhbi54eWl0ZWNoLmNvbSNiUy9odVhnK1VtUUlsVFNmejdWVXBBa1N0SGM9&page_no=1&page_size=20";
-    // let url = "https://raw.githubusercontent.com/facebook/react-native/master/docs/MoviesExample.json";
     let curpageNo = page;
     if (curpageNo == '' || !curpageNo) {
       curpageNo = 0;
@@ -95,7 +77,7 @@ export default class OrderListView extends React.Component {
     let url = "http://jieyan.xyitech.com/order/search?&page_no=" + curpageNo + "&page_size=20&token=" + Token;
     NetUtil.postJson(url, (responseText)=> {
       if (!responseText || responseText == "") {
-        // alert("加载中，请重新加载！")
+        ToastAndroid.show('错误，请重试', ToastAndroid.SHORT);
       } else {
         // let curdata = responseText;
         // console.log("默认信息是 ",responseText,'  数据类型是',typeof responseText);
@@ -246,7 +228,16 @@ export default class OrderListView extends React.Component {
           paddingLeft: 18
         }}>
           <TouchableOpacity
-            style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
+            style={{
+              height: 44,
+              width: 44,
+              top: 0,
+              left: 0,
+              position: 'absolute',
+              zIndex: 999999,
+              paddingLeft: 15,
+              paddingTop: 18,
+            }}
             onPress={() => this.props.navigator.pop()}
           >
             <Image source={require('../img/ic_back.png')}/>
@@ -258,41 +249,6 @@ export default class OrderListView extends React.Component {
         </View>
       </View>
     );
-  }
-
-// 判断运单状态
-  orderState(state) {
-    let n = state;
-    // alert(n)
-    // console.log('运单当前状态是 ', n);
-    switch (n) {
-      case 0:
-        return '未起飞';
-        break;
-      case 1:
-        return '已取消';
-        break;
-      case 2:
-        return '运送中';
-        break;
-      case 3 || 6 || 9:
-        return '异常';
-        break;
-      case 4:
-        return '已送达';
-        break;
-      case 5:
-        return '返航中';
-        break;
-      case 7:
-        return '完成';
-        break;
-      case 8:
-        return '返航中';
-        break;
-      default:
-        return '';
-    }
   }
 
   // 运单时间转换
@@ -381,12 +337,11 @@ export default class OrderListView extends React.Component {
     let curitem = item;
     // curitem = JSON.stringify(curitem);
     // console.log("初始化的数据是 ", curitem, "数据类型是  ", typeof curitem);
-    // curdata.map(function (item) {
     return (
       <TouchableOpacity onPress={()=>this.openOrderItem(curitem.id, curitem.state)}>
         <View style={OrderListItem.container}><View style={OrderListItem.title}><Text
           style={curitem.state == 0 || curitem.state == 1 ? OrderListItem.titleLeft1 : OrderListItem.titleLeft2}>运单编号&nbsp;&nbsp;&nbsp;{curitem.id}</Text><Text
-          style={curitem.state == 0 || curitem.state == 1 ? OrderListItem.titleRight1 : OrderListItem.titleRight2}>{this.orderState(curitem.state)}</Text></View><View
+          style={curitem.state == 0 || curitem.state == 1 ? OrderListItem.titleRight1 : OrderListItem.titleRight2}>{Ctrl.orderState(curitem.state)}</Text></View><View
           style={OrderListItem.content}><View style={OrderListItem.Left}><Text
           style={OrderListItem.Text}>{item.sname}</Text><Text
           style={OrderListItem.Text}>{this.setOrderStatusDateTime(item, 'start')}</Text></View><View
@@ -428,8 +383,17 @@ export default class OrderListView extends React.Component {
           paddingTop: 15,
           paddingLeft: 18
         }}>
-          <TouchableOpacity style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
-            onPress={() => this._onBack()}
+          <TouchableOpacity style={{
+            height: 44,
+            width: 44,
+            top: 0,
+            left: 0,
+            position: 'absolute',
+            zIndex: 999999,
+            paddingLeft: 15,
+            paddingTop: 18,
+          }}
+                            onPress={() => this._onBack()}
           >
             <Image source={require('../img/ic_back.png')}/>
           </TouchableOpacity>
@@ -479,24 +443,24 @@ const OrderListItem = StyleSheet.create({
   titleLeft1: {
     flex: 1,
     color: '#A09F9F',
-    fontSize: 12*Ctrl.pxToDp(),
+    fontSize: 12 * Ctrl.pxToDp(),
   },
   titleRight1: {
     flex: 1,
     color: '#A09F9F',
     textAlign: 'right',
-    fontSize: 13*Ctrl.pxToDp(),
+    fontSize: 13 * Ctrl.pxToDp(),
   },
   titleLeft2: {
     flex: 1,
     color: '#313131',
-    fontSize: 12*Ctrl.pxToDp(),
+    fontSize: 12 * Ctrl.pxToDp(),
   },
   titleRight2: {
     flex: 1,
     color: '#313131',
     textAlign: 'right',
-    fontSize: 13*Ctrl.pxToDp(),
+    fontSize: 13 * Ctrl.pxToDp(),
   },
   content: {
     flex: 2,
@@ -526,18 +490,18 @@ const OrderListItem = StyleSheet.create({
   },
   Text: {
     marginBottom: 10,
-    fontSize: 15*Ctrl.pxToDp(),
+    fontSize: 15 * Ctrl.pxToDp(),
     color: '#313131',
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 40*Ctrl.pxToDp(),
+    height: 40 * Ctrl.pxToDp(),
   },
   footerTitle: {
     marginLeft: 10,
-    fontSize: 15*Ctrl.pxToDp(),
+    fontSize: 15 * Ctrl.pxToDp(),
     color: 'gray'
   }
 });

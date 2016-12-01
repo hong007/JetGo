@@ -18,6 +18,7 @@ import  {
   Switch,
   StatusBar,
   Alert,
+  BackAndroid,
   ToastAndroid,
   AsyncStorage,
 } from 'react-native';
@@ -39,31 +40,36 @@ export default class Detail extends React.Component {
     }
   }
 
+  // componentWillMount() {
+  //   if (Platform.OS === 'android') {
+  //     BackAndroid.addEventListener('hardwareBackPress', this._onBack());
+  //   }
+  // }
+  //
+  // componentWillUnmount() {
+  //   if (Platform.OS === 'android') {
+  //     BackAndroid.removeEventListener('hardwareBackPress', this._onBack());
+  //   }
+  // }
+
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
+    // BackAndroid.addEventListener('hardwareBackPress', this._onBack());
+
     Ctrl.setStatusBar();
     let _this = this;
-    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
-      //TODO:错误处理
+    AsyncStorage.multiGet(['LOGIN_TOKEN', 'DETAIL_ID'], function (errs, result) {
       if (!errs) {
-        // let Token = result;
-        Token = result;
-        console.log("取得缓存中的Token是  ", Token, "  ");
-      }
-    });
-    AsyncStorage.getItem("DETAIL_ID", function (errs, result) {
-      //TODO:错误处理
-      if (!errs) {
-        let curfid = result;
+        let curdata = result;
+        Token = result[0][1];
+        let curfid = result[1][1];
         _this.getOrderDetail(curfid);
-        console.log("取得缓存中的order_detail_id是  ", curfid, "  ");
+        // alert("返回数据是  " + curdata + "  " + "  数据类型是  " + typeof curdata + "   token是" + Token + "  DETAIL_ID  是    " + curfid);
       }
-    });
+    })
   }
 
   openOrderItem() {
-    // let id = value;
-    // AsyncStorage.setItem("DETAIL_ID", id);
     this.props.navigator.push({
       title: 'getFlight',
       component: getFlight
@@ -93,81 +99,10 @@ export default class Detail extends React.Component {
             isOrderCansle: true,
           })
         }
-        // AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
-        // this._onBack();
       } else {
         // alert("用户名或密码错误，请重试");
       }
     });
-  }
-
-// 判断运单状态
-  orderState(state) {
-    let n = state;
-    // alert(n)
-    // console.log('运单当前状态是 ', n);
-    switch (n) {
-      case 0:
-        return '未起飞';
-        break;
-      case 1:
-        return '已取消';
-        break;
-      case 2:
-        return '运送中';
-        break;
-      case 3 || 6 || 9:
-        return '异常';
-        break;
-      case 4:
-        return '已送达';
-        break;
-      case 5:
-        return '返航中';
-        break;
-      case 7:
-        return '完成';
-        break;
-      case 8:
-        return '返航中';
-        break;
-      default:
-        return '';
-    }
-  }
-
-  // 运单时间转换
-  setOrderStatusDateTime(value, type) {
-    let item = this.state.detailData.order;
-    let curtimestate = value;
-    var curTime = item['' + curtimestate];
-    console.log('当前时间是 ', curTime, '  运单t是  ', curtimestate);
-    let unixtime = curTime * 1;
-    let unixTimestamp = new Date(unixtime * 1000 + 28800000);//东8区时间偏移量为28800000毫秒
-    let commonTime = unixTimestamp;
-    let nYear = commonTime.getUTCFullYear();
-    let nMonth = (commonTime.getUTCMonth() + 1);
-    nMonth = nMonth < 10 ? ('0' + nMonth) : nMonth;
-    let nDay = commonTime.getUTCDate();
-    nDay = nDay < 10 ? ('0' + nDay) : nDay;
-
-    let tDate = nYear + "." + nMonth + "." + nDay;
-
-    let nHour = (commonTime.getUTCHours());
-    nHour = nHour < 10 ? ('0' + nHour) : nHour;
-    let nMinutes = commonTime.getUTCMinutes();
-    nMinutes = nMinutes < 10 ? ('0' + nMinutes) : nMinutes;
-    let nSeconds = commonTime.getUTCSeconds();
-    nSeconds = nSeconds < 10 ? ('0' + nSeconds) : nSeconds;
-
-    let tTime = nHour + ":" + nMinutes;
-
-    // let newStatusDate = nYear + "/" + nMonth + "/" + nDay + "/" + nHour + ":" + nMinutes + ":" + nSeconds;
-    if (type == "date") {
-      return nYear + "." + nMonth + "." + nDay;
-    } else {
-      return nHour + ":" + nMinutes;
-    }
   }
 
   _onBack() {
@@ -201,9 +136,12 @@ export default class Detail extends React.Component {
       let curdata = JSON.parse(responseText);
       console.log('返回数据是 ', curdata);
       if (curdata.err == '0') {
-        this._onBack();
+        this.props.navigator.push({
+          // title: '',
+          name: 'OrderListView',
+          component: OrderListView
+        });
       } else {
-        // alert("暂时无法取消，请重试！");
         ToastAndroid.show('暂时无法取消，请重试！', ToastAndroid.SHORT);
       }
     });
@@ -226,7 +164,16 @@ export default class Detail extends React.Component {
               paddingLeft: 18
             }}>
               <TouchableOpacity
-                style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
+                style={{
+                  height: 44,
+                  width: 44,
+                  top: 0,
+                  left: 0,
+                  position: 'absolute',
+                  zIndex: 999999,
+                  paddingLeft: 15,
+                  paddingTop: 18,
+                }}
                 onPress={() => this._onBack()}
               >
                 <Image source={require('../img/ic_back.png')}/>
@@ -241,7 +188,7 @@ export default class Detail extends React.Component {
             <View style={routeStyle.rContianer}>
               <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
                 <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
-                <Text style={routeStyle.rTextRight}>{this.orderState(this.state.detailData.order.state)}</Text>
+                <Text style={routeStyle.rTextRight}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
               </View>
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -276,8 +223,8 @@ export default class Detail extends React.Component {
                   <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                 </View>
                 <View style={routeStyle.Left}>
-                  <Text style={[routeStyle.Text, routeStyle.Text1]}>{this.setOrderStatusDateTime('t0', 'date')}</Text>
-                  <Text style={[routeStyle.Text, routeStyle.Text2]}>{this.setOrderStatusDateTime('t0', 'time')}</Text>
+                  <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'date')}</Text>
+                  <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'time')}</Text>
                 </View>
                 <View style={routeStyle.Right}>
                   <Text style={routeStyle.Text}>成功创建无人机运单</Text>
@@ -287,7 +234,7 @@ export default class Detail extends React.Component {
             <TouchableOpacity style={{
               backgroundColor: '#313131',
               marginTop: 10,
-              height: 54*Ctrl.pxToDp(),
+              height: 54 * Ctrl.pxToDp(),
               borderWidth: 0.3,
               borderColor: '#a09f9f',
               borderRadius: 4,
@@ -299,7 +246,7 @@ export default class Detail extends React.Component {
             }} onPress={()=> {
               this.openOrderItem()
             }}>
-              <Text style={{color: '#fff',fontSize: 17*Ctrl.pxToDp(),}}>操作起飞</Text>
+              <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp(),}}>操作起飞</Text>
             </TouchableOpacity>
           </View>
         )
@@ -317,7 +264,16 @@ export default class Detail extends React.Component {
                 paddingLeft: 18
               }}>
                 <TouchableOpacity
-                  style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
+                  style={{
+                    height: 44,
+                    width: 44,
+                    top: 0,
+                    left: 0,
+                    position: 'absolute',
+                    zIndex: 999999,
+                    paddingLeft: 15,
+                    paddingTop: 18,
+                  }}
                   onPress={() => this._onBack()}
                 >
                   <Image source={require('../img/ic_back.png')}/>
@@ -327,7 +283,7 @@ export default class Detail extends React.Component {
               <View style={routeStyle.rContianer}>
                 <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
                   <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
-                  <Text style={routeStyle.rTextRight}>{this.orderState(this.state.detailData.order.state)}</Text>
+                  <Text style={routeStyle.rTextRight}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
                 </View>
                 <View style={routeStyle.rItem}>
                   <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -362,8 +318,8 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{this.setOrderStatusDateTime('t1', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{this.setOrderStatusDateTime('t1', 'time')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t1', 'date')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t1', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>您的运单已取消</Text>
@@ -377,8 +333,8 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{this.setOrderStatusDateTime('t0', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{this.setOrderStatusDateTime('t0', 'time')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'date')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>成功创建无人机运单</Text>
@@ -400,7 +356,16 @@ export default class Detail extends React.Component {
                 paddingLeft: 18
               }}>
                 <TouchableOpacity
-                  style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
+                  style={{
+                    height: 44,
+                    width: 44,
+                    top: 0,
+                    left: 0,
+                    position: 'absolute',
+                    zIndex: 999999,
+                    paddingLeft: 15,
+                    paddingTop: 18,
+                  }}
                   onPress={() => this._onBack()}
                 >
                   <Image source={require('../img/ic_back.png')}/>
@@ -410,7 +375,7 @@ export default class Detail extends React.Component {
               <View style={routeStyle.rContianer}>
                 <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
                   <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
-                  <Text style={routeStyle.rTextRight}>{this.orderState(this.state.detailData.order.state)}</Text>
+                  <Text style={routeStyle.rTextRight}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
                 </View>
                 <View style={routeStyle.rItem}>
                   <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -445,8 +410,8 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{this.setOrderStatusDateTime('t7', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{this.setOrderStatusDateTime('t7', 'time')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t7', 'date')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t7', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>您的包裹已确认送达</Text>
@@ -459,8 +424,8 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{this.setOrderStatusDateTime('t2', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{this.setOrderStatusDateTime('t2', 'time')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t2', 'date')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t2', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>捷雁无人机开始运送您的包裹</Text>
@@ -474,8 +439,8 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{this.setOrderStatusDateTime('t0', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{this.setOrderStatusDateTime('t0', 'time')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'date')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>成功创建无人机运单</Text>
@@ -499,7 +464,16 @@ export default class Detail extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
+              style={{
+                height: 44,
+                width: 44,
+                top: 0,
+                left: 0,
+                position: 'absolute',
+                zIndex: 999999,
+                paddingLeft: 15,
+                paddingTop: 18,
+              }}
               onPress={() => this._onBack()}
             >
               <Image source={require('../img/ic_back.png')}/>
@@ -523,7 +497,7 @@ const routeStyle = StyleSheet.create({
   rItem: {
     flex: 1,
     paddingLeft: 18,
-    height: 44*Ctrl.pxToDp(),
+    height: 44 * Ctrl.pxToDp(),
     paddingRight: 18,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -536,7 +510,7 @@ const routeStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     color: '#313131',
-    fontSize:15*Ctrl.pxToDp()
+    fontSize: 15 * Ctrl.pxToDp()
   },
   rTextRight: {
     flex: 1,
@@ -544,7 +518,7 @@ const routeStyle = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'right',
     color: '#313131',
-    fontSize:15*Ctrl.pxToDp()
+    fontSize: 15 * Ctrl.pxToDp()
   },
   rTextValue: {
     color: '#E98B21',
@@ -552,7 +526,7 @@ const routeStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'right',
-    fontSize: 22*Ctrl.pxToDp(),
+    fontSize: 22 * Ctrl.pxToDp(),
   },
   container: {
     flex: 2,
@@ -590,20 +564,20 @@ const routeStyle = StyleSheet.create({
   },
   Text: {
     marginBottom: 10,
-    fontSize: 15*Ctrl.pxToDp(),
+    fontSize: 15 * Ctrl.pxToDp(),
     color: '#313131',
   },
   Text1: {
     marginBottom: -2,
     color: '#A09F9F',
-    fontSize: 12*Ctrl.pxToDp(),
+    fontSize: 12 * Ctrl.pxToDp(),
   },
   Text2: {
-    fontSize: 18*Ctrl.pxToDp(),
+    fontSize: 18 * Ctrl.pxToDp(),
     fontWeight: 'bold',
   },
   gridTitle: {
-    fontSize: 16*Ctrl.pxToDp(),
+    fontSize: 16 * Ctrl.pxToDp(),
     color: '#313131',
     marginTop: 7,
     marginBottom: 7,

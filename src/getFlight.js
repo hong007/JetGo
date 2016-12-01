@@ -24,9 +24,8 @@ import SwitchComp from './SwitchComp';
 import Main from './Main';
 import RealtimeOrder from './RealtimeOrder';
 import DialPhone from './DialPhone';
+import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
-
-
 var Token;
 
 export default class getFlight extends React.Component {
@@ -45,26 +44,15 @@ export default class getFlight extends React.Component {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
     let _this = this;
-    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
-      //TODO:错误处理
+    AsyncStorage.multiGet(['LOGIN_TOKEN', 'DETAIL_ID'], function (errs, result) {
       if (!errs) {
-        // let Token = result;
-        Token = result;
-        console.log("取得缓存中的Token是  ", Token, "  ");
-      }
-    });
-    AsyncStorage.getItem("DETAIL_ID", function (errs, result) {
-      //TODO:错误处理
-      if (!errs) {
-        let curfid = result;
-        // _this.setState({
-        //   fid: curfid,
-        // });
+        let curdata = result;
+        Token = result[0][1];
+        let curfid = result[1][1];
         _this.getOrderDetail(curfid);
-        console.log("取得缓存中的order_detail_id是  ", curfid, "  ");
-
+        // alert("返回数据是  " + curdata + "  " + "  数据类型是  " + typeof curdata + "   token是" + Token + "  DETAIL_ID  是    " + curfid);
       }
-    });
+    })
   }
 
   getOrderDetail(id) {
@@ -84,83 +72,12 @@ export default class getFlight extends React.Component {
             noFlighting: true,
           })
         }
-        // AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
         // this.pageJump();
       } else {
         // alert("用户名或密码错误，请重试");
       }
     });
   }
-
-// 判断运单状态
-  orderState(state) {
-    let n = state;
-    // alert(n)
-    // console.log('运单当前状态是 ', n);
-    switch (n) {
-      case 0:
-        return '未起飞';
-        break;
-      case 1:
-        return '已取消';
-        break;
-      case 2:
-        return '运送中';
-        break;
-      case 3 || 6 || 9:
-        return '异常';
-        break;
-      case 4:
-        return '已送达';
-        break;
-      case 5:
-        return '返航中';
-        break;
-      case 7:
-        return '完成';
-        break;
-      case 8:
-        return '返航中';
-        break;
-      default:
-        return '';
-    }
-  }
-
-  // 运单时间转换
-  setOrderStatusDateTime(value, type) {
-    let item = this.state.detailData.order;
-    let curtimestate = value;
-    var curTime = item['' + curtimestate];
-    console.log('当前时间是 ', curTime, '  运单t是  ', curtimestate);
-    let unixtime = curTime * 1;
-    let unixTimestamp = new Date(unixtime * 1000 + 28800000);//东8区时间偏移量为28800000毫秒
-    let commonTime = unixTimestamp;
-    let nYear = commonTime.getUTCFullYear();
-    let nMonth = (commonTime.getUTCMonth() + 1);
-    nMonth = nMonth < 10 ? ('0' + nMonth) : nMonth;
-    let nDay = commonTime.getUTCDate();
-    nDay = nDay < 10 ? ('0' + nDay) : nDay;
-
-    let tDate = nYear + "." + nMonth + "." + nDay;
-
-    let nHour = (commonTime.getUTCHours());
-    nHour = nHour < 10 ? ('0' + nHour) : nHour;
-    let nMinutes = commonTime.getUTCMinutes();
-    nMinutes = nMinutes < 10 ? ('0' + nMinutes) : nMinutes;
-    let nSeconds = commonTime.getUTCSeconds();
-    nSeconds = nSeconds < 10 ? ('0' + nSeconds) : nSeconds;
-
-    let tTime = nHour + ":" + nMinutes;
-
-    // let newStatusDate = nYear + "/" + nMonth + "/" + nDay + "/" + nHour + ":" + nMinutes + ":" + nSeconds;
-    if (type == "date") {
-      return nYear + "." + nMonth + "." + nDay;
-    } else {
-      return nHour + ":" + nMinutes;
-    }
-  }
-
 
   onChildChanged(newState) {
     // alert(newState);
@@ -179,6 +96,9 @@ export default class getFlight extends React.Component {
   CreateOrder() {
     if (this.state.totalChecked == 4) {
       // alert('飞机起飞');
+      this.setState({
+        submitStatus: true,
+      });
       let _this = this;
       let curId = this.state.detailData.order.id;
       let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
@@ -187,6 +107,9 @@ export default class getFlight extends React.Component {
         console.log('发送起飞指令返回数据 ', curdata);
         if (curdata.err == '0') {
           if (curdata.state != 2) {
+            _this.setState({
+              submitStatus: false,
+            });
             Alert.alert(
               '温馨提示',
               '起飞失败，请重试，或联系客服！',
@@ -196,15 +119,19 @@ export default class getFlight extends React.Component {
             );
           } else {
             console.log('起飞成功后 ', curdata);
-            Alert.alert(
-              '温馨提示',
-              '起飞成功',
-              [
-                {text: '确定', onPress: ()=>this.pageJump('order')}
-              ]
-            );
+            this.pageJump('order');
+            // Alert.alert(
+            //   '温馨提示',
+            //   '起飞成功',
+            //   [
+            //     {text: '确定', onPress: ()=>this.pageJump('order')}
+            //   ]
+            // );
           }
         } else {
+          _this.setState({
+            submitStatus: false,
+          });
           Alert.alert(
             '温馨提示',
             '起飞故障，请联系客服！',
@@ -243,6 +170,11 @@ export default class getFlight extends React.Component {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
     var isChecked = this.state.checked ? 'yes' : 'no';
+    if (this.state.submitStatus) {
+      return (
+        <LoadingViewProgress/>
+      )
+    }
     if (this.state.detailDataLoaded) {
       return (
         <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
@@ -256,7 +188,16 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
+              style={{
+                height: 44,
+                width: 44,
+                top: 0,
+                left: 0,
+                position: 'absolute',
+                zIndex: 999999,
+                paddingLeft: 15,
+                paddingTop: 18,
+              }}
               onPress={() => this.pageJump()}
             >
               <Image source={require('../img/ic_back.png')}/>
@@ -313,9 +254,9 @@ export default class getFlight extends React.Component {
             <TouchableOpacity style={{
               backgroundColor: '#313131',
               marginTop: 20,
-              height: 80* Ctrl.pxToDp(),
-              width: 80* Ctrl.pxToDp(),
-              borderRadius: 40* Ctrl.pxToDp(),
+              height: 80 * Ctrl.pxToDp(),
+              width: 80 * Ctrl.pxToDp(),
+              borderRadius: 40 * Ctrl.pxToDp(),
               borderWidth: 0.3,
               borderColor: '#a09f9f',
               justifyContent: 'center',
@@ -347,7 +288,16 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
+              style={{
+                height: 44,
+                width: 44,
+                top: 0,
+                left: 0,
+                position: 'absolute',
+                zIndex: 999999,
+                paddingLeft: 15,
+                paddingTop: 18,
+              }}
               onPress={() => this.pageJump()}
             >
               <Image source={require('../img/ic_back.png')}/>

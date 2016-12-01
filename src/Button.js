@@ -35,12 +35,12 @@ const LoginStyles = StyleSheet.create({
   loginText: {
     color: '#a09f9f',
     fontWeight: 'bold',
-    width: 60*Ctrl.pxToDp(),
-    textAlign:'center',
-    fontSize: 17*Ctrl.pxToDp(),
+    width: 60 * Ctrl.pxToDp(),
+    textAlign: 'center',
+    fontSize: 17 * Ctrl.pxToDp(),
   },
   loginTextView1: {
-    height: 54*Ctrl.pxToDp(),
+    height: 54 * Ctrl.pxToDp(),
     borderWidth: 1,
     borderColor: '#a09f9f',
     borderRadius: 4,
@@ -51,7 +51,7 @@ const LoginStyles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   loginTextView2: {
-    height: 54*Ctrl.pxToDp(),
+    height: 54 * Ctrl.pxToDp(),
     borderWidth: 1,
     borderColor: '#a09f9f',
     borderRadius: 4,

@@ -21,8 +21,8 @@ import  {
 } from 'react-native';
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
-import LoadingViewProgress from './LoadingViewProgress';
 import DialPhone from './DialPhone';
+import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
 
 var Token;
@@ -49,22 +49,15 @@ export default class getFlight extends React.Component {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
     let _this = this;
-    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
-      //TODO:错误处理
+    AsyncStorage.multiGet(['LOGIN_TOKEN', 'DETAIL_ID'], function (errs, result) {
       if (!errs) {
-        // let Token = result;
-        Token = result;
-        console.log("取得缓存中的Token是  ", Token, "  ");
-      }
-    });
-    AsyncStorage.getItem("DETAIL_ID", function (errs, result) {
-      //TODO:错误处理
-      if (!errs) {
-        let curfid = result;
+        let curdata = result;
+        Token = result[0][1];
+        let curfid = result[1][1];
         _this.getOrderDetail(curfid);
-        console.log("取得缓存中的order_detail_id是  ", curfid, "  ");
+        // alert("返回数据是  " + curdata + "  " + "  数据类型是  " + typeof curdata + "   token是" + Token + "  DETAIL_ID  是    " + curfid);
       }
-    });
+    })
   }
 
   getOrderDetail(id) {
@@ -146,82 +139,6 @@ export default class getFlight extends React.Component {
 
   }
 
-  // orderInterval(time, rate) {
-  //   let curcounttime = time;
-  //   let currate = rate;
-  //
-  //
-  // }
-
-// 判断运单状态
-  orderState(state) {
-    let n = state;
-    // alert(n)
-    // console.log('运单当前状态是 ', n);
-    switch (n) {
-      case 0:
-        return '未起飞';
-        break;
-      case 1:
-        return '已取消';
-        break;
-      case 2:
-        return '运送中';
-        break;
-      case 3 || 6 || 9:
-        return '异常';
-        break;
-      case 4:
-        return '已送达';
-        break;
-      case 5:
-        return '返航中';
-        break;
-      case 7:
-        return '完成';
-        break;
-      case 8:
-        return '返航中';
-        break;
-      default:
-        return '';
-    }
-  }
-
-  // 运单时间转换
-  setOrderStatusDateTime(value, type) {
-    let item = this.state.detailData.order;
-    let curtimestate = value;
-    var curTime = item['' + curtimestate];
-    console.log('当前时间是 ', curTime, '  运单t是  ', curtimestate);
-    let unixtime = curTime * 1;
-    let unixTimestamp = new Date(unixtime * 1000 + 28800000);//东8区时间偏移量为28800000毫秒
-    let commonTime = unixTimestamp;
-    let nYear = commonTime.getUTCFullYear();
-    let nMonth = (commonTime.getUTCMonth() + 1);
-    nMonth = nMonth < 10 ? ('0' + nMonth) : nMonth;
-    let nDay = commonTime.getUTCDate();
-    nDay = nDay < 10 ? ('0' + nDay) : nDay;
-
-    let tDate = nYear + "." + nMonth + "." + nDay;
-
-    let nHour = (commonTime.getUTCHours());
-    nHour = nHour < 10 ? ('0' + nHour) : nHour;
-    let nMinutes = commonTime.getUTCMinutes();
-    nMinutes = nMinutes < 10 ? ('0' + nMinutes) : nMinutes;
-    let nSeconds = commonTime.getUTCSeconds();
-    nSeconds = nSeconds < 10 ? ('0' + nSeconds) : nSeconds;
-
-    let tTime = nHour + ":" + nMinutes;
-
-    // let newStatusDate = nYear + "/" + nMonth + "/" + nDay + "/" + nHour + ":" + nMinutes + ":" + nSeconds;
-    if (type == "date") {
-      return nYear + "." + nMonth + "." + nDay;
-    } else {
-      return nHour + ":" + nMinutes;
-    }
-  }
-
   pageJump() {
     clearInterval(this.timer);
     this.props.navigator.push({
@@ -233,6 +150,9 @@ export default class getFlight extends React.Component {
 
   orderConfirm() {
     if (this.state.buttonStatus) {
+      this.setState({
+        submitStatus: true,
+      });
       let _this = this;
       let curId = this.state.detailData.order.id;
       let url = "http://jieyan.xyitech.com/order/update?token=" + Token + "&id=" + curId + "&state=4";
@@ -250,12 +170,17 @@ export default class getFlight extends React.Component {
               {text: '确定',}
             ]
           );
+          this.setState({
+            submitStatus: false,
+          });
           // alert("起飞失败，请重试，或联系客服！");
         }
       })
-    }
-    else {
+    } else {
       // alert("暂时无法确认，请稍后重试！");
+      this.setState({
+        submitStatus: false,
+      });
       ToastAndroid.show('暂时无法确认，请稍后重试！', ToastAndroid.SHORT);
     }
   }
@@ -265,6 +190,11 @@ export default class getFlight extends React.Component {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
     var isChecked = this.state.checked ? 'yes' : 'no';
+    if (this.state.submitStatus) {
+      return (
+        <LoadingViewProgress/>
+      )
+    }
     if (this.state.detailDataLoaded) {
       return (
         <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
@@ -312,7 +242,7 @@ export default class getFlight extends React.Component {
                 style={{fontSize: 22 * Ctrl.pxToDp(),}}
                 value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>
             </View>
-            <View style={{backgroundColor:'#f7f7f7',height: 180 * Ctrl.pxToDp()}}>
+            <View style={{backgroundColor: '#f7f7f7', height: 180 * Ctrl.pxToDp()}}>
               <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
                          title={this.state.detailData.order.route.airport[1].phone}/>
               <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
@@ -344,29 +274,29 @@ export default class getFlight extends React.Component {
                   </View>
                 </View>
               </View>
+            </View>
+            <View style={{alignItems: 'center', justifyContent: 'center', height: 150 * Ctrl.pxToDp(),}}>
+              <Image style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: 70 * Ctrl.pxToDp(),
+                resizeMode: Image.resizeMode.contain
+              }}
+                     source={require('../img/flight02.png')}><Text
+                style={{textAlign: 'center'}}>距离投递点<Text style={{
+                fontSize: 22 * Ctrl.pxToDp(),
+                color: '#313131',
+              }}>{this.state.durationValue}&nbsp;&nbsp;</Text>公里</Text></Image>
+            </View>
           </View>
-          <View style={{alignItems: 'center', justifyContent: 'center', height: 150 * Ctrl.pxToDp(),}}>
-            <Image style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 70 * Ctrl.pxToDp(),
-              resizeMode: Image.resizeMode.contain
-            }}
-                   source={require('../img/flight02.png')}><Text
-              style={{textAlign: 'center'}}>距离投递点<Text style={{
-              fontSize: 22 * Ctrl.pxToDp(),
-              color: '#313131',
-            }}>{this.state.durationValue}&nbsp;&nbsp;</Text>公里</Text></Image>
-          </View>
-        </View>
 
-      <TouchableOpacity style={this.state.buttonStatus ? routeStyle.button2 : routeStyle.button1} onPress={()=> {
-        this.orderConfirm()
-      }}>
-        <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>确认收货</Text>
-      </TouchableOpacity>
-    </View>
-    )
+          <TouchableOpacity style={this.state.buttonStatus ? routeStyle.button2 : routeStyle.button1} onPress={()=> {
+            this.orderConfirm()
+          }}>
+            <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>确认收货</Text>
+          </TouchableOpacity>
+        </View>
+      )
     } else {
       return (
         <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
