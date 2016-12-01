@@ -17,6 +17,7 @@ import  {
   StatusBar,
   ToastAndroid,
   AsyncStorage,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import LeftMenuList from './LeftMenuList';
 import NetUtil from './NetUtil';
@@ -91,6 +92,22 @@ export default class getFlight extends React.Component {
     this.setState({
       totalChecked: newTotal,
     });
+  }
+
+  _orderPressOut() {
+    clearInterval(this.timer);
+  }
+
+  _orderPressIn() {
+    let count = 0;
+    this.timer = setInterval(
+      ()=> {
+        count++;
+        if (count == 3) {
+          this.CreateOrder()
+        }
+      }, 1000
+    );
   }
 
   CreateOrder() {
@@ -262,7 +279,7 @@ export default class getFlight extends React.Component {
               justifyContent: 'center',
               alignItems: 'center',
               color: '#fff',
-            }} onPress={this.CreateOrder.bind(this)}>
+            }} onPressIn={this._orderPressIn.bind(this)} onPressOut={this._orderPressOut.bind(this)}>
               <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>起飞</Text>
             </TouchableOpacity>
             <Text style={{

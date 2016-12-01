@@ -10,6 +10,7 @@
     "react": "15.3.2",
     "react-native": "0.36.1",
     "react-native-barcodescanner": "^3.1.1",
+    "react-native-circular-progress": "0.0.7",
     "react-native-code-push": "^1.16.0-beta"
   },
   "jest": {

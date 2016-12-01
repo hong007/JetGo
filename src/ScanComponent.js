@@ -211,6 +211,9 @@ export default class ScanComponent extends React.Component {
         // alert("提交的信息是  " + url);
         if (_this.fid == "") {
           // alert("飞机id不能为空");
+          _this.setState({
+            submitStatus: false,
+          });
           ToastAndroid.show('飞机id不能为空!', ToastAndroid.SHORT);
         } else if (!_this.fid) {
           // alert("飞机id不存在");
