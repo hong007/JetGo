@@ -23,6 +23,7 @@ import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
 import LoadingViewProgress from './LoadingViewProgress';
 import DialPhone from './DialPhone';
+import Ctrl from './Ctrl';
 
 var Token;
 
@@ -45,7 +46,8 @@ export default class getFlight extends React.Component {
   }
 
   componentDidMount() {
-    StatusBar.setBackgroundColor('#000', true);
+    // StatusBar.setBackgroundColor('#000', true);
+    Ctrl.setStatusBar();
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
@@ -238,6 +240,7 @@ export default class getFlight extends React.Component {
         let curdata = JSON.parse(responseText);
         console.log('发送指令返回数据 ', curdata);
         if (curdata.err == '0') {
+          AsyncStorage.setItem("ORDER_CONFIRM", 'true');
           this.pageJump();
         } else {
           Alert.alert(
@@ -275,70 +278,95 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+              style={{
+                height: 44,
+                width: 44,
+                top: 0,
+                left: 0,
+                position: 'absolute',
+                zIndex: 999999,
+                paddingLeft: 15,
+                paddingTop: 18,
+              }}
               onPress={() => this.pageJump()}
             >
-              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+              <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
           </View>
           <View style={routeStyle.rContianer}>
-            <View style={{flex: 3,}}>
-              <Image style={{alignItems: 'center', justifyContent: 'flex-end', width: Dimensions.get('window').width,}}
-                     source={require('../img/orderrealtime.png')}><Text
-                style={{textAlign: 'center', color: '#fff', marginBottom: 50,}}>预计<Text
-                style={{fontSize: 22,}} value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>
-            </View>
-
-            <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                       title={this.state.detailData.order.route.airport[1].phone}/>
-
-            <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
-              <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
-              <Text
-                style={routeStyle.rTextRight}>运送中</Text>
-            </View>
-
-            <View style={[routeStyle.rItem, {height: 80}]}>
-              <Image source={require('../img/flight.png')}/>
-              <View style={{flex: 1, flexDirection: 'column'}}>
-                <View style={[routeStyle.rItem, {height: 20}]}>
-                  <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
-                </View>
-                <View style={[routeStyle.rItem, {height: 16}]}>
-                  <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
-                  <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
-                </View>
-
-                <View style={[routeStyle.rItem, {height: 16}]}>
-                  <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
-                  <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
-                </View>
-              </View>
-            </View>
-
-            <View style={{flex: 2, alignItems: 'center', justifyContent: 'center', height: 70,}}>
+            <View style={{}}>
               <Image style={{
                 alignItems: 'center',
-                justifyContent: 'center',
-                height: 70,
-                resizeMode: Image.resizeMode.contain
+                justifyContent: 'flex-end',
+                width: Dimensions.get('window').width,
+                height: 153 * Ctrl.pxToDp(),
               }}
-                     source={require('../img/flight02.png')}><Text
-                style={{textAlign: 'center'}}>距离投递点<Text style={{
-                fontSize: 22,
-                color: '#313131',
-              }}>{this.state.durationValue}&nbsp;&nbsp;</Text>公里</Text></Image>
+                     source={require('../img/orderrealtime.png')}><Text
+                style={{
+                  textAlign: 'center',
+                  color: '#fff',
+                  marginBottom: 50 * Ctrl.pxToDp(),
+                  fontSize: 14 * Ctrl.pxToDp(),
+                }}>预计<Text
+                style={{fontSize: 22 * Ctrl.pxToDp(),}}
+                value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>
             </View>
-          </View>
+            <View style={{backgroundColor:'#f7f7f7',height: 180 * Ctrl.pxToDp()}}>
+              <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
+                         title={this.state.detailData.order.route.airport[1].phone}/>
+              <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
+                <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
+                <Text
+                  style={routeStyle.rTextRight}>运送中</Text>
+              </View>
 
-          <TouchableOpacity style={this.state.buttonStatus ? routeStyle.button2 : routeStyle.button1} onPress={()=> {
-            this.orderConfirm()
-          }}>
-            <Text style={{color: '#fff',}}>确认收货</Text>
-          </TouchableOpacity>
+              <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
+                <Image source={require('../img/flight.png')}/>
+                <View style={{
+                  flex: 3,
+                  height: 95 * Ctrl.pxToDp(),
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <View style={[routeStyle.rItem, {height: 20 * Ctrl.pxToDp()}]}>
+                    <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
+                  </View>
+                  <View style={[routeStyle.rItem, {height: 16 * Ctrl.pxToDp()}]}>
+                    <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
+                    <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
+                  </View>
+
+                  <View style={[routeStyle.rItem, {height: 16 * Ctrl.pxToDp()}]}>
+                    <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
+                    <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
+                  </View>
+                </View>
+              </View>
+          </View>
+          <View style={{alignItems: 'center', justifyContent: 'center', height: 150 * Ctrl.pxToDp(),}}>
+            <Image style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: 70 * Ctrl.pxToDp(),
+              resizeMode: Image.resizeMode.contain
+            }}
+                   source={require('../img/flight02.png')}><Text
+              style={{textAlign: 'center'}}>距离投递点<Text style={{
+              fontSize: 22 * Ctrl.pxToDp(),
+              color: '#313131',
+            }}>{this.state.durationValue}&nbsp;&nbsp;</Text>公里</Text></Image>
+          </View>
         </View>
-      )
+
+      <TouchableOpacity style={this.state.buttonStatus ? routeStyle.button2 : routeStyle.button1} onPress={()=> {
+        this.orderConfirm()
+      }}>
+        <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>确认收货</Text>
+      </TouchableOpacity>
+    </View>
+    )
     } else {
       return (
         <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
@@ -352,10 +380,19 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+              style={{
+                height: 44,
+                width: 44,
+                top: 0,
+                left: 0,
+                position: 'absolute',
+                zIndex: 999999,
+                paddingLeft: 15,
+                paddingTop: 18,
+              }}
               onPress={() => this.pageJump()}
             >
-              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+              <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
           </View>
@@ -376,7 +413,7 @@ const routeStyle = StyleSheet.create({
   },
   rItem: {
     paddingLeft: 18,
-    height: 34,
+    height: 44 * Ctrl.pxToDp(),
     paddingRight: 18,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -390,6 +427,7 @@ const routeStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     color: '#313131',
+    fontSize: 15 * Ctrl.pxToDp(),
   },
   rTextRight: {
     flex: 1,
@@ -397,32 +435,33 @@ const routeStyle = StyleSheet.create({
     justifyContent: 'center',
     color: '#313131',
     textAlign: 'right',
+    fontSize: 15 * Ctrl.pxToDp(),
   },
   button1: {
     backgroundColor: '#ddd',
     marginTop: 10,
-    height: 54,
+    height: 54 * Ctrl.pxToDp(),
     borderWidth: 0.3,
     borderColor: '#a09f9f',
     borderRadius: 4,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 17,
+    fontSize: 17 * Ctrl.pxToDp(),
     color: '#55ACEE',
     margin: 18,
   },
   button2: {
     backgroundColor: '#313131',
     marginTop: 10,
-    height: 54,
+    height: 54 * Ctrl.pxToDp(),
     borderWidth: 0.3,
     borderColor: '#a09f9f',
     borderRadius: 4,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 17,
+    fontSize: 17 * Ctrl.pxToDp(),
     color: '#55ACEE',
     margin: 18,
   }

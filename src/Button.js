@@ -12,6 +12,8 @@ import {
   TextInput,
   TouchableOpacity
 } from 'react-native';
+import Ctrl from './Ctrl';
+
 export default class Button extends Component {
   constructor(props) {
     super(props);
@@ -33,29 +35,29 @@ const LoginStyles = StyleSheet.create({
   loginText: {
     color: '#a09f9f',
     fontWeight: 'bold',
-    width: 30,
+    width: 60*Ctrl.pxToDp(),
+    textAlign:'center',
+    fontSize: 17*Ctrl.pxToDp(),
   },
   loginTextView1: {
-    height: 54,
+    height: 54*Ctrl.pxToDp(),
     borderWidth: 1,
     borderColor: '#a09f9f',
     borderRadius: 4,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 18,
     marginTop: 32,
     backgroundColor: '#fff',
   },
   loginTextView2: {
-    height: 54,
+    height: 54*Ctrl.pxToDp(),
     borderWidth: 1,
     borderColor: '#a09f9f',
     borderRadius: 4,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 18,
     marginTop: 32,
   },
 });

@@ -11,6 +11,7 @@ import  {
     Platform,
     Switch,
 } from 'react-native';
+import Ctrl from './Ctrl';
 export default class ChildCompontent extends React.Component {
     constructor(props) {
         super(props);
@@ -37,20 +38,20 @@ const switchStyle = StyleSheet.create({
     rItem: {
         flex: 1,
         paddingLeft: 18,
-        height: 44,
+        height: 44*Ctrl.pxToDp(),
         paddingRight: 18,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         marginBottom: 1,
         backgroundColor: '#fff',
-
     },
     rTextLeft: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         color: '#313131',
+        fontSize:15*Ctrl.pxToDp(),
     },
     rTextRight: {
         flex: 1,
@@ -58,5 +59,6 @@ const switchStyle = StyleSheet.create({
         justifyContent: 'center',
         textAlign: 'right',
         color: '#313131',
+        fontSize:15*Ctrl.pxToDp(),
     },
 })

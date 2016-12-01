@@ -22,6 +22,8 @@ import Button from './Button';
 import Main from './Main';
 import NetUtil from './NetUtil';
 import LoadingViewProgress from './LoadingViewProgress';
+import Ctrl from './Ctrl';
+
 // import LoadingView from './LoadingView';
 
 
@@ -39,7 +41,8 @@ export default class LoginPage extends Component {
   }
 
   componentDidMount() {
-    StatusBar.setBackgroundColor('#000', true);
+    // StatusBar.setBackgroundColor('#000', true);
+    Ctrl.setStatusBar();
   }
   openDrawer() {
     this.refs.drawerLayout.openDrawer()
@@ -67,13 +70,13 @@ export default class LoginPage extends Component {
     }
     return (
       <View style={LoginStyles.loginview}>
-        <Text style={{fontSize: 22, color: '#fff',}}>用户登录</Text>
+        <Text style={{fontSize: 22*Ctrl.pxToDp(), color: '#fff',}}>用户登录</Text>
         <View style={{paddingTop: 38,}}>
-          <Text style={{color: '#a09f9f', marginTop: 20,}}>用户名</Text>
+          <Text style={{color: '#a09f9f', marginTop: 20,fontSize:14*Ctrl.pxToDp()}}>用户名</Text>
           <EditView name='' onChangeText={(text) => {
             this.userName = text;
           }}/>
-          <Text style={{color: '#a09f9f', marginTop: 20,}}>密码</Text>
+          <Text style={{color: '#a09f9f', marginTop: 20,fontSize:14*Ctrl.pxToDp()}}>密码</Text>
           <EditView name='password' onChangeText={(text) => {
             this.passWord = text;
           }}/>

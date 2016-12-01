@@ -9,6 +9,8 @@ import {
   Linking,
   TouchableOpacity,
 } from 'react-native';
+import Ctrl from './Ctrl';
+
 export default class DialPhone extends React.Component {
   constructor(props) {
     super(props);
@@ -39,13 +41,14 @@ export default class DialPhone extends React.Component {
           alignItems: 'center',
           marginBottom: 1,
           backgroundColor: '#fff',
-          height: 40
+          height: 40*Ctrl.pxToDp()
         }}>
           <Text style={{
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
             color: '#313131',
+            fontSize:15*Ctrl.pxToDp(),
           }}>联系人电话:&nbsp;&nbsp;&nbsp;{this.props.title}</Text>
           <Image source={require('../img/phone.png')}/>
         </View>

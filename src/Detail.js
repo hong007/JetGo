@@ -25,6 +25,8 @@ import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
 import getFlight from './getFlight';
 import DialPhone from './DialPhone';
+import Ctrl from './Ctrl';
+
 var Token;
 export default class Detail extends React.Component {
   constructor(props) {
@@ -38,7 +40,8 @@ export default class Detail extends React.Component {
   }
 
   componentDidMount() {
-    StatusBar.setBackgroundColor('#000', true);
+    // StatusBar.setBackgroundColor('#000', true);
+    Ctrl.setStatusBar();
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
@@ -223,10 +226,10 @@ export default class Detail extends React.Component {
               paddingLeft: 18
             }}>
               <TouchableOpacity
-                style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+                style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
                 onPress={() => this._onBack()}
               >
-                <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+                <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
               <Text style={{flex: 1, textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
               <Text style={{top: 18, right: 18, position: 'absolute', zIndex: 99999999, color: '#313131'}}
@@ -284,20 +287,19 @@ export default class Detail extends React.Component {
             <TouchableOpacity style={{
               backgroundColor: '#313131',
               marginTop: 10,
-              height: 44,
+              height: 54*Ctrl.pxToDp(),
               borderWidth: 0.3,
               borderColor: '#a09f9f',
               borderRadius: 4,
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              fontSize: 17,
               color: '#55ACEE',
               margin: 18,
             }} onPress={()=> {
               this.openOrderItem()
             }}>
-              <Text style={{color: '#fff',}}>操作起飞</Text>
+              <Text style={{color: '#fff',fontSize: 17*Ctrl.pxToDp(),}}>操作起飞</Text>
             </TouchableOpacity>
           </View>
         )
@@ -315,10 +317,10 @@ export default class Detail extends React.Component {
                 paddingLeft: 18
               }}>
                 <TouchableOpacity
-                  style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+                  style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
                   onPress={() => this._onBack()}
                 >
-                  <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+                  <Image source={require('../img/ic_back.png')}/>
                 </TouchableOpacity>
                 <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
               </View>
@@ -398,10 +400,10 @@ export default class Detail extends React.Component {
                 paddingLeft: 18
               }}>
                 <TouchableOpacity
-                  style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+                  style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
                   onPress={() => this._onBack()}
                 >
-                  <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+                  <Image source={require('../img/ic_back.png')}/>
                 </TouchableOpacity>
                 <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
               </View>
@@ -497,10 +499,10 @@ export default class Detail extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute',}}
+              style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
               onPress={() => this._onBack()}
             >
-              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+              <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
           </View>
@@ -521,7 +523,7 @@ const routeStyle = StyleSheet.create({
   rItem: {
     flex: 1,
     paddingLeft: 18,
-    height: 34,
+    height: 44*Ctrl.pxToDp(),
     paddingRight: 18,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -534,6 +536,7 @@ const routeStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     color: '#313131',
+    fontSize:15*Ctrl.pxToDp()
   },
   rTextRight: {
     flex: 1,
@@ -541,6 +544,7 @@ const routeStyle = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'right',
     color: '#313131',
+    fontSize:15*Ctrl.pxToDp()
   },
   rTextValue: {
     color: '#E98B21',
@@ -548,7 +552,7 @@ const routeStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'right',
-    fontSize: 22,
+    fontSize: 22*Ctrl.pxToDp(),
   },
   container: {
     flex: 2,
@@ -586,20 +590,20 @@ const routeStyle = StyleSheet.create({
   },
   Text: {
     marginBottom: 10,
-    fontSize: 15,
+    fontSize: 15*Ctrl.pxToDp(),
     color: '#313131',
   },
   Text1: {
     marginBottom: -2,
     color: '#A09F9F',
-    fontSize: 12,
+    fontSize: 12*Ctrl.pxToDp(),
   },
   Text2: {
-    fontSize: 18,
+    fontSize: 18*Ctrl.pxToDp(),
     fontWeight: 'bold',
   },
   gridTitle: {
-    fontSize: 16,
+    fontSize: 16*Ctrl.pxToDp(),
     color: '#313131',
     marginTop: 7,
     marginBottom: 7,

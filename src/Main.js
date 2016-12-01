@@ -22,6 +22,11 @@ const menu_order = require('../img/menu_order.png');
 const menu_phone = require('../img/menu_phone.png');
 const menu_lay = require('../img/menu_lay.png');
 const menu_about = require('../img/menu_about.png');
+//
+// const deviceWidthDp = Dimensions.get('window').width;
+// const uiWidthPx = 375;
+//
+// const pxToDp = deviceWidthDp / uiWidthPx;
 
 
 import ScanComponent from './ScanComponent';
@@ -34,6 +39,7 @@ import LoginPage from './LoginPage';
 import OnlineHelp from './OnlineHelp';
 import Lawyer from './Lawyer';
 import AboutUS from './AboutUS';
+import Ctrl from './Ctrl';
 
 // var token="MiMxNDc5Mzc5MDc3QGppZXlhbi54eWl0ZWNoLmNvbSNvTFdsTTdBR0hqL2tzYlFCd0F1VUtHd2RZNkE9";
 export default class Main extends React.Component {
@@ -53,7 +59,8 @@ export default class Main extends React.Component {
   }
 
   componentDidMount() {
-    StatusBar.setBackgroundColor('#000', true);
+    // StatusBar.setBackgroundColor('#f00', true);
+    Ctrl.setStatusBar();
     this.setState({
       loginStatus: false,
     });
@@ -148,7 +155,7 @@ export default class Main extends React.Component {
       <DrawerLayoutAndroid
         ref={'drawerLayout'}
         drawerBackgroundColor="rgba(188,0,202,0.5)"
-        drawerWidth={230}
+        drawerWidth={260*Ctrl.pxToDp()}
         drawerPosition={DrawerLayoutAndroid.positions.Left}
         renderNavigationView={() => navigationView}
         onDrawerOpen={()=> {
@@ -172,7 +179,6 @@ export default class Main extends React.Component {
             height: (Platform.OS === 'android' ? 42 : 50),
             backgroundColor: '#fff',
             paddingLeft: 18,
-            paddingRight: 18
           }}>
             <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
               <TouchableOpacity style={{
@@ -192,14 +198,15 @@ export default class Main extends React.Component {
               <TouchableOpacity style={{
                 alignItems: 'flex-start',
                 justifyContent: 'center',
-                height: (Platform.OS === 'android' ? 42 : 50)
+                height: (Platform.OS === 'android' ? 42 : 50),
+                paddingRight: 18,
               }} onPress={() => this.pageJump()}>
                 <Image source={require('../img/icon_order.png')}/>
               </TouchableOpacity>
             </View>
           </View>
 
-          <View style={{flex: 4, marginTop: 60, padding: 18,}}>
+          <View style={{flex: 4, marginTop: 20, padding: 18,}}>
             <PickerComponent refs="picker"/>
           </View>
 
@@ -207,21 +214,20 @@ export default class Main extends React.Component {
           <TouchableOpacity style={{
             backgroundColor: '#313131',
             marginTop: 10,
-            height: 54,
+            height: 54*Ctrl.pxToDp(),
             borderWidth: 0.3,
             borderColor: '#a09f9f',
             borderRadius: 4,
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-            fontSize: 17,
             color: '#55ACEE',
             margin: 18,
             zIndex: 9999,
           }} onPress={()=> {
             this._openPage()
           }}>
-            <Text style={{color: '#fff',}}>我要寄件</Text>
+            <Text style={{color: '#fff',fontSize: 17*Ctrl.pxToDp(),}}>我要寄件</Text>
           </TouchableOpacity>
           {/*</View>*/}
           <Image style={{

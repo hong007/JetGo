@@ -13,6 +13,8 @@ import{
   AsyncStorage,
 } from 'react-native';
 import NetUtil from './NetUtil';
+import Ctrl from './Ctrl';
+
 class PickerComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -100,12 +102,12 @@ class PickerComponent extends React.Component {
 
   initStartAirports(n) {
     let item = n;
-    return <Picker.Item label={item.name} value={item.id} airportType="sid" sidValue="item.id"/>;
+    return <Picker.Item style={{fontSize:23*Ctrl.pxToDp()}} label={item.name} value={item.id} airportType="sid" sidValue="item.id"/>;
   }
 
   initEndAirports(n) {
     let item = n;
-    return <Picker.Item label={item.ename} value={item.id} airportType="eid" eidValue={item.eid}
+    return <Picker.Item style={{fontSize:23*Ctrl.pxToDp()}} label={item.ename} value={item.id} airportType="eid" eidValue={item.eid}
                         routeID={item.id}/>;
   }
 
@@ -121,7 +123,7 @@ class PickerComponent extends React.Component {
               style={PickerStyle.picker}
               selectedValue={this.state.pickerValue}
               onValueChange={(value) => this.chooseAirPorts(value)}>
-              <Picker.Item label="请选择" value="请选择" aid=""/>
+              <Picker.Item style={{fontSize:23*Ctrl.pxToDp()}} label="请选择" value="请选择" aid=""/>
             </Picker>
           </View>
 
@@ -135,7 +137,7 @@ class PickerComponent extends React.Component {
               style={PickerStyle.picker}
               selectedValue={this.state.pickerValue2}
             >
-              <Picker.Item label="请选择" value="请选择" aid=""/>
+              <Picker.Item style={{fontSize:23*Ctrl.pxToDp()}} label="请选择" value="请选择" aid=""/>
             </Picker>
           </View>
         </View>
@@ -196,7 +198,7 @@ class PickerComponent extends React.Component {
                 style={PickerStyle.picker}
                 selectedValue={this.state.pickerValue2}
               >
-                <Picker.Item label="请选择" value="请选择" aid=""/>
+                <Picker.Item style={{fontSize:23*Ctrl.pxToDp()}} label="请选择" value="请选择" aid=""/>
               </Picker>
             </View>
           </View>
@@ -207,31 +209,33 @@ class PickerComponent extends React.Component {
 }
 const PickerStyle = StyleSheet.create({
   Container: {
-    height: 100,
+    height: 100*Ctrl.pxToDp(),
     backgroundColor: '#fff'
   },
   item: {
-    height: 50,
+    height: 50*Ctrl.pxToDp(),
+    justifyContent:'center',
   },
   picker: {
-    marginLeft: 20,
+    marginLeft: 20*Ctrl.pxToDp(),
+    fontSize:22*Ctrl.pxToDp(),
   },
   bgSPoint: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 8*Ctrl.pxToDp(),
+    height: 8*Ctrl.pxToDp(),
+    borderRadius: 4*Ctrl.pxToDp(),
     backgroundColor: '#3EC556',
     position: 'absolute',
     left: 10,
-    top: 20,
+    top: 21*Ctrl.pxToDp(),
   },
   bgEPoint: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 8*Ctrl.pxToDp(),
+    height: 8*Ctrl.pxToDp(),
+    borderRadius: 4*Ctrl.pxToDp(),
     position: 'absolute',
     left: 10,
-    top: 20,
+    top: 21*Ctrl.pxToDp(),
     backgroundColor: '#ED684A'
   }
 })

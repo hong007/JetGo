@@ -19,6 +19,8 @@ import getFlight from './getFlight';
 import NetUtil from './NetUtil';
 import GridChild from './GridChild';
 import BarcodeScanner from './BarcodeScanner';
+import Ctrl from './Ctrl';
+
 var Token;
 var orderTypeList = [];
 var packagetype = [];
@@ -50,7 +52,9 @@ export default class ScanComponent extends React.Component {
   }
 
   componentDidMount() {
-    StatusBar.setBackgroundColor('#000', true);
+    // StatusBar.setBackgroundColor('#000', true);
+    Ctrl.setStatusBar();
+
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
@@ -273,10 +277,10 @@ export default class ScanComponent extends React.Component {
               paddingLeft: 18
             }}>
               <TouchableOpacity
-                style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+                style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
                 onPress={() => this.props.navigator.pop()}
               >
-                <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+                <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
               <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
             </View>
@@ -324,7 +328,7 @@ export default class ScanComponent extends React.Component {
 
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>物品重量</Text>
-                <TextInput style={[scanStyle.TextInput, {marginRight: 10, width: 60, textAlign: 'right'}]}
+                <TextInput style={[scanStyle.TextInput, {marginRight: 10, width: 60*Ctrl.pxToDp(), textAlign: 'right'}]}
                            underlineColorAndroid='transparent'
                            placeholder='1公斤'
                            placeholderTextColor='#a09f9f'
@@ -342,24 +346,22 @@ export default class ScanComponent extends React.Component {
                 <Text style={{height: 0,}}>{this.state.packageWeight}</Text>
               </View>
             </View>
-            <View style={routeStyle.rContianer}></View>
             <TouchableOpacity style={{
               backgroundColor: '#313131',
               marginTop: 10,
-              height: 54,
+              height: 54*Ctrl.pxToDp(),
               borderWidth: 0.3,
               borderColor: '#a09f9f',
               borderRadius: 4,
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              fontSize: 17,
               color: '#55ACEE',
               margin: 18,
             }} onPress={()=> {
               this.orderCreate()
             }}>
-              <Text style={{color: '#fff',}}>提交</Text>
+              <Text style={{color: '#fff',fontSize: 17*Ctrl.pxToDp(),}}>提交</Text>
             </TouchableOpacity>
 
           </View>
@@ -380,10 +382,10 @@ export default class ScanComponent extends React.Component {
               paddingLeft: 18
             }}>
               <TouchableOpacity
-                style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+                style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
                 onPress={() => this.props.navigator.pop()}
               >
-                <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+                <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
               <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
             </View>
@@ -431,7 +433,7 @@ export default class ScanComponent extends React.Component {
 
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>物品重量</Text>
-                <TextInput style={[scanStyle.TextInput, {width: 60, textAlign: 'right'}]}
+                <TextInput style={[scanStyle.TextInput, {width: 60*Ctrl.pxToDp(), textAlign: 'right'}]}
                            underlineColorAndroid='transparent'
                            placeholder='1公斤'
                            placeholderTextColor='#a09f9f'
@@ -449,24 +451,22 @@ export default class ScanComponent extends React.Component {
                 <Text style={{height: 0,}}>{this.state.packageWeight}</Text>
               </View>
             </View>
-            <View style={routeStyle.rContianer}></View>
             <TouchableOpacity style={{
               backgroundColor: '#313131',
               marginTop: 10,
-              height: 54,
+              height: 54*Ctrl.pxToDp(),
               borderWidth: 0.3,
               borderColor: '#a09f9f',
               borderRadius: 4,
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              fontSize: 17,
               color: '#55ACEE',
               margin: 18,
             }} onPress={()=> {
               this.orderCreate()
             }}>
-              <Text style={{color: '#fff',}}>提交</Text>
+              <Text style={{color: '#fff',fontSize: 17*Ctrl.pxToDp(),}}>提交</Text>
             </TouchableOpacity>
             <View style={scanStyle.gridContainer}>
               <Text style={scanStyle.gridTitle}>请选择货物类型(多选)</Text>
@@ -509,12 +509,12 @@ export default class ScanComponent extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+              style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
               onPress={() => this.props.navigator.pop()}
             >
-              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+              <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+            <Text style={{textAlign: 'center', color: '#313131', fontSize: 17*Ctrl.pxToDp(),}}>飞机扫码</Text>
           </View>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
             <Text>加载数据中......</Text>
@@ -532,9 +532,8 @@ const routeStyle = StyleSheet.create({
     backgroundColor: '#f7f7f7',
   },
   rItem: {
-    flex: 1,
     paddingLeft: 18,
-    height: 34,
+    height: 44*Ctrl.pxToDp(),
     paddingRight: 18,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -548,6 +547,7 @@ const routeStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     color: '#313131',
+    fontSize:15*Ctrl.pxToDp(),
   },
   rTextRight: {
     flex: 1,
@@ -555,22 +555,22 @@ const routeStyle = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'right',
     color: '#313131',
+    fontSize:15*Ctrl.pxToDp(),
   },
   Textgray:{
     color:'#A09F9F',
   },
   rTextValue: {
     color: '#E98B21',
-    fontSize:22,
+    fontSize:22*Ctrl.pxToDp(),
   }
 })
 const scanStyle = StyleSheet.create({
   TextInputView: {
-    height: 44,
+    height: 44*Ctrl.pxToDp(),
     flexDirection: 'column',
     justifyContent: 'center',
     color: '#a09f9f',
-    fontSize: 14,
     paddingLeft: 16,
     paddingRight: 16,
     marginTop:20,
@@ -578,7 +578,8 @@ const scanStyle = StyleSheet.create({
     marginBottom: 1
   },
   TextInput: {
-    height: 44,
+    height: 44*Ctrl.pxToDp(),
+    fontSize: 14*Ctrl.pxToDp(),
   },
   gridContainer: {
     flex: 1,
@@ -592,13 +593,13 @@ const scanStyle = StyleSheet.create({
   },
   gridContent: {
     flex: 1,
-    height: 60,
+    height: 60*Ctrl.pxToDp(),
     flexDirection: 'row',
     flexWrap: 'wrap',
     paddingLeft: 10,
   },
   gridTitle: {
-    fontSize: 16,
+    fontSize: 16*Ctrl.pxToDp(),
     color: '#313131',
     marginBottom: 5,
     marginLeft: 16,

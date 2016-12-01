@@ -12,6 +12,7 @@ import {
   TextInput,
   TouchableOpacity
 } from 'react-native';
+import Ctrl from './Ctrl';
 export default class EditView extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +39,7 @@ export default class EditView extends Component {
 
 const LoginStyles = StyleSheet.create({
   TextInputView: {
-    height: 50,
+    height: 50*Ctrl.pxToDp(),
     flexDirection: 'column',
     justifyContent: 'center',
     borderBottomWidth: 1,
@@ -46,8 +47,8 @@ const LoginStyles = StyleSheet.create({
   },
 
   TextInput: {
-    height: 54,
+    height: 54*Ctrl.pxToDp(),
     color: '#fff',
-    fontSize: 22,
+    fontSize: 22*Ctrl.pxToDp(),
   },
 });

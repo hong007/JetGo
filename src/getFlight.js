@@ -24,6 +24,8 @@ import SwitchComp from './SwitchComp';
 import Main from './Main';
 import RealtimeOrder from './RealtimeOrder';
 import DialPhone from './DialPhone';
+import Ctrl from './Ctrl';
+
 
 var Token;
 
@@ -40,7 +42,8 @@ export default class getFlight extends React.Component {
   }
 
   componentDidMount() {
-    StatusBar.setBackgroundColor('#000', true);
+    // StatusBar.setBackgroundColor('#000', true);
+    Ctrl.setStatusBar();
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
@@ -253,20 +256,20 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+              style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
               onPress={() => this.pageJump()}
             >
-              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+              <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
           </View>
           <View style={routeStyle.rContianer}>
-            <View style={[routeStyle.rItem, {marginBottom: 1, marginTop: 1, height: 40}]}>
+            <View style={[routeStyle.rItem, {marginBottom: 1, marginTop: 1, height: 44 * Ctrl.pxToDp()}]}>
               <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
             </View>
-            <View style={[routeStyle.rItem, {height: 95}]}>
+            <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
               <Image source={require('../img/flight.png')}/>
-              <View style={{height: 95, flex: 3, flexDirection: 'column'}}>
+              <View style={{height: 95 * Ctrl.pxToDp(), flex: 3, flexDirection: 'column'}}>
                 <View style={[routeStyle.rItem, {height: 20,}]}>
                   <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
                   <Text style={routeStyle.rTextRight}><Text
@@ -278,7 +281,7 @@ export default class getFlight extends React.Component {
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
                 </View>
 
-                <View style={[routeStyle.rItem, {height: 16, marginTop: -15,}]}>
+                <View style={[routeStyle.rItem, {height: 16, marginTop: -10,}]}>
                   <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
                   <Text style={routeStyle.rTextRight}><Text
@@ -310,17 +313,16 @@ export default class getFlight extends React.Component {
             <TouchableOpacity style={{
               backgroundColor: '#313131',
               marginTop: 20,
-              height: 80,
-              width: 80,
-              borderRadius: 40,
+              height: 80* Ctrl.pxToDp(),
+              width: 80* Ctrl.pxToDp(),
+              borderRadius: 40* Ctrl.pxToDp(),
               borderWidth: 0.3,
               borderColor: '#a09f9f',
               justifyContent: 'center',
               alignItems: 'center',
-              fontSize: 22,
               color: '#fff',
             }} onPress={this.CreateOrder.bind(this)}>
-              <Text style={{color: '#fff',}}>起飞</Text>
+              <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>起飞</Text>
             </TouchableOpacity>
             <Text style={{
               color: '#313131',
@@ -328,7 +330,7 @@ export default class getFlight extends React.Component {
               textAlign: 'center',
               alignItems: 'center',
               justifyContent: 'center',
-            }}>长安3秒</Text>
+            }}>长按3秒</Text>
           </View>
         </View>
       )
@@ -345,10 +347,10 @@ export default class getFlight extends React.Component {
             paddingLeft: 18
           }}>
             <TouchableOpacity
-              style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
+              style={{height:44,width:44,top: 0, left: 0, position: 'absolute', zIndex: 999999,paddingLeft:15,paddingTop:18,}}
               onPress={() => this.pageJump()}
             >
-              <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
+              <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
           </View>
@@ -369,7 +371,7 @@ const routeStyle = StyleSheet.create({
   rItem: {
     flex: 1,
     paddingLeft: 18,
-    height: 44,
+    height: 44 * Ctrl.pxToDp(),
     paddingRight: 18,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -382,6 +384,7 @@ const routeStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     color: '#313131',
+    fontSize: 15 * Ctrl.pxToDp(),
   },
   rTextRight: {
     flex: 1,
@@ -389,6 +392,7 @@ const routeStyle = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'right',
     color: '#313131',
+    fontSize: 15 * Ctrl.pxToDp(),
   },
   rTextValue: {
     flex: 1,
@@ -401,6 +405,7 @@ const routeStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     color: '#313131',
+    fontSize: 15 * Ctrl.pxToDp(),
   },
   rRightView: {
     flex: 1,
@@ -408,9 +413,10 @@ const routeStyle = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'right',
     color: '#313131',
+    fontSize: 15 * Ctrl.pxToDp(),
   },
   rTitle: {
-    fontSize: 16,
+    fontSize: 16 * Ctrl.pxToDp(),
     color: '#313131',
     fontWeight: 'bold',
     marginTop: 15,
