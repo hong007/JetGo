@@ -22,6 +22,7 @@ const menu_order = require('../img/menu_order.png');
 const menu_phone = require('../img/menu_phone.png');
 const menu_lay = require('../img/menu_lay.png');
 const menu_about = require('../img/menu_about.png');
+const menu_quit = require('../img/menu_quit.png');
 
 import ScanComponent from './ScanComponent';
 import PickerComponent from './PickerComponent';
@@ -40,6 +41,8 @@ export default class Main extends React.Component {
     super(props);
     this.state = {
       routeid: '',
+      loginName: '犀利哥',
+      isLogin: true,
     };
   }
 
@@ -51,13 +54,36 @@ export default class Main extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // StatusBar.setBackgroundColor('#f00', true);
     Ctrl.setStatusBar();
-    this.setState({
+    let _this = this;
+    _this.setState({
       loginStatus: false,
     });
-    ToastAndroid.show('登录成功', ToastAndroid.SHORT);
+    AsyncStorage.multiGet(["LOGIN_TOKEN", "LOGIN_USERNAME"], function (errs, result) {
+      //TODO:错误处理
+      if (!errs) {
+        // let Token = result;
+        let curdata = result;
+        let curToken = result[0][1];
+        let curUsername = result[1][1];
+        if (curToken && curToken != '' && curUsername && curUsername != '') {
+          if (curToken.length > 60 && curUsername.length >= 1) {
+            _this.setState({
+              loginName: curUsername,
+              isLogin: true,
+            })
+          } else {
+            _this.setState({
+              loginName: "登录"
+            })
+          }
+        }
+        // console.log("取得缓存中的Token是  ", curToken, "  长度是  ",curToken.lenght);
+        // alert("取得缓存中的result是  " + curToken + "  长度是  " + curToken.length+"   "+ "curUsername  "+curUsername+"  长度是  " + curUsername.length+"   ");
+      }
+    });
   }
 
   pageJump() {
@@ -92,10 +118,15 @@ export default class Main extends React.Component {
   _openLeftMenuPage(name) {
     let curPage = name;
     if (curPage == "LoginPage") {
-      this.props.navigator.push({
-        name: "LoginPage",
-        component: LoginPage,
-      });
+      if (this.state.loginName == "登录") {
+        this.props.navigator.push({
+          name: "LoginPage",
+          component: LoginPage,
+        });
+      } else {
+        return
+      }
+
     } else if (curPage == "OrderListView") {
       this.props.navigator.push({
         name: "OrderListView",
@@ -116,33 +147,97 @@ export default class Main extends React.Component {
         name: "AboutUS",
         component: AboutUS,
       });
+    } else if (curPage == "QuitLogin") {
+      AsyncStorage.setItem("LOGIN_USERNAME", '');
+      AsyncStorage.setItem("LOGIN_USERPWD", '');
+      AsyncStorage.setItem("LOGIN_TOKEN", '');
+      this.props.navigator.push({
+        name: "LoginPage",
+        component: LoginPage,
+      });
     }
   }
 
   render() {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
-    var navigationView = (
-      <View style={{flex: 1, backgroundColor: '#1b1b1b', paddingTop: 24,}}
-            onPress={()=>this.closeDrawer()}
-      >
-        <LeftMenuList title='犀利哥/登录' pageName="LoginPage" imageSource={menu_user} _leftMenuPress={(pageName)=> {
-          this._openLeftMenuPage(pageName)
-        }}/>
-        <LeftMenuList title='我的订单' pageName="OrderListView" imageSource={menu_order} _leftMenuPress={(pageName)=> {
-          this._openLeftMenuPage(pageName)
-        }}/>
-        <LeftMenuList title='在线帮助' pageName="OnlineHelp" imageSource={menu_phone} _leftMenuPress={(pageName)=> {
-          this._openLeftMenuPage(pageName)
-        }}/>
-        <LeftMenuList title='法律条款' pageName="Lawyer" imageSource={menu_lay} _leftMenuPress={(pageName)=> {
-          this._openLeftMenuPage(pageName)
-        }}/>
-        <LeftMenuList title='关于捷雁' pageName="AboutUS" imageSource={menu_about} _leftMenuPress={(pageName)=> {
-          this._openLeftMenuPage(pageName)
-        }}/>
-      </View>
-    );
+    if (this.state.isLogin) {
+      var navigationView = (
+        <View style={{flex: 1, backgroundColor: '#1b1b1b', paddingTop: 24,}}
+              onPress={()=>this.closeDrawer()}
+        >
+          <LeftMenuList title={this.state.loginName} pageName="LoginPage" imageSource={menu_user}
+                        _leftMenuPress={(pageName)=> {
+                          this._openLeftMenuPage(pageName)
+                        }}/>
+          <LeftMenuList title='我的订单' pageName="OrderListView" imageSource={menu_order} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
+          <LeftMenuList title='在线帮助' pageName="OnlineHelp" imageSource={menu_phone} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
+          <LeftMenuList title='法律条款' pageName="Lawyer" imageSource={menu_lay} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
+          <LeftMenuList title='关于捷雁' pageName="AboutUS" imageSource={menu_about} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
+          <TouchableOpacity style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            height: 40,
+            paddingLeft: 30,
+            position: 'absolute',
+            bottom: 30,
+            left: 0,
+          }} onPress={(value)=> {
+            this._openLeftMenuPage('QuitLogin')
+          }}>
+            <Image
+              style={{
+                resizeMode: Image.resizeMode.strech,
+                marginLeft: 5,
+              }}
+              source={menu_quit}
+            />
+            <Text style={{
+              fontSize: 16 * Ctrl.pxToDp(),
+              marginLeft: 15,
+              textAlign: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+            }}>
+              退出
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      var navigationView = (
+        <View style={{flex: 1, backgroundColor: '#1b1b1b', paddingTop: 24,}}
+              onPress={()=>this.closeDrawer()}
+        >
+          <LeftMenuList title={this.state.loginName} pageName="LoginPage" imageSource={menu_user}
+                        _leftMenuPress={(pageName)=> {
+                          this._openLeftMenuPage(pageName)
+                        }}/>
+          <LeftMenuList title='我的订单' pageName="OrderListView" imageSource={menu_order} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
+          <LeftMenuList title='在线帮助' pageName="OnlineHelp" imageSource={menu_phone} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
+          <LeftMenuList title='法律条款' pageName="Lawyer" imageSource={menu_lay} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
+          <LeftMenuList title='关于捷雁' pageName="AboutUS" imageSource={menu_about} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
+        </View>
+      );
+    }
+
     return (
       <DrawerLayoutAndroid
         ref={'drawerLayout'}

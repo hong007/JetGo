@@ -12,6 +12,7 @@ import  {
   Picker,
   StatusBar,
   ToastAndroid,
+  BackAndroid,
   AsyncStorage,
   TouchableOpacity
 } from 'react-native';
@@ -57,19 +58,22 @@ export default class ScanComponent extends React.Component {
     Ctrl.setStatusBar();
 
     let _this = this;
-    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
-      //TODO:错误处理
-      if (!errs) {
-        // let Token = result;
-        Token = result;
-        console.log("取得缓存中的Token是  ", Token, "  ");
+    BackAndroid.addEventListener('hardwareBackPress', function () {
+      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
+        //最近2秒内按过back键，可以退出应用。
+        return false;
       }
+      _this.lastBackPressed = Date.now();
+      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      _this.props.navigator.pop();
+      return true;
     });
-
-    AsyncStorage.getItem("ROUTE_ID", function (errs, result) {
+    AsyncStorage.multiGet(["LOGIN_TOKEN", "ROUTE_ID"], function (errs, result) {
       //TODO:错误处理
       if (!errs) {
-        let route_id = result;
+        let curdata = result;
+        Token = result[0][1];
+        let route_id = result[1][1];
         let url = "http://jieyan.xyitech.com/config/route?token=" + Token + "&id=" + route_id;
         NetUtil.postJson(url, (responseText)=> {
           let curdata = JSON.parse(responseText);
@@ -94,7 +98,6 @@ export default class ScanComponent extends React.Component {
       }
     });
   }
-
 
   onChildChanged(newState, value) {
     // alert(newState);
@@ -315,6 +318,8 @@ export default class ScanComponent extends React.Component {
               <TextInput style={scanStyle.TextInput}
                          underlineColorAndroid='transparent'
                          placeholder='扫码或输入无人机上的二维码'
+                         keyboardType="numeric"
+                         clearButtonMode="unless-editing"
                          onChangeText={
                            (scannText) => {
                              this.setState({scannText});
@@ -358,6 +363,8 @@ export default class ScanComponent extends React.Component {
                   style={[scanStyle.TextInput, {marginRight: 10, width: 60 * Ctrl.pxToDp(), textAlign: 'right'}]}
                   underlineColorAndroid='transparent'
                   placeholder='1公斤'
+                  keyboardType="numeric"
+                  clearButtonMode="unless-editing"
                   placeholderTextColor='#a09f9f'
                   onFocus={
                     ()=> {
@@ -429,6 +436,8 @@ export default class ScanComponent extends React.Component {
               <TextInput style={scanStyle.TextInput}
                          underlineColorAndroid='transparent'
                          placeholder='扫码或输入无人机上的二维码'
+                         keyboardType="numeric"
+                         clearButtonMode="unless-editing"
                          onChangeText={
                            (scannText) => {
                              this.setState({scannText});
@@ -472,6 +481,8 @@ export default class ScanComponent extends React.Component {
                 <TextInput style={[scanStyle.TextInput, {width: 60 * Ctrl.pxToDp(), textAlign: 'right'}]}
                            underlineColorAndroid='transparent'
                            placeholder='1公斤'
+                           keyboardType="numeric"
+                           clearButtonMode="unless-editing"
                            placeholderTextColor='#a09f9f'
                            onFocus={
                              ()=> {

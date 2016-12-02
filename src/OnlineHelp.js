@@ -10,6 +10,8 @@ import {
   Vibration,
   View,
   StatusBar,
+  BackAndroid,
+  ToastAndroid,
   Image,
   TouchableOpacity
 } from 'react-native';
@@ -19,6 +21,17 @@ export default class BarcodeScanner extends Component {
   }
   componentDidMount() {
     StatusBar.setBackgroundColor('#000', true);
+    let _this=this;
+    BackAndroid.addEventListener('hardwareBackPress', function () {
+      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
+        //最近2秒内按过back键，可以退出应用。
+        return false;
+      }
+      _this.lastBackPressed = Date.now();
+      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      _this.props.navigator.pop();
+      return true;
+    });
   }
   render() {
     return (

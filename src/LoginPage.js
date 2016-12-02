@@ -13,6 +13,7 @@ import {
   Platform,
   StatusBar,
   ToastAndroid,
+  BackAndroid,
   AsyncStorage,
   ProgressBarAndroid,
   TouchableOpacity
@@ -43,6 +44,16 @@ export default class LoginPage extends Component {
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
+    let _this=this;
+    BackAndroid.addEventListener('hardwareBackPress', function () {
+      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
+        //最近2秒内按过back键，可以退出应用。
+        return false;
+      }
+      _this.lastBackPressed = Date.now();
+      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      return true;
+    });
   }
 
   openDrawer() {
@@ -99,11 +110,12 @@ export default class LoginPage extends Component {
     NetUtil.postJson(url, (responseText)=> {
       let curdata = JSON.parse(responseText);
       if (curdata.err == '0') {
-        AsyncStorage.setItem("LOGIN_USERNAME", curdata.token);
-        AsyncStorage.setItem("LOGIN_USERPWD", curdata.token);
+        AsyncStorage.setItem("LOGIN_USERNAME", this.userName);
+        AsyncStorage.setItem("LOGIN_USERPWD", this.passWord);
         AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
         this.timer = setTimeout(
           ()=> {
+            ToastAndroid.show('登录成功', ToastAndroid.SHORT);
             _this.pageJump();
           },
           300

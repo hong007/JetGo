@@ -14,6 +14,7 @@ import  {
   Alert,
   Platform,
   Switch,
+  BackAndroid,
   StatusBar,
   ToastAndroid,
   AsyncStorage,
@@ -45,6 +46,16 @@ export default class getFlight extends React.Component {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
     let _this = this;
+    BackAndroid.addEventListener('hardwareBackPress', function () {
+      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
+        //最近2秒内按过back键，可以退出应用。
+        return false;
+      }
+      _this.lastBackPressed = Date.now();
+      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      _this.pageJump();
+      return true;
+    });
     AsyncStorage.multiGet(['LOGIN_TOKEN', 'DETAIL_ID'], function (errs, result) {
       if (!errs) {
         let curdata = result;
@@ -284,7 +295,7 @@ export default class getFlight extends React.Component {
             </TouchableOpacity>
             <Text style={{
               color: '#313131',
-              marginTop: 20,
+              marginTop: 15,
               textAlign: 'center',
               alignItems: 'center',
               justifyContent: 'center',
