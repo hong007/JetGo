@@ -98,10 +98,10 @@ export default class navigator extends Component {
       console.log("第一次启动");
       // let defaultName = this.state.defaultName;
       // let defaultComponent = this.state.defaultComponent;
-      let defaultName = 'HelloJetGo';
-      let defaultComponent = HelloJetGo;
-      // let defaultName = 'Main';
-      // let defaultComponent = Main;
+      // let defaultName = 'HelloJetGo';
+      // let defaultComponent = HelloJetGo;
+      let defaultName = 'Main';
+      let defaultComponent = Main;
       return (
         <Navigator
           initialRoute={{name: defaultName, component: defaultComponent}}

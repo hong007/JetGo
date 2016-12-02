@@ -291,6 +291,9 @@ export default class getFlight extends React.Component {
               alignItems: 'center',
               color: '#fff',
             }} onPressIn={this._orderPressIn.bind(this)} onPressOut={this._orderPressOut.bind(this)}>
+              <View>
+                <PercentageCircle radius={35} percent={60} color={"#f10"}></PercentageCircle>
+              </View>
               <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>起飞</Text>
             </TouchableOpacity>
             <Text style={{
