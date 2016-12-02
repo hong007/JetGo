@@ -1,48 +1,144 @@
 /**
  * Created by hongty on 2016/11/29.
  */
+'use strict';
 import React, {Component} from 'react';
 import {
   AppRegistry,
+  Dimensions,
   StyleSheet,
   Text,
+  StatusBar,
   Platform,
-  Vibration,
-  View,
+  TouchableHighlight,
+  TouchableOpacity,
   Image,
-  TouchableOpacity
+  View
 } from 'react-native';
-import Barcode from 'react-native-barcodescanner';
+import Camera from 'react-native-camera';
+
 export default class BarcodeScanner extends Component {
   constructor(props) {
     super(props);
+
+    this.camera = null;
+
     this.state = {
-      barcode: '',
-      cameraType: 'back',
-      text: '扫描二维码',
-      torchMode: 'off',
-      type: '',
+      camera: {
+        aspect: Camera.constants.Aspect.fill,
+        captureTarget: Camera.constants.CaptureTarget.cameraRoll,
+        type: Camera.constants.Type.back,
+        orientation: Camera.constants.Orientation.auto,
+        flashMode: Camera.constants.FlashMode.auto,
+      },
+      isRecording: false
     };
+
+    this.takePicture = this.takePicture.bind(this);
+    this.startRecording = this.startRecording.bind(this);
+    this.stopRecording = this.stopRecording.bind(this);
+    this.switchType = this.switchType.bind(this);
+    this.switchFlash = this.switchFlash.bind(this);
   }
 
+  takePicture() {
+    if (this.camera) {
+      this.camera.capture()
+        .then((data) => console.log(data))
+        .catch(err => console.error(err));
+    }
+  }
 
-  barcodeReceived(e) {
-    if (e.data !== this.state.barcode || e.type !== this.state.type) Vibration.vibrate();
+  startRecording() {
+    if (this.camera) {
+      this.camera.capture({mode: Camera.constants.CaptureMode.video})
+        .then((data) => console.log(data))
+        .catch(err => console.error(err));
+      this.setState({
+        isRecording: true
+      });
+    }
+  }
+
+  stopRecording() {
+    if (this.camera) {
+      this.camera.stopCapture();
+      this.setState({
+        isRecording: false
+      });
+    }
+  }
+
+  switchType() {
+    let newType;
+    const {back, front} = Camera.constants.Type;
+
+    if (this.state.camera.type === back) {
+      newType = front;
+    } else if (this.state.camera.type === front) {
+      newType = back;
+    }
+
     this.setState({
-      barcode: e.data,
-      text: `${e.data} (${e.type})`,
-      type: e.type,
+      camera: {
+        ...this.state.camera,
+        type: newType,
+      },
     });
-    // const {navigator}=this.props;
-    // if (this.props.getUrl) {
-    //   let url = this.state.text;
-    //   this.props.getUrl(url);
-    // }
-    // if (navigator) {
-    //   navigator.pop({
-    //     name: 'barcode'
-    //   })
-    // }
+  }
+
+  get typeIcon() {
+    let icon;
+    const {back, front} = Camera.constants.Type;
+
+    if (this.state.camera.type === back) {
+      icon = require('./assets/ic_camera_rear_white.png');
+    } else if (this.state.camera.type === front) {
+      icon = require('./assets/ic_camera_front_white.png');
+    }
+
+    return icon;
+  }
+
+  switchFlash() {
+    let newFlashMode;
+    const {auto, on, off} = Camera.constants.FlashMode;
+
+    if (this.state.camera.flashMode === auto) {
+      newFlashMode = on;
+    } else if (this.state.camera.flashMode === on) {
+      newFlashMode = off;
+    } else if (this.state.camera.flashMode === off) {
+      newFlashMode = auto;
+    }
+
+    this.setState({
+      camera: {
+        ...this.state.camera,
+        flashMode: newFlashMode,
+      },
+    });
+  }
+
+  get flashIcon() {
+    let icon;
+    const {auto, on, off} = Camera.constants.FlashMode;
+
+    if (this.state.camera.flashMode === auto) {
+      icon = require('./assets/ic_flash_auto_white.png');
+    } else if (this.state.camera.flashMode === on) {
+      icon = require('./assets/ic_flash_on_white.png');
+    } else if (this.state.camera.flashMode === off) {
+      icon = require('./assets/ic_flash_off_white.png');
+    }
+
+    return icon;
+  }
+
+  takePicture() {
+    this.camera.capture()
+      .then((data) => console.log(data))
+      .catch(err => console.error(err));
   }
 
   render() {
@@ -59,25 +155,96 @@ export default class BarcodeScanner extends Component {
           alignItem: 'center',
           marginTop: 24,
           paddingTop: 15,
-          paddingLeft: 18
         }}>
           <TouchableOpacity
-            style={{height:42,width:42,top: 0, right: 0,  position: 'absolute', zIndex: 999999}}
+            style={{
+              height: 44,
+              width: 44,
+              top: 0,
+              left: 0,
+              position: 'absolute',
+              zIndex: 999999,
+              paddingLeft: 15,
+              paddingTop: 18,
+            }}
             onPress={() => this.props.navigator.pop()}
           >
-            <Image style={{marginTop:15,}} source={require('../img/ic_back.png')}/>
+            <Image source={require('../img/ic_back.png')}/>
           </TouchableOpacity>
-          <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>二维码扫码测试</Text>
+          <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>扫码</Text>
         </View>
-        <View style={styles.Container}>
-          <Barcode
-            onBarCodeRead={this.barcodeReceived.bind(this)}
-            style={{flex: 1}}
-            torchMode={this.state.torchMode}
-            cameraType={this.state.cameraType}
+        <View style={styles.container}>
+          <StatusBar
+            animated
+            hidden
           />
-          <View style={styles.statusBar}>
-            <Text style={styles.statusBarText}>{this.state.text}</Text>
+          <Camera
+            ref={(cam) => {
+              this.camera = cam;
+            }}
+            style={styles.preview}
+            aspect={this.state.camera.aspect}
+            captureTarget={this.state.camera.captureTarget}
+            type={this.state.camera.type}
+            flashMode={this.state.camera.flashMode}
+            defaultTouchToFocus
+            mirrorImage={false}
+          />
+          <View style={[styles.overlay, styles.topOverlay]}>
+            <TouchableOpacity
+              style={styles.typeButton}
+              onPress={this.switchType}
+            >
+              <Image
+                source={this.typeIcon}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.flashButton}
+              onPress={this.switchFlash}
+            >
+              <Image
+                source={this.flashIcon}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.overlay, styles.bottomOverlay]}>
+            {
+              !this.state.isRecording
+              &&
+              <TouchableOpacity
+                style={styles.captureButton}
+                onPress={this.takePicture}
+              >
+                <Image
+                  source={require('./assets/ic_photo_camera_36pt.png')}
+                />
+              </TouchableOpacity>
+              ||
+              null
+            }
+            <View style={styles.buttonsSpace}/>
+            {
+              !this.state.isRecording
+              &&
+              <TouchableOpacity
+                style={styles.captureButton}
+                onPress={this.startRecording}
+              >
+                <Image
+                  source={require('./assets/ic_videocam_36pt.png')}
+                />
+              </TouchableOpacity>
+              ||
+              <TouchableOpacity
+                style={styles.captureButton}
+                onPress={this.stopRecording}
+              >
+                <Image
+                  source={require('./assets/ic_stop_36pt.png')}
+                />
+              </TouchableOpacity>
+            }
           </View>
         </View>
       </View>
@@ -86,14 +253,56 @@ export default class BarcodeScanner extends Component {
 }
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+  },
+  preview: {
     flex: 1,
-  },
-  statusBar: {
-    height: 100,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    justifyContent: 'center',
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width
   },
-  statusBarText: {
-    fontSize: 20,
+  capture: {
+    flex: 0,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+    color: '#000',
+    padding: 10,
+    margin: 40
+  },
+  overlay: {
+    position: 'absolute',
+    padding: 16,
+    right: 0,
+    left: 0,
+    alignItems: 'center',
+  },
+  topOverlay: {
+    top: 0,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  bottomOverlay: {
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  captureButton: {
+    padding: 15,
+    backgroundColor: 'white',
+    borderRadius: 40,
+  },
+  typeButton: {
+    padding: 5,
+  },
+  flashButton: {
+    padding: 5,
+  },
+  buttonsSpace: {
+    width: 10,
   },
 });

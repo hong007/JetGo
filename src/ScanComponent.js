@@ -313,7 +313,6 @@ export default class ScanComponent extends React.Component {
               </TouchableOpacity>
               <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
             </View>
-
             <View style={scanStyle.TextInputView}>
               <TextInput style={scanStyle.TextInput}
                          underlineColorAndroid='transparent'
@@ -328,6 +327,13 @@ export default class ScanComponent extends React.Component {
                            }
                          }
               />
+              <Image style={{position: 'absolute', right: 18, top: 10 * Ctrl.pxToDp()}}
+                     source={require('../img/scanner.png')}><Text style={{backgroundColor:'transparent', height:44 * Ctrl.pxToDp(),width:44 * Ctrl.pxToDp()}}onPress={()=> {
+                this.props.navigator.push({
+                  name: 'BarcodeScanner',
+                  component: BarcodeScanner
+                });
+              }}></Text></Image>
               <Text style={{height: 0,}}>{this.state.scannText}</Text>
             </View>
             <View style={routeStyle.rContianer}>
@@ -447,6 +453,13 @@ export default class ScanComponent extends React.Component {
                          }
               />
               <Text style={{height: 0,}}>{this.state.scannText}</Text>
+              <Image style={{position: 'absolute', right: 18, top: 10 * Ctrl.pxToDp()}}
+                     source={require('../img/scanner.png')}><Text style={{backgroundColor:'transparent', height:44 * Ctrl.pxToDp(),width:44 * Ctrl.pxToDp()}}onPress={()=> {
+                this.props.navigator.push({
+                  name: 'BarcodeScanner',
+                  component: BarcodeScanner
+                });
+              }}></Text></Image>
             </View>
             <View style={routeStyle.rContianer}>
               <View style={routeStyle.rItem}>
