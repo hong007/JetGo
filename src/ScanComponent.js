@@ -218,16 +218,16 @@ export default class ScanComponent extends React.Component {
           packageList = packagetype.join("&");
         }
         // alert(packageList)
-        let url = "http://jieyan.xyitech.com/order/create?token=" + Token + "&routeid=" + route_id + "&remark=1&fid=" + _this.fid + "&weight=" + pWeight + "&" + packageList;
+        let url = "http://jieyan.xyitech.com/order/create?token=" + Token + "&routeid=" + route_id + "&remark=1&fid=" + _this.state.scannText + "&weight=" + pWeight + "&" + packageList;
         console.log("提交的信息是  ", url);
         // alert("提交的信息是  " + url);
-        if (_this.fid == "") {
+        if (_this.state.scannText == "") {
           // alert("飞机id不能为空");
           _this.setState({
             submitStatus: false,
           });
           ToastAndroid.show('飞机id不能为空!', ToastAndroid.SHORT);
-        } else if (!_this.fid) {
+        } else if (!_this.state.scannText) {
           // alert("飞机id不存在");
           ToastAndroid.show('飞机id不存在!', ToastAndroid.SHORT);
         } else {
