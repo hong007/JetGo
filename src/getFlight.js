@@ -186,6 +186,11 @@ export default class getFlight extends React.Component {
         component: RealtimeOrder
       });
     } else {
+      // let route={
+      //     name: 'Main',
+      //     component: Main
+      // }
+      // this.props.navigator.popToRoute(route);
       this.props.navigator.push({
         // title: '',
         name: 'Main',
