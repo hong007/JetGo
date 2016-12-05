@@ -14,9 +14,11 @@ import  {
   ToastAndroid,
   BackAndroid,
   AsyncStorage,
+  DeviceEventEmitter,
   TouchableOpacity
 } from 'react-native';
 import getFlight from './getFlight';
+import Main from './Main';
 import NetUtil from './NetUtil';
 import GridChild from './GridChild';
 import BarcodeScanner from './BarcodeScanner';
@@ -58,6 +60,8 @@ export default class ScanComponent extends React.Component {
     Ctrl.setStatusBar();
 
     let _this = this;
+    DeviceEventEmitter.addListener("changeBarCode",(events)=>{_this.setState({scannText:events})})
+
     BackAndroid.addEventListener('hardwareBackPress', function () {
       if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
         //最近2秒内按过back键，可以退出应用。
@@ -65,7 +69,7 @@ export default class ScanComponent extends React.Component {
       }
       _this.lastBackPressed = Date.now();
       ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      _this.props.navigator.pop();
+      this.__onBack();
       return true;
     });
     AsyncStorage.multiGet(["LOGIN_TOKEN", "ROUTE_ID"], function (errs, result) {
@@ -87,7 +91,7 @@ export default class ScanComponent extends React.Component {
               distance: (curdata.route.distance / 1000).toFixed(0),
               duration: (curdata.route.duration / 60).toFixed(0),
             });
-            console.log("存储缓存中的route是  ", JSON.stringify(curdata.route));
+            // console.log("存储缓存中的route是  ", JSON.stringify(curdata.route));
             AsyncStorage.setItem("SINGLE_ROUTE", JSON.stringify(curdata.route));
           } else {
             // alert("没有该航路，请重试");
@@ -98,7 +102,12 @@ export default class ScanComponent extends React.Component {
       }
     });
   }
-
+  _onBack(){
+    this.props.navigator.push({
+      name: 'Main',
+      component: Main
+    });
+  }
   onChildChanged(newState, value) {
     // alert(newState);
     console.log('物品种类是否选中，', newState, "  选中的值是 ", value);
@@ -307,7 +316,7 @@ export default class ScanComponent extends React.Component {
                   paddingLeft: 15,
                   paddingTop: 18,
                 }}
-                onPress={() => this.props.navigator.pop()}
+                onPress={() => this._onBack()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
@@ -319,6 +328,7 @@ export default class ScanComponent extends React.Component {
                          placeholder='扫码或输入无人机上的二维码'
                          keyboardType="numeric"
                          clearButtonMode="unless-editing"
+                         value={this.state.scannText}
                          onChangeText={
                            (scannText) => {
                              this.setState({scannText});
@@ -328,12 +338,14 @@ export default class ScanComponent extends React.Component {
                          }
               />
               <Image style={{position: 'absolute', right: 18, top: 10 * Ctrl.pxToDp()}}
-                     source={require('../img/scanner.png')}><Text style={{backgroundColor:'transparent', height:44 * Ctrl.pxToDp(),width:44 * Ctrl.pxToDp()}}onPress={()=> {
-                this.props.navigator.push({
-                  name: 'BarcodeScanner',
-                  component: BarcodeScanner
-                });
-              }}></Text></Image>
+                     source={require('../img/scanner.png')}>
+                <Text style={{backgroundColor: 'transparent', height: 44 * Ctrl.pxToDp(), width: 44 * Ctrl.pxToDp()}}
+                      onPress={()=> {
+                        this.props.navigator.push({
+                          name: 'BarcodeScanner',
+                          component: BarcodeScanner
+                        });
+                      }}></Text></Image>
               <Text style={{height: 0,}}>{this.state.scannText}</Text>
             </View>
             <View style={routeStyle.rContianer}>
@@ -432,7 +444,7 @@ export default class ScanComponent extends React.Component {
                   paddingLeft: 15,
                   paddingTop: 18,
                 }}
-                onPress={() => this.props.navigator.pop()}
+                onPress={() => this._onBack()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
@@ -444,6 +456,7 @@ export default class ScanComponent extends React.Component {
                          placeholder='扫码或输入无人机上的二维码'
                          keyboardType="numeric"
                          clearButtonMode="unless-editing"
+                         value={this.state.scannText}
                          onChangeText={
                            (scannText) => {
                              this.setState({scannText});
@@ -451,15 +464,25 @@ export default class ScanComponent extends React.Component {
                              AsyncStorage.setItem("FID", scannText);
                            }
                          }
+
               />
               <Text style={{height: 0,}}>{this.state.scannText}</Text>
               <Image style={{position: 'absolute', right: 18, top: 10 * Ctrl.pxToDp()}}
-                     source={require('../img/scanner.png')}><Text style={{backgroundColor:'transparent', height:44 * Ctrl.pxToDp(),width:44 * Ctrl.pxToDp()}}onPress={()=> {
-                this.props.navigator.push({
-                  name: 'BarcodeScanner',
-                  component: BarcodeScanner
-                });
-              }}></Text></Image>
+                     source={require('../img/scanner.png')}><Text
+                style={{backgroundColor: 'transparent', height: 44 * Ctrl.pxToDp(), width: 44 * Ctrl.pxToDp()}}
+                onPress={()=> {
+                  this.props.navigator.push({
+                    name: 'BarcodeScanner',
+                    component: BarcodeScanner,
+                    param:{
+                      getUser: function(scanResult){
+                        this.setState({
+                          scannText:scanResult,
+                        })
+                      }
+                    }
+                  });
+                }}></Text></Image>
             </View>
             <View style={routeStyle.rContianer}>
               <View style={routeStyle.rItem}>
@@ -579,7 +602,7 @@ export default class ScanComponent extends React.Component {
                 paddingLeft: 15,
                 paddingTop: 18,
               }}
-              onPress={() => this.props.navigator.pop()}
+              onPress={() => this._onBack()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
