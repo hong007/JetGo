@@ -244,18 +244,18 @@ export default class getFlight extends React.Component {
             <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
               <Image source={require('../img/flight.png')}/>
               <View style={{height: 95 * Ctrl.pxToDp(), flex: 3, flexDirection: 'column'}}>
-                <View style={[routeStyle.rItem, {height: 20,}]}>
+                <View style={[routeStyle.rItem, {height: 20,marginTop:10* Ctrl.pxToDp(),marginBottom:5* Ctrl.pxToDp()}]}>
                   <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
                   <Text style={routeStyle.rTextRight}><Text
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
                     style={routeStyle.rTextName}>公里</Text></Text>
                 </View>
-                <View style={[routeStyle.rItem, {height: 16, marginTop: -10,}]}>
+                <View style={[routeStyle.rItem, {height: 22,}]}>
                   <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
                 </View>
 
-                <View style={[routeStyle.rItem, {height: 16, marginTop: -10,}]}>
+                <View style={[routeStyle.rItem, {height: 22, }]}>
                   <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
                   <Text style={routeStyle.rTextRight}><Text
@@ -352,7 +352,6 @@ const routeStyle = StyleSheet.create({
     backgroundColor: '#f7f7f7',
   },
   rItem: {
-    flex: 1,
     paddingLeft: 18,
     height: 44 * Ctrl.pxToDp(),
     paddingRight: 18,

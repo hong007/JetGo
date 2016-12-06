@@ -33,7 +33,6 @@ export default class DialPhone extends React.Component {
         }).catch(err => console.error('An error occurred', err));
       }}>
         <View style={{
-          flex: 1,
           paddingLeft: 18,
           paddingRight: 18,
           flexDirection: 'row',

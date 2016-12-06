@@ -29,7 +29,7 @@ export default class HelloJetGo extends React.Component {
     //默认从0 开始，0是第一页
     this.setState({page: e.nativeEvent});
     // console.log('CurrentPage: ' + e.nativeEvent.position);
-    ToastAndroid.show('CurrentPage: ' + e.nativeEvent.position, ToastAndroid.SHORT);
+    // ToastAndroid.show('CurrentPage: ' + e.nativeEvent.position, ToastAndroid.SHORT);
   }
 
   pageJump() {
