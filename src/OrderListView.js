@@ -436,20 +436,22 @@ const OrderListItem = StyleSheet.create({
     backgroundColor: '#f7f7f7',
   },
   container: {
-    flex: 1,
     flexDirection: 'column',
     paddingLeft: 18,
     paddingRight: 18,
     marginBottom: 20,
+    height:126 * Ctrl.pxToDp(),
     backgroundColor: '#fff'
   },
   title: {
     flex: 1,
     flexDirection: 'row',
     borderBottomWidth: 1,
-    paddingTop: 5,
-    paddingBottom: 5,
+    paddingTop: 2,
+    paddingBottom: 2,
     borderBottomColor: '#f7f7f7',
+    justifyContent:'center',
+    alignItems:'center',
   },
   titleLeft1: {
     flex: 1,

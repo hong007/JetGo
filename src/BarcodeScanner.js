@@ -54,7 +54,7 @@ export default class BarcodeScanner extends Component {
 
     let _this = this;
     if (e.data != '') {
-      AsyncStorage.setItem("SCANRESULT", e.data);
+      // AsyncStorage.setItem("SCANRESULT", e.data);
       console.log('这下你不嘚瑟了吧', e.data);
       if (this.state.isBarCodeScann) {
         return true;

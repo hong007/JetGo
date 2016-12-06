@@ -11,8 +11,8 @@ import {
   Modal
 } from 'react-native';
 const {width, height} = Dimensions.get('window');
-import loadingImage from '../img/0.gif';
-// import loadingImage from '../img/flight.png';
+import loadingImage from '../img//0.gif';
+// import loadingImage from './img/flight.png';
 export default class LoadingView extends Component {
   constructor(props) {
     super(props);
