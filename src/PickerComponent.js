@@ -14,6 +14,8 @@ import{
 } from 'react-native';
 import NetUtil from './NetUtil';
 import Ctrl from './Ctrl';
+import ModalComp from './ModalComp';
+
 
 class PickerComponent extends React.Component {
   constructor(props) {
@@ -25,7 +27,9 @@ class PickerComponent extends React.Component {
       start_airports_load: false,
       airportsData: null,
       airportsEndData: null,
-      test: this.props.test,
+
+      isLoadModalVisible: false
+      // test: this.props.test,
     };
   }
 
@@ -37,6 +41,11 @@ class PickerComponent extends React.Component {
       if (!errs) {
         let Token = result;
         console.log("取得缓存中的Token是  ", Token, "  ");
+
+        _this.setState({
+          isLoadModalVisible: true
+        });
+
         let url = "http://jieyan.xyitech.com/spoint/search?token=" + Token;
         NetUtil.postJson(url, (responseText)=> {
           let curdata = JSON.parse(responseText);
@@ -47,6 +56,8 @@ class PickerComponent extends React.Component {
             _this.setState({
               airports_status: true,
               airportsData: airports,
+
+              isLoadModalVisible: false
             });
           } else {
             alert("获取航路失败请重试");
@@ -142,6 +153,8 @@ class PickerComponent extends React.Component {
               <Picker.Item style={{fontSize: 23 * Ctrl.pxToDp()}} label="请选择" value="请选择" aid=""/>
             </Picker>
           </View>
+          <ModalComp modalValue={this.state.isLoadModalVisible}/>
+
         </View>
       );
     } else {
@@ -172,6 +185,7 @@ class PickerComponent extends React.Component {
                 {this.state.airportsEndData.map((n)=>this.initEndAirports(n))}
               </Picker>
             </View>
+            <ModalComp modalValue={this.state.isLoadModalVisible}/>
 
           </View>
 
@@ -203,6 +217,8 @@ class PickerComponent extends React.Component {
                 <Picker.Item style={{fontSize: 23 * Ctrl.pxToDp()}} label="请选择" value="请选择" aid=""/>
               </Picker>
             </View>
+            <ModalComp modalValue={this.state.isLoadModalVisible}/>
+
           </View>
         );
       }

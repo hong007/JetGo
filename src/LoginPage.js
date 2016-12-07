@@ -24,6 +24,8 @@ import Main from './Main';
 import NetUtil from './NetUtil';
 import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
+import ModalComp from './ModalComp';
+
 
 // import LoadingView from './LoadingView';
 
@@ -34,7 +36,7 @@ export default class LoginPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showLoading: false,
+      isLoadModalVisible: false
     };
     this.userName = "";
     this.password = "";
@@ -44,7 +46,7 @@ export default class LoginPage extends Component {
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
-    let _this=this;
+    let _this = this;
     BackAndroid.addEventListener('hardwareBackPress', function () {
       if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
         //最近2秒内按过back键，可以退出应用。
@@ -71,39 +73,12 @@ export default class LoginPage extends Component {
   //     showLoading: false
   //   })
   // }
-
-  render() {
-    console.disableYellowBox = true;
-    console.warn('YellowBox is disabled.');
-    if (this.state.loginStatus) {
-      return (
-        <LoadingViewProgress/>
-      )
-    }
-    return (
-      <View style={LoginStyles.loginview}>
-        <Text style={{fontSize: 22 * Ctrl.pxToDp(), color: '#fff',}}>用户登录</Text>
-        <View style={{paddingTop: 38,}}>
-          <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>用户名</Text>
-          <EditView name='' onChangeText={(text) => {
-            this.userName = text;
-          }}/>
-          <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>密码</Text>
-          <EditView name='password' onChangeText={(text) => {
-            this.passWord = text;
-          }}/>
-          <Button name='登录' onPressCallback={()=>this.onPressCallback()}/>
-        </View>
-      </View>
-    )
-  }
-
   onPressCallback() {
     // this.pageJump();
 
     let _this = this;
     this.setState({
-      loginStatus: true,
+      isLoadModalVisible: true
     });
     let url = "http://jieyan.xyitech.com/login/?username=" + this.userName + "&password=" + this.passWord;
 
@@ -116,13 +91,16 @@ export default class LoginPage extends Component {
         this.timer = setTimeout(
           ()=> {
             ToastAndroid.show('登录成功', ToastAndroid.SHORT);
+            _this.setState({
+              isLoadModalVisible: false
+            });
             _this.pageJump();
           },
           300
         );
       } else {
-        this.setState({
-          loginStatus: false,
+        _this.setState({
+          isLoadModalVisible: false
         });
         // alert("用户名或密码错误，请重试");
         ToastAndroid.show('用户名或密码错误，请重试', ToastAndroid.SHORT);
@@ -142,19 +120,27 @@ export default class LoginPage extends Component {
     }
   }
 
-// <Button name='test' onPressCallback={()=>this.pageJump2()}/>
-
-
-  // pageJump2() {
-  //   const {navigator} = this.props;
-  //   if (navigator) {
-  //     navigator.push({
-  //       title: '主页',
-  //       name: 'RealtimeOrder',
-  //       component: RealtimeOrder,
-  //     });
-  //   }
-  // }
+  render() {
+    console.disableYellowBox = true;
+    console.warn('YellowBox is disabled.');
+    return (
+      <View style={LoginStyles.loginview}>
+        <Text style={{fontSize: 22 * Ctrl.pxToDp(), color: '#fff',}}>用户登录</Text>
+        <View style={{paddingTop: 38,}}>
+          <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>用户名</Text>
+          <EditView name='' onChangeText={(text) => {
+            this.userName = text;
+          }}/>
+          <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>密码</Text>
+          <EditView name='password' onChangeText={(text) => {
+            this.passWord = text;
+          }}/>
+          <Button name='登录' onPressCallback={()=>this.onPressCallback()}/>
+        </View>
+        <ModalComp modalValue={this.state.isLoadModalVisible}/>
+      </View>
+    )
+  }
 }
 
 const LoginStyles = StyleSheet.create({

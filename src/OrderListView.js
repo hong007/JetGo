@@ -72,7 +72,7 @@ export default class OrderListView extends React.Component {
         _this.timer = setTimeout(
           ()=> {
             _this._fetchListData(0);
-          }, 500
+          }, 300
         );
         // alert("返回数据是  " + curdata + "  " + "  数据类型是  " + typeof curdata + "   token是" + Token + "  DETAIL_ID  是    " + curfid);
       }

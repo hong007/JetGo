@@ -39,6 +39,7 @@ export default class Detail extends React.Component {
       isOrderCansle: false,
     }
   }
+  // this.setState({isPackageType: (this.state.isPackageType ? false : true)})
 
   // componentWillMount() {
   //   if (Platform.OS === 'android') {

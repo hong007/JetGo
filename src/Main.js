@@ -90,7 +90,7 @@ export default class Main extends React.Component {
     this.props.navigator.push({
       title: '订单列表',
       name: 'OrderListView',
-      component: OrderListView
+      component: OrderListView,
     });
   }
 

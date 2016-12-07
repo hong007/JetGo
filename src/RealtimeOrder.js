@@ -23,8 +23,8 @@ import  {
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
 import DialPhone from './DialPhone';
-import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
+import ModalComp from './ModalComp';
 
 var Token;
 
@@ -43,6 +43,7 @@ export default class getFlight extends React.Component {
       orderArrivalTime: '',
 
       buttonStatus: false,
+      isLoadModalVisible: false
     }
   }
 
@@ -160,11 +161,11 @@ export default class getFlight extends React.Component {
   }
 
   orderConfirm() {
+    let _this = this;
     if (this.state.buttonStatus) {
-      this.setState({
-        submitStatus: true,
+      _this.setState({
+        isLoadModalVisible: true,
       });
-      let _this = this;
       let curId = this.state.detailData.order.id;
       let url = "http://jieyan.xyitech.com/order/update?token=" + Token + "&id=" + curId + "&state=4";
       NetUtil.postJson(url, (responseText)=> {
@@ -172,7 +173,14 @@ export default class getFlight extends React.Component {
         console.log('发送指令返回数据 ', curdata);
         if (curdata.err == '0') {
           AsyncStorage.setItem("ORDER_CONFIRM", 'true');
-          this.pageJump();
+          _this.timer = setTimeout(
+            ()=> {
+              _this.setState({
+                isLoadModalVisible: false
+              });
+              _this.pageJump();
+            }, 300
+          )
         } else {
           Alert.alert(
             '温馨提示',
@@ -181,16 +189,16 @@ export default class getFlight extends React.Component {
               {text: '确定',}
             ]
           );
-          this.setState({
-            submitStatus: false,
+          _this.setState({
+            isLoadModalVisible: false,
           });
           // alert("起飞失败，请重试，或联系客服！");
         }
       })
     } else {
       // alert("暂时无法确认，请稍后重试！");
-      this.setState({
-        submitStatus: false,
+      _this.setState({
+        isLoadModalVisible: false,
       });
       ToastAndroid.show('暂时无法确认，请稍后重试！', ToastAndroid.SHORT);
     }
@@ -201,11 +209,6 @@ export default class getFlight extends React.Component {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
     var isChecked = this.state.checked ? 'yes' : 'no';
-    if (this.state.submitStatus) {
-      return (
-        <LoadingViewProgress/>
-      )
-    }
     if (this.state.detailDataLoaded) {
       return (
         <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
@@ -306,6 +309,7 @@ export default class getFlight extends React.Component {
           }}>
             <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>确认收货</Text>
           </TouchableOpacity>
+          <ModalComp modalValue={this.state.isLoadModalVisible}/>
         </View>
       )
     } else {

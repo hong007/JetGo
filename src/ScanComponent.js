@@ -10,20 +10,23 @@ import  {
   Platform,
   Image,
   Picker,
+  Modal,
   StatusBar,
   ToastAndroid,
   BackAndroid,
   AsyncStorage,
+  Dimensions,
   DeviceEventEmitter,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight,
 } from 'react-native';
 import getFlight from './getFlight';
 import Main from './Main';
 import NetUtil from './NetUtil';
 import GridChild from './GridChild';
 import BarcodeScanner from './BarcodeScanner';
-import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
+import ModalComp from './ModalComp';
 
 var Token;
 var orderTypeList = [];
@@ -43,14 +46,12 @@ export default class ScanComponent extends React.Component {
       initialChecked: false,
       totalChecked: 0,
       orderType: '',
-
       orderId: '',
-
       isPackageType: false,
-
       setChoosedType: '包裹',
-
       barcodeResult: '',
+      girdModalVisible: false,
+      isLoadModalVisible: false,
     };
     this.fid = '';
   }
@@ -60,7 +61,9 @@ export default class ScanComponent extends React.Component {
     Ctrl.setStatusBar();
 
     let _this = this;
-    DeviceEventEmitter.addListener("changeBarCode",(events)=>{_this.setState({scannText:events})})
+    DeviceEventEmitter.addListener("changeBarCode", (events)=> {
+      _this.setState({scannText: events})
+    })
 
     BackAndroid.addEventListener('hardwareBackPress', function () {
       if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
@@ -102,12 +105,18 @@ export default class ScanComponent extends React.Component {
       }
     });
   }
-  _onBack(){
+
+  setModalVisible(visible) {
+    this.setState({girdModalVisible: visible});
+  }
+
+  _onBack() {
     this.props.navigator.push({
       name: 'Main',
       component: Main
     });
   }
+
   onChildChanged(newState, value) {
     // alert(newState);
     console.log('物品种类是否选中，', newState, "  选中的值是 ", value);
@@ -163,9 +172,7 @@ export default class ScanComponent extends React.Component {
   orderCreate() {
     let _this = this;
     // _this.pageJump();
-    this.setState({
-      submitStatus: true,
-    });
+
     AsyncStorage.getItem("ROUTE_ID", function (errs, result) {
       //TODO:错误处理
       if (!errs) {
@@ -223,20 +230,24 @@ export default class ScanComponent extends React.Component {
         // alert("提交的信息是  " + url);
         if (_this.state.scannText == "") {
           // alert("飞机id不能为空");
-          _this.setState({
-            submitStatus: false,
-          });
           ToastAndroid.show('飞机id不能为空!', ToastAndroid.SHORT);
         } else if (!_this.state.scannText) {
           // alert("飞机id不存在");
           ToastAndroid.show('飞机id不存在!', ToastAndroid.SHORT);
         } else {
+          _this.setState({
+            isLoadModalVisible: true
+          });
+          _this.timer = setTimeout(
+            ()=> {
+              _this.setState({
+                isLoadModalVisible: false
+              });
+            }, 10000
+          )
           NetUtil.postJson(url, (responseText)=> {
             if (!responseText || responseText == "") {
               // alert("提交失败，请重试！");
-              _this.setState({
-                submitStatus: false,
-              });
               ToastAndroid.show('提交失败，请重试!', ToastAndroid.SHORT);
             } else {
               let curdata = JSON.parse(responseText);
@@ -245,12 +256,17 @@ export default class ScanComponent extends React.Component {
                 // console.log("存储缓存中的ORDER_ID是  ", JSON.stringify(curdata.id));
                 // AsyncStorage.setItem("ORDER_ID", JSON.stringify(curdata.id));
                 AsyncStorage.setItem("DETAIL_ID", JSON.stringify(curdata.id));
-                _this.pageJump();
+
+                _this.timer = setTimeout(
+                  ()=> {
+                    _this.setState({
+                      isLoadModalVisible: false
+                    });
+                    _this.pageJump();
+                  }, 300
+                )
               } else {
                 // alert("错误，请重试");
-                _this.setState({
-                  submitStatus: false,
-                });
                 ToastAndroid.show('错误，请重试!', ToastAndroid.SHORT);
               }
             }
@@ -274,22 +290,11 @@ export default class ScanComponent extends React.Component {
     });
   }
 
-// <Text onPress={()=> {
-//   this.props.navigator.push({
-//     name: 'BarcodeScanner',
-//     component: BarcodeScanner
-//   })
-// }}> 二维码扫码测试</Text>
   render() {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
-    if (this.state.submitStatus) {
-      return (
-        <LoadingViewProgress/>
-      )
-    }
     if (this.state.dataload) {
-      if (!this.state.isPackageType && !this.state.isPackage) {
+      if (!this.state.isPackageType) {
         return (
           <View style={{
             flex: 1,
@@ -370,10 +375,69 @@ export default class ScanComponent extends React.Component {
                 <Text style={routeStyle.rTextLeft}>选择货物</Text>
                 <Text style={[routeStyle.rTextRight, routeStyle.Textgray]}
                       onPress={()=> {
-                        this.setState({isPackageType: (this.state.isPackageType ? false : true)})
+                        this.setModalVisible(true);
                       }}>{this.state.setChoosedType}</Text>
                 <Image style={{marginLeft: 8, marginTop: 2}} source={require('../img/arrow.png')}/>
               </View>
+
+              <Modal
+                animationType={"fade"}
+                transparent={true}
+                visible={this.state.girdModalVisible}
+                onRequestClose={() => {
+                  alert("Modal has been closed.")
+                }}
+              >
+                <View style={{
+                  flex: 1,
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  justifyContent: 'flex-end'
+                }}>
+                  <View style={{
+                    backgroundColor: '#fff',
+                    width: Dimensions.get('window').width,
+                    height: 180 * Ctrl.pxToDp(),
+                    paddingTop: 16,
+                  }}>
+                    <Text style={scanStyle.gridTitle}>请选择货物类型(多选)</Text>
+                    <TouchableOpacity
+                      style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        width: 40,
+                        height: 40,
+                        paddingRight: 18,
+                        paddingTop: 20,
+                        alignItems: 'flex-end',
+                      }}
+                      onPress={()=> {
+                        this.setModalVisible(!this.state.girdModalVisible);
+                      }}>
+                      <Image source={require('../img/close.png')}/>
+                    </TouchableOpacity>
+                    <View style={scanStyle.gridContent}>
+                      <GridChild text="报纸" orderName="报纸" orderType="paper" initialChecked={this.state.initialChecked}
+                                 callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "报纸", "paper")}/>
+                      <GridChild text="信件" orderName="信件" orderType="letter"
+                                 initialChecked={this.state.initialChecked}
+                                 callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "信件", "letter")}/>
+                      <GridChild text="刊物" orderName="刊物" orderType="magzine"
+                                 initialChecked={this.state.initialChecked}
+                                 callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "刊物", "magzine")}/>
+                      <GridChild text="包裹" orderName="包裹" orderType="package"
+                                 initialChecked={this.state.initialChecked}
+                                 callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "包裹", "package")}/>
+                    </View>
+
+                    <View style={[scanStyle.gridContent, {marginTop: -15}]}>
+
+                      <GridChild text="其他" orderName="其他" orderType="other" initialChecked={this.state.initialChecked}
+                                 callbackParent={(initialChecked, orderName, orderType)=>this.onChildChanged(initialChecked, "其他", "other")}/>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
 
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>物品重量</Text>
@@ -415,167 +479,8 @@ export default class ScanComponent extends React.Component {
             }}>
               <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp(),}}>提交</Text>
             </TouchableOpacity>
+            <ModalComp modalValue={this.state.isLoadModalVisible}/>
 
-          </View>
-        )
-      } else if (this.state.isPackageType) {
-        return (
-          <View style={{
-            flex: 1,
-            backgroundColor: '#f7f7f7',
-          }}>
-            <View style={{
-              height: (Platform.OS === 'android' ? 42 : 50),
-              backgroundColor: '#fff',
-              flexDeriction: 'row',
-              alignItem: 'center',
-              marginTop: 24,
-              paddingTop: 15,
-              paddingLeft: 18
-            }}>
-              <TouchableOpacity
-                style={{
-                  height: 44,
-                  width: 44,
-                  top: 0,
-                  left: 0,
-                  position: 'absolute',
-                  zIndex: 999999,
-                  paddingLeft: 15,
-                  paddingTop: 18,
-                }}
-                onPress={() => this._onBack()}
-              >
-                <Image source={require('../img/ic_back.png')}/>
-              </TouchableOpacity>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
-            </View>
-            <View style={scanStyle.TextInputView}>
-              <TextInput style={scanStyle.TextInput}
-                         underlineColorAndroid='transparent'
-                         placeholder='扫码或输入无人机上的二维码'
-                         keyboardType="numeric"
-                         clearButtonMode="unless-editing"
-                         value={this.state.scannText}
-                         onChangeText={
-                           (scannText) => {
-                             this.setState({scannText});
-                             this.fid = scannText;
-                             AsyncStorage.setItem("FID", scannText);
-                           }
-                         }
-
-              />
-              <Text style={{height: 0,}}>{this.state.scannText}</Text>
-              <Image style={{position: 'absolute', right: 18, top: 10 * Ctrl.pxToDp()}}
-                     source={require('../img/scanner.png')}><Text
-                style={{backgroundColor: 'transparent', height: 44 * Ctrl.pxToDp(), width: 44 * Ctrl.pxToDp()}}
-                onPress={()=> {
-                  this.props.navigator.push({
-                    name: 'BarcodeScanner',
-                    component: BarcodeScanner,
-                    param:{
-                      getUser: function(scanResult){
-                        this.setState({
-                          scannText:scanResult,
-                        })
-                      }
-                    }
-                  });
-                }}></Text></Image>
-            </View>
-            <View style={routeStyle.rContianer}>
-              <View style={routeStyle.rItem}>
-                <Text style={routeStyle.rTextLeft}>无人机行程</Text>
-                <Text style={routeStyle.rTextRight}>{this.state.sname}&nbsp;-&nbsp;{this.state.ename}</Text>
-              </View>
-              <View style={routeStyle.rItem}>
-                <Text style={routeStyle.rTextLeft}>飞行距离</Text>
-                <Text style={routeStyle.rTextRight}><Text
-                  style={routeStyle.rTextValue}>{this.state.distance}</Text><Text
-                  style={routeStyle.rTextName}>公里</Text></Text>
-              </View>
-              <View style={routeStyle.rItem}>
-                <Text style={routeStyle.rTextLeft}>飞行时间</Text>
-                <Text style={routeStyle.rTextRight}><Text
-                  style={routeStyle.rTextValue}>{this.state.duration}</Text><Text
-                  style={routeStyle.rTextName}>分钟</Text></Text>
-              </View>
-
-              <View style={[routeStyle.rItem, {marginTop: 20,}]}>
-                <Text style={routeStyle.rTextLeft}>选择货物</Text>
-                <Text style={[routeStyle.rTextRight, routeStyle.Textgray]}
-                      onPress={()=> {
-                        this.setState({isPackageType: (this.state.isPackageType ? false : true)})
-                      }}>{this.state.setChoosedType}</Text>
-                <Image style={{marginLeft: 8, marginTop: 2}} source={require('../img/arrow.png')}/>
-
-              </View>
-
-              <View style={routeStyle.rItem}>
-                <Text style={routeStyle.rTextLeft}>物品重量</Text>
-                <TextInput style={[scanStyle.TextInput, {width: 60 * Ctrl.pxToDp(), textAlign: 'right'}]}
-                           underlineColorAndroid='transparent'
-                           placeholder='1公斤'
-                           keyboardType="numeric"
-                           clearButtonMode="unless-editing"
-                           placeholderTextColor='#a09f9f'
-                           onFocus={
-                             ()=> {
-                               this._textInputFocus()
-                             }
-                           }
-                           onChangeText={
-                             (packageWeight) => {
-                               this.setState({packageWeight});
-                             }
-                           }
-                />
-                <Text style={{height: 0,}}>{this.state.packageWeight}</Text>
-              </View>
-            </View>
-            <TouchableOpacity style={{
-              backgroundColor: '#313131',
-              marginTop: 10,
-              height: 54 * Ctrl.pxToDp(),
-              borderWidth: 0.3,
-              borderColor: '#a09f9f',
-              borderRadius: 4,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              color: '#55ACEE',
-              margin: 18,
-            }} onPress={()=> {
-              this.orderCreate()
-            }}>
-              <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp(),}}>提交</Text>
-            </TouchableOpacity>
-            <View style={scanStyle.gridContainer}>
-              <Text style={scanStyle.gridTitle}>请选择货物类型(多选)</Text>
-              <Image source={require('../img/close.png')}
-                     style={{position: 'absolute', right: 18, top: 20, zIndex: 999999999}}>
-                <Text onPress={()=> {
-                  this.setState({isPackageType: false})
-                }}></Text>
-              </Image>
-              <View style={scanStyle.gridContent}>
-                <GridChild text="报纸" orderName="报纸" orderType="paper" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "报纸", "paper")}/>
-                <GridChild text="信件" orderName="信件" orderType="letter" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "信件", "letter")}/>
-                <GridChild text="刊物" orderName="刊物" orderType="magzine" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "刊物", "magzine")}/>
-                <GridChild text="包裹" orderName="包裹" orderType="package" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName, ordertype)=>this.onChildChanged(initialChecked, "包裹", "package")}/>
-              </View>
-
-              <View style={[scanStyle.gridContent, {marginTop: -15}]}>
-
-                <GridChild text="其他" orderName="其他" orderType="other" initialChecked={this.state.initialChecked}
-                           callbackParent={(initialChecked, orderName, orderType)=>this.onChildChanged(initialChecked, "其他", "other")}/>
-              </View>
-            </View>
           </View>
         )
       }
@@ -651,6 +556,9 @@ const routeStyle = StyleSheet.create({
   },
   Textgray: {
     color: '#A09F9F',
+    // backgroundColor: '#f10',
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   rTextValue: {
     color: '#E98B21',

@@ -95,7 +95,7 @@ export default class BarcodeScanner extends Component {
               paddingLeft: 15,
               paddingTop: 18,
             }}
-            onPress={() => this._onBack()}
+            onPress={() => this.props.navigator.pop()}
           >
             <Image source={require('../img/ic_back.png')}/>
           </TouchableOpacity>

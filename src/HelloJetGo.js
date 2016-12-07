@@ -15,13 +15,52 @@ import {
 } from 'react-native';
 import LoginPage from './LoginPage';
 import Main from './Main';
+import ModalComp from './ModalComp';
 
 export default class HelloJetGo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       page: 0,
+      isLogin: false,
+      isLoadModalVisible: false
     }
+  }
+
+  componentWillMount() {
+    // this.pageJump();
+    let _this = this;
+    AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
+      if (!errs) {
+        let TOKEN = result;
+        // alert(TOKEN);
+        TOKEN = JSON.stringify(TOKEN);
+        console.log("取得的Token是", TOKEN, "  长度是  ", TOKEN.length)
+        if (TOKEN && TOKEN != "" && TOKEN.length > 50) {
+          _this.setState({
+            isLogin: false,
+            isLoadModalVisible: true
+          });
+          _this.timer = setTimeout(
+            ()=> {
+              _this.setState({
+                isLogin: false,
+                isLoadModalVisible: false
+              });
+              _this.props.navigator.push({
+                name: 'Main',
+                component: Main
+              });
+            }, 300
+          )
+
+        } else {
+          _this.setState({
+            isLogin: true,
+          });
+        }
+      }
+    })
   }
 
   //坚挺页面变化
@@ -38,7 +77,12 @@ export default class HelloJetGo extends React.Component {
       if (!errs) {
         let TOKEN = result;
         // alert(TOKEN);
-        if (TOKEN && TOKEN != "") {
+        TOKEN = JSON.stringify(TOKEN);
+        console.log("取得的Token是", TOKEN, "  长度是  ", TOKEN.length)
+        if (TOKEN && TOKEN != "" && TOKEN.length > 50) {
+          _this.setState({
+            isLogin: true,
+          });
           _this.props.navigator.push({
             name: 'Main',
             component: Main
@@ -64,6 +108,14 @@ export default class HelloJetGo extends React.Component {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
     let page = this.state.page;
+    if (!this.state.isLogin) {
+      return (
+        <View>
+          <Image style={{flex:1,}} source={require('../img/AppStart.png')} />
+
+        </View>
+      )
+    }
     return (
       <View style={styles.bg}>
         <ViewPagerAndroid style={styles.container}

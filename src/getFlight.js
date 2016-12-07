@@ -26,8 +26,9 @@ import SwitchComp from './SwitchComp';
 import Main from './Main';
 import RealtimeOrder from './RealtimeOrder';
 import DialPhone from './DialPhone';
-import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
+import ModalComp from './ModalComp';
+
 var Token;
 
 export default class getFlight extends React.Component {
@@ -39,6 +40,8 @@ export default class getFlight extends React.Component {
       detailDataLoaded: false,
       detailData: null,
       noFlighting: false,
+
+      isLoadModalVisible: false
     }
   }
 
@@ -122,21 +125,29 @@ export default class getFlight extends React.Component {
   }
 
   CreateOrder() {
+    let _this=this;
     if (this.state.totalChecked == 4) {
       // alert('飞机起飞');
-      this.setState({
-        submitStatus: true,
+      _this.setState({
+        isLoadModalVisible: true,
       });
-      let _this = this;
+      _this.timer=setTimeout(
+        ()=>{
+          _this.setState({
+            isLoadModalVisible: false
+          });
+        },10000
+      );
       let curId = this.state.detailData.order.id;
       let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
       NetUtil.postJson(url, (responseText)=> {
+        // if(responseText&&)
         let curdata = JSON.parse(responseText);
         console.log('发送起飞指令返回数据 ', curdata);
         if (curdata.err == '0') {
           if (curdata.state != 2) {
             _this.setState({
-              submitStatus: false,
+              isLoadModalVisible: false,
             });
             Alert.alert(
               '温馨提示',
@@ -147,7 +158,14 @@ export default class getFlight extends React.Component {
             );
           } else {
             console.log('起飞成功后 ', curdata);
-            this.pageJump('order');
+            _this.timer=setTimeout(
+              ()=>{
+                _this.setState({
+                  isLoadModalVisible: false
+                });
+                _this.pageJump('order');
+              },300
+            )
             // Alert.alert(
             //   '温馨提示',
             //   '起飞成功',
@@ -158,7 +176,7 @@ export default class getFlight extends React.Component {
           }
         } else {
           _this.setState({
-            submitStatus: false,
+            isLoadModalVisible: false,
           });
           Alert.alert(
             '温馨提示',
@@ -203,11 +221,6 @@ export default class getFlight extends React.Component {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
     var isChecked = this.state.checked ? 'yes' : 'no';
-    if (this.state.submitStatus) {
-      return (
-        <LoadingViewProgress/>
-      )
-    }
     if (this.state.detailDataLoaded) {
       return (
         <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
@@ -244,7 +257,11 @@ export default class getFlight extends React.Component {
             <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
               <Image source={require('../img/flight.png')}/>
               <View style={{height: 95 * Ctrl.pxToDp(), flex: 3, flexDirection: 'column'}}>
-                <View style={[routeStyle.rItem, {height: 20,marginTop:10* Ctrl.pxToDp(),marginBottom:5* Ctrl.pxToDp()}]}>
+                <View style={[routeStyle.rItem, {
+                  height: 20,
+                  marginTop: 10 * Ctrl.pxToDp(),
+                  marginBottom: 5 * Ctrl.pxToDp()
+                }]}>
                   <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
                   <Text style={routeStyle.rTextRight}><Text
                     style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
@@ -255,7 +272,7 @@ export default class getFlight extends React.Component {
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
                 </View>
 
-                <View style={[routeStyle.rItem, {height: 22, }]}>
+                <View style={[routeStyle.rItem, {height: 22,}]}>
                   <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
                   <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
                   <Text style={routeStyle.rTextRight}><Text
@@ -306,6 +323,7 @@ export default class getFlight extends React.Component {
               justifyContent: 'center',
             }}>长按3秒</Text>
           </View>
+          <ModalComp modalValue={this.state.isLoadModalVisible}/>
         </View>
       )
     } else {
