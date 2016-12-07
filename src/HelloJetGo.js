@@ -110,10 +110,7 @@ export default class HelloJetGo extends React.Component {
     let page = this.state.page;
     if (!this.state.isLogin) {
       return (
-        <View>
-          <Image style={{flex:1,}} source={require('../img/AppStart.png')} />
-
-        </View>
+        <ModalComp modalValue={this.state.isLoadModalVisible}/>
       )
     }
     return (
