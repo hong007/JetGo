@@ -43,11 +43,11 @@ export default class ModalComp extends React.Component {
       >
         <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', alignItems: 'center', justifyContent: 'center'}}>
           <View>
-            <Text style={{color:'#313131'}}></Text>
+            {/*<Text style={{color:'#313131'}}></Text>*/}
+            <Image source={require('../img/loading.gif')} />
           </View>
         </View>
       </Modal>
     )
   }
 }
-

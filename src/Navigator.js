@@ -16,6 +16,7 @@ import {
   TouchableHighlight,
   DrawerLayoutAndroid,
 } from 'react-native';
+// var Orientation = require('react-native-orientation');
 import LoginPage from './LoginPage';
 import Main from './Main';
 import OrderListView from './OrderListView';
@@ -27,6 +28,20 @@ export default class navigator extends Component {
       defaultName: '',
       defaultComponent: '',
     };
+  }
+  componentWillMount() {
+    // // 判断横竖屏幕
+    // var initial = Orientation.getInitialOrientation();
+    // if (initial === 'PORTRAIT') {
+    //   //do stuff
+    // } else {
+    //   //do other stuff
+    // }
+
+    // 只允许竖屏
+    // Orientation.lockToPortrait();
+    //只允许横屏
+    // Orientation.lockToLandscape();
   }
 
   componentDidMount() {

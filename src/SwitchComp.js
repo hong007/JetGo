@@ -38,7 +38,7 @@ const switchStyle = StyleSheet.create({
   rItem: {
     flex: 1,
     paddingLeft: 18,
-    height: 44 * Ctrl.pxToDp(),
+    height: 34 * Ctrl.pxToDp(),
     paddingRight: 18,
     flexDirection: 'row',
     justifyContent: 'center',

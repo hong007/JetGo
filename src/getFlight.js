@@ -14,6 +14,7 @@ import  {
   Alert,
   Platform,
   Switch,
+  Modal,
   BackAndroid,
   StatusBar,
   ToastAndroid,
@@ -41,7 +42,9 @@ export default class getFlight extends React.Component {
       detailData: null,
       noFlighting: false,
 
-      isLoadModalVisible: false
+      isLoadModalVisible: false,
+      modalGetFlightCountDown: false,
+      planeFlightCount: 10,
     }
   }
 
@@ -118,25 +121,59 @@ export default class getFlight extends React.Component {
       ()=> {
         count++;
         if (count == 3) {
-          this.CreateOrder()
+          Alert.alert(
+            '温馨提示',
+            '您确定要起飞吗？',
+            [
+              {text: '取消', onPress: () => console.log('Cancel Pressed!')},
+              {text: '确定', onPress: ()=>this._confirmPlaneFlight()}
+            ]
+          );
+          // this.CreateOrder()
         }
       }, 1000
     );
   }
 
+  _confirmPlaneFlight() {
+    let planeCount = 10;
+    let _this = this;
+    _this.setState({
+      modalGetFlightCountDown: true,
+    })
+    _this.timer = setInterval(
+      ()=> {
+        planeCount--;
+        _this.setState({
+          planeFlightCount: planeCount
+        });
+        if (planeCount <= 0) {
+          clearInterval(_this.timer);
+          _this.setState({
+            modalGetFlightCountDown: false,
+          })
+          // alert(12);
+          console.log('飞机起飞指令发送！');
+          this.CreateOrder();
+        }
+      }, 1000
+    )
+
+  }
+
   CreateOrder() {
-    let _this=this;
-    if (this.state.totalChecked == 4) {
+    let _this = this;
+    if (this.state.totalChecked == 6) {
       // alert('飞机起飞');
       _this.setState({
         isLoadModalVisible: true,
       });
-      _this.timer=setTimeout(
-        ()=>{
+      _this.timer = setTimeout(
+        ()=> {
           _this.setState({
             isLoadModalVisible: false
           });
-        },10000
+        }, 15000
       );
       let curId = this.state.detailData.order.id;
       let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
@@ -158,13 +195,13 @@ export default class getFlight extends React.Component {
             );
           } else {
             console.log('起飞成功后 ', curdata);
-            _this.timer=setTimeout(
-              ()=>{
+            _this.timer = setTimeout(
+              ()=> {
                 _this.setState({
                   isLoadModalVisible: false
                 });
                 _this.pageJump('order');
-              },300
+              }, 300
             )
             // Alert.alert(
             //   '温馨提示',
@@ -294,9 +331,17 @@ export default class getFlight extends React.Component {
             <SwitchComp text='电池已安装完成'
                         initialChecked={this.state.initialChecked}
                         callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            <SwitchComp text='放置起降区中心' initialChecked={this.state.initialChecked}
+            <SwitchComp text='放置起降区中心'
+                        initialChecked={this.state.initialChecked}
                         callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            <SwitchComp text='起降区无人进入' initialChecked={this.state.initialChecked}
+            <SwitchComp text='飞控解锁'
+                        initialChecked={this.state.initialChecked}
+                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+            <SwitchComp text='遥控器自主状态'
+                        initialChecked={this.state.initialChecked}
+                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+            <SwitchComp text='起降区无人进入'
+                        initialChecked={this.state.initialChecked}
                         callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
 
           </View>
@@ -323,6 +368,36 @@ export default class getFlight extends React.Component {
               justifyContent: 'center',
             }}>长按3秒</Text>
           </View>
+          <Modal
+            animationType={"fade"}
+            transparent={true}
+            visible={this.state.modalGetFlightCountDown}
+            onRequestClose={() => {
+              alert("Modal has been closed.")
+            }}
+          >
+            <View style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.3)',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+              <TouchableOpacity style={{
+                backgroundColor: '#313131',
+                marginTop: 20,
+                height: 100 * Ctrl.pxToDp(),
+                width: 100 * Ctrl.pxToDp(),
+                borderRadius: 50 * Ctrl.pxToDp(),
+                borderWidth: 0.3,
+                borderColor: '#a09f9f',
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: '#fff',
+              }}>
+                <Text style={{color: '#fff', fontSize: 24 * Ctrl.pxToDp()}}>{this.state.planeFlightCount}</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
           <ModalComp modalValue={this.state.isLoadModalVisible}/>
         </View>
       )
@@ -419,8 +494,8 @@ const routeStyle = StyleSheet.create({
     fontSize: 16 * Ctrl.pxToDp(),
     color: '#313131',
     fontWeight: 'bold',
-    marginTop: 15,
-    marginBottom: 15,
+    marginTop: 10,
+    marginBottom: 10,
     marginLeft: 16,
   },
 });

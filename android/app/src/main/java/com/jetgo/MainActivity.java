@@ -1,7 +1,9 @@
 package com.jetgo;
 
 import com.facebook.react.ReactActivity;
-
+import com.github.yamill.orientation.OrientationPackage;
+import android.content.Intent;
+import android.content.res.Configuration;
 public class MainActivity extends ReactActivity {
 
     /**

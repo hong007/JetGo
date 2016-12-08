@@ -43,7 +43,7 @@ class PickerComponent extends React.Component {
         console.log("取得缓存中的Token是  ", Token, "  ");
 
         _this.setState({
-          isLoadModalVisible: true
+          // isLoadModalVisible: true
         });
 
         let url = "http://jieyan.xyitech.com/spoint/search?token=" + Token;
@@ -108,6 +108,7 @@ class PickerComponent extends React.Component {
       pickerValue2: value,
     });
     AsyncStorage.setItem("ROUTE_ID", value);
+    console.log('存储的航路id是',value)
 
   }
 
