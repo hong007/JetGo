@@ -16,7 +16,8 @@ import {
   TouchableHighlight,
   DrawerLayoutAndroid,
 } from 'react-native';
-// var Orientation = require('react-native-orientation');
+// import Orientation from 'react-native-orientation';
+
 import LoginPage from './LoginPage';
 import Main from './Main';
 import OrderListView from './OrderListView';
