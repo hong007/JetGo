@@ -5,12 +5,14 @@ import React from 'react';
 import {
   View,
   Navigator,
+  StyleSheet,
   ToolbarAndroid,
   Text,
   Image,
   Platform,
   Dimensions,
   StatusBar,
+  Modal,
   ToastAndroid,
   AsyncStorage,
   TouchableOpacity,
@@ -35,6 +37,8 @@ import OnlineHelp from './OnlineHelp';
 import Lawyer from './Lawyer';
 import AboutUS from './AboutUS';
 import Ctrl from './Ctrl';
+import ModalComp from './ModalComp';
+
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -43,6 +47,7 @@ export default class Main extends React.Component {
       routeid: '',
       loginName: '犀利哥',
       isLogin: true,
+      showLeadingModal: false,
     };
   }
 
@@ -95,6 +100,7 @@ export default class Main extends React.Component {
   }
 
   _openPage() {
+    this.setState({showLeadingModal: false});
     this.props.navigator.push({
       title: '飞机扫码',
       name: 'ScanComponent',
@@ -310,7 +316,7 @@ export default class Main extends React.Component {
             margin: 18,
             zIndex: 9999,
           }} onPress={()=> {
-            this._openPage()
+            this.setState({showLeadingModal: true})
           }}>
             <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp(),}}>我要寄件</Text>
           </TouchableOpacity>
@@ -326,7 +332,82 @@ export default class Main extends React.Component {
           }} source={require('../img/bg.png')}>
           </Image>
         </View>
+        <Modal
+          animationType={"fade"}
+          transparent={true}
+          visible={this.state.showLeadingModal}
+          onRequestClose={() => {
+            alert("Modal has been closed.")
+          }}
+        >
+          <View style={{
+            flex: 1,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
+            <View style={{
+              flex: 3, justifyContent: 'flex-end',
+              alignItems: 'flex-start',
+            }}>
+              <Text style={LeadingStyle.title}>
+                操作提示——
+              </Text>
+              <Text style={LeadingStyle.item}>1. 将待运送货物装载至无人机</Text>
+              <Text style={LeadingStyle.item}>2. 为无人机安装好满电电池</Text>
+              <Text style={LeadingStyle.item}>3. 将无人机放置在起降区中心</Text>
+              <Text style={LeadingStyle.item}>4. 开启无人机电源</Text>
+              <Text style={LeadingStyle.item}>5. 确保起降区无人员进入</Text>
+            </View>
+            <View style={{flex: 2, justifyContent: 'flex-end', padding: 18, width: Dimensions.get('window').width}}>
+              <TouchableOpacity style={{
+                backgroundColor: '#fff',
+                marginTop: 10,
+                height: 54 * Ctrl.pxToDp(),
+                borderRadius: 4,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                zIndex: 9999,
+              }} onPress={()=> {
+                this._openPage()
+              }}>
+                <Text style={{color: '#313131', fontSize: 17 * Ctrl.pxToDp(),}}>完成</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                width: 40,
+                height: 40,
+                paddingRight: 18,
+                paddingTop: 15,
+                alignItems: 'flex-end',
+              }}
+              onPress={()=> {
+                this.setState({showLeadingModal: false});
+              }}>
+              <Image source={require('../img/mainclose.png')}/>
+            </TouchableOpacity>
+
+          </View>
+        </Modal>
+
       </DrawerLayoutAndroid>
     );
   }
 }
+const LeadingStyle = StyleSheet.create({
+  title: {
+    fontSize: 23 * Ctrl.pxToDp(),
+    color: '#fff',
+    marginBottom:20,
+  },
+  item: {
+    fontSize: 16 * Ctrl.pxToDp(),
+    color: '#fff',
+    marginBottom:10,
+  }
+})
