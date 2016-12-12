@@ -173,7 +173,7 @@ export default class getFlight extends React.Component {
           _this.setState({
             isLoadModalVisible: false
           });
-        }, 15000
+        }, 20000
       );
       let curId = this.state.detailData.order.id;
       let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";

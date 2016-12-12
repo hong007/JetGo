@@ -421,8 +421,8 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t7', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t7', 'time')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t4', 'date')}</Text>
+                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t4', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>您的包裹已确认送达</Text>
