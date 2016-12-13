@@ -48,6 +48,20 @@ export default class getFlight extends React.Component {
     }
   }
 
+  // this._handleAppStateChange = this.handleAppStateChange.bind(this);
+  //
+  // componentWillMount() {
+  //   AppState.addEventListener('change', this._handleAppStateChange);
+  // }
+  //
+  // componentWillUnmount() {
+  //   AppState.removeEventListener('change', this._handleAppStateChange);
+  // }
+  //
+  // handleAppStateChange(appState) {
+  //   ToastAndroid.show('当前状态为:' + appState, ToastAndroid.SHORT);
+  // }
+
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
@@ -136,6 +150,7 @@ export default class getFlight extends React.Component {
   }
 
   _confirmPlaneFlight() {
+    // let planeCount = value;
     let planeCount = 10;
     let _this = this;
     _this.setState({
@@ -177,56 +192,76 @@ export default class getFlight extends React.Component {
       );
       let curId = this.state.detailData.order.id;
       let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
+      console.log("发送的起飞指令是 ", url)
       NetUtil.postJson(url, (responseText)=> {
-        // if(responseText&&)
-        let curdata = JSON.parse(responseText);
-        console.log('发送起飞指令返回数据 ', curdata);
-        if (curdata.err == '0') {
-          if (curdata.state != 2) {
-            _this.setState({
-              isLoadModalVisible: false,
-            });
+          // if(responseText&&)
+          let curdata = JSON.parse(responseText);
+          console.log('发送起飞指令返回数据 ', curdata);
+          if (curdata.err == '0') {
+            if (curdata.state == 2) {
+              console.log('起飞成功后 ', curdata);
+              _this.timer = setTimeout(
+                ()=> {
+                  _this.setState({
+                    isLoadModalVisible: false
+                  });
+                  _this.pageJump('order');
+                }, 300
+              );
+            }
+          } else if (curdata.err == 5) {
+
+            // let planeStatus = String(curdata.msg).split('：');
+            // planeStatus=planeStatus[1];
+            // let errTips;
+            // console.log('返回错误信息 ', errTips,' 错误编号是 ',planeStatus,'  ',curdata.msg);
+            // switch (planeStatus) {
+            //   case 1 :
+            //     return errTips = "使用中";
+            //   case 2:
+            //     return errTips = "维修中";
+            //   case 3:
+            //     return errTips = "库存";
+            // }
+            let errTips;
+            let planeStatus = curdata.msg;
+            if (planeStatus == "该状态不允许起飞: 1") {
+              errTips = "该id飞机已起飞，请先确认收货";
+            } else if (planeStatus == "该状态不允许起飞: 2") {
+              errTips = "该id飞机维修中,请使用其他飞机";
+            } else if (planeStatus == "该状态不允许起飞: 3") {
+              errTips = "该id飞机库存中，尚未激活,请使用其他飞机";
+            }
+            console.log('返回错误信息 ', errTips);
             Alert.alert(
-              '温馨提示',
-              '起飞失败，请重试，或联系客服！',
+              '起飞失败',
+              errTips,
               [
                 {text: '确定',}
               ]
             );
+            _this.setState({
+              isLoadModalVisible: false,
+              planeFlightCount: 10
+            });
           } else {
-            console.log('起飞成功后 ', curdata);
-            _this.timer = setTimeout(
-              ()=> {
-                _this.setState({
-                  isLoadModalVisible: false
-                });
-                _this.pageJump('order');
-              }, 300
-            )
-            // Alert.alert(
-            //   '温馨提示',
-            //   '起飞成功',
-            //   [
-            //     {text: '确定', onPress: ()=>this.pageJump('order')}
-            //   ]
-            // );
+            Alert.alert(
+              '起飞失败',
+              curdata.msg,
+              [
+                {text: '确定',}
+              ]
+            );
+            _this.setState({
+              isLoadModalVisible: false,
+              planeFlightCount: 10
+            });
           }
-        } else {
-          _this.setState({
-            isLoadModalVisible: false,
-          });
-          Alert.alert(
-            '温馨提示',
-            '起飞故障，请联系客服！',
-            [
-              {text: '确定',}
-            ]
-          );
-          // alert("起飞失败，请重试，或联系客服！");
         }
-      });
+      );
 
-    } else {
+    }
+    else {
       // alert('你想飞？必须全部点中哦😯！');
       ToastAndroid.show('你想飞？必须全部点中哦😯！', ToastAndroid.SHORT);
     }
@@ -293,10 +328,15 @@ export default class getFlight extends React.Component {
             </View>
             <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
               <Image source={require('../img/flight.png')}/>
-              <View style={{height: 95 * Ctrl.pxToDp(), flex: 3, flexDirection: 'column'}}>
+              <View style={{
+                height: 95 * Ctrl.pxToDp(),
+                flex: 3,
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
                 <View style={[routeStyle.rItem, {
                   height: 20,
-                  marginTop: 10 * Ctrl.pxToDp(),
                   marginBottom: 5 * Ctrl.pxToDp()
                 }]}>
                   <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
