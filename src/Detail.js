@@ -39,6 +39,7 @@ export default class Detail extends React.Component {
       isOrderCansle: false,
     }
   }
+
   // this.setState({isPackageType: (this.state.isPackageType ? false : true)})
 
   // componentWillMount() {
@@ -65,7 +66,7 @@ export default class Detail extends React.Component {
         return false;
       }
       _this.lastBackPressed = Date.now();
-      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
       _this._onBack();
       return true;
     });
@@ -198,8 +199,9 @@ export default class Detail extends React.Component {
             </View>
             <View style={routeStyle.rContianer}>
               <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
-                <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
-                <Text style={routeStyle.rTextRight}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
+                <Text
+                  style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
+                <Text style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
               </View>
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -234,8 +236,10 @@ export default class Detail extends React.Component {
                   <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                 </View>
                 <View style={routeStyle.Left}>
-                  <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'date')}</Text>
-                  <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'time')}</Text>
+                  <Text
+                    style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't0', 'date')}</Text>
+                  <Text
+                    style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't0', 'time')}</Text>
                 </View>
                 <View style={routeStyle.Right}>
                   <Text style={routeStyle.Text}>成功创建无人机运单</Text>
@@ -293,8 +297,10 @@ export default class Detail extends React.Component {
               </View>
               <View style={routeStyle.rContianer}>
                 <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
-                  <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
-                  <Text style={routeStyle.rTextRight}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
+                  <Text
+                    style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
+                  <Text
+                    style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
                 </View>
                 <View style={routeStyle.rItem}>
                   <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -329,8 +335,10 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t1', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t1', 'time')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't1', 'date')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't1', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>您的运单已取消</Text>
@@ -344,8 +352,10 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'time')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't0', 'date')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't0', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>成功创建无人机运单</Text>
@@ -385,8 +395,9 @@ export default class Detail extends React.Component {
               </View>
               <View style={routeStyle.rContianer}>
                 <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
-                  <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
-                  <Text style={routeStyle.rTextRight}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
+                  <Text
+                    style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
+                  <Text style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
                 </View>
                 <View style={routeStyle.rItem}>
                   <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -421,8 +432,10 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t4', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t4', 'time')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't4', 'date')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't4', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>您的包裹已确认送达</Text>
@@ -435,8 +448,10 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t2', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t2', 'time')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't2', 'date')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't2', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>捷雁无人机开始运送您的包裹</Text>
@@ -450,8 +465,10 @@ export default class Detail extends React.Component {
                     <Image style={routeStyle.Image2} source={require('../img/detail03.png')}/>
                   </View>
                   <View style={routeStyle.Left}>
-                    <Text style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'date')}</Text>
-                    <Text style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order,'t0', 'time')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text1]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't0', 'date')}</Text>
+                    <Text
+                      style={[routeStyle.Text, routeStyle.Text2]}>{Ctrl.setOrderStatusDateTime(this.state.detailData.order, 't0', 'time')}</Text>
                   </View>
                   <View style={routeStyle.Right}>
                     <Text style={routeStyle.Text}>成功创建无人机运单</Text>

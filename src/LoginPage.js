@@ -53,7 +53,7 @@ export default class LoginPage extends Component {
         return false;
       }
       _this.lastBackPressed = Date.now();
-      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
       return true;
     });
   }

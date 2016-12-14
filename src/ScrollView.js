@@ -76,7 +76,7 @@ export default class ScanComponent extends React.Component {
         return false;
       }
       _this.lastBackPressed = Date.now();
-      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
       this.__onBack();
       return true;
     });

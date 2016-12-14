@@ -31,7 +31,7 @@ export default class BarcodeScanner extends Component {
         return false;
       }
       _this.lastBackPressed = Date.now();
-      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
       _this.props.navigator.pop();
       return true;
     });

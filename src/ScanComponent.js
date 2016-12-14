@@ -101,8 +101,8 @@ export default class ScanComponent extends React.Component {
         return false;
       }
       _this.lastBackPressed = Date.now();
-      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      this.__onBack();
+      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      _this._onBack();
       return true;
     });
     AsyncStorage.multiGet(["LOGIN_TOKEN", "ROUTE_ID"], function (errs, result) {

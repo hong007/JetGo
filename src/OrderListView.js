@@ -58,7 +58,7 @@ export default class OrderListView extends React.Component {
         return false;
       }
       _this.lastBackPressed = Date.now();
-      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
       _this._onBack();
       return true;
     });
@@ -116,7 +116,7 @@ export default class OrderListView extends React.Component {
               });
               // console.log("数据已经全部加载了哦！请先再去创建运单哦！");
             }
-            // console.log("运单总数据是  ", JSON.stringify(totalList), "  数据类型是  ", typeof JSON.stringify(totalList), ' 数据长度是  ', totalList.length);
+            console.log("运单总数据是  ", JSON.stringify(totalList), "  数据类型是  ", typeof JSON.stringify(totalList), ' 数据长度是  ', totalList.length);
 
             // 重新绑定listView数据
             this.setState({
@@ -351,7 +351,7 @@ export default class OrderListView extends React.Component {
     return (
       <TouchableOpacity onPress={()=>this.openOrderItem(curitem.id, curitem.state)}>
         <View style={OrderListItem.container}><View style={OrderListItem.title}><Text
-          style={curitem.state == 0 || curitem.state == 1 ? OrderListItem.titleLeft1 : OrderListItem.titleLeft2}>运单编号&nbsp;&nbsp;&nbsp;{curitem.id}</Text><Text
+          style={curitem.state == 0 || curitem.state == 1 ? OrderListItem.titleLeft1 : OrderListItem.titleLeft2}>运单编号&nbsp;&nbsp;&nbsp;{(curitem.serial_no == '') ? curitem.id : curitem.serial_no}</Text><Text
           style={curitem.state == 0 || curitem.state == 1 ? OrderListItem.titleRight1 : OrderListItem.titleRight2}>{Ctrl.orderState(curitem.state)}</Text></View><View
           style={OrderListItem.content}><View style={OrderListItem.Left}><Text
           style={OrderListItem.Text}>{item.sname}</Text><Text
@@ -440,7 +440,7 @@ const OrderListItem = StyleSheet.create({
     paddingLeft: 18,
     paddingRight: 18,
     marginBottom: 20,
-    height:126 * Ctrl.pxToDp(),
+    height: 126 * Ctrl.pxToDp(),
     backgroundColor: '#fff'
   },
   title: {
@@ -450,8 +450,8 @@ const OrderListItem = StyleSheet.create({
     paddingTop: 2,
     paddingBottom: 2,
     borderBottomColor: '#f7f7f7',
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   titleLeft1: {
     flex: 1,

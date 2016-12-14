@@ -57,7 +57,7 @@ export default class getFlight extends React.Component {
         return false;
       }
       _this.lastBackPressed = Date.now();
-      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
       _this.pageJump();
       return true;
     });
@@ -260,9 +260,9 @@ export default class getFlight extends React.Component {
               <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
                          title={this.state.detailData.order.route.airport[1].phone}/>
               <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
-                <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
+                <Text style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
                 <Text
-                  style={routeStyle.rTextRight}>运送中</Text>
+                  style={[routeStyle.rTextRight, {flex: 1}]}>运送中</Text>
               </View>
 
               <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>

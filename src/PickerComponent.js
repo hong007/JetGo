@@ -10,6 +10,8 @@ import{
   View,
   Picker,
   Image,
+  DeviceEventEmitter,
+  ToastAndroid,
   AsyncStorage,
 } from 'react-native';
 import NetUtil from './NetUtil';
@@ -28,7 +30,7 @@ class PickerComponent extends React.Component {
       airportsData: null,
       airportsEndData: null,
 
-      isLoadModalVisible: false
+      isLoadModalVisible: false,
       // test: this.props.test,
     };
   }
@@ -60,7 +62,8 @@ class PickerComponent extends React.Component {
               isLoadModalVisible: false
             });
           } else {
-            alert("获取航路失败请重试");
+            ToastAndroid.show('获取航路失败请重试', ToastAndroid.SHORT);
+            DeviceEventEmitter.emit("routeChange", false);
           }
         });
       }
@@ -89,14 +92,18 @@ class PickerComponent extends React.Component {
             if (routes.length > 0) {
               _this.setState({
                 start_airports_load: true,
-                airportsEndData: routes
+                airportsEndData: routes,
               });
+              DeviceEventEmitter.emit("routeChange", true);
+
             } else {
-              alert("该站点有误，请重试")
+              ToastAndroid.show('该站点没有对应航路，请重试', ToastAndroid.SHORT);
+              DeviceEventEmitter.emit("routeChange", false);
             }
 
           } else {
-            alert("获取航路失败请重试");
+            ToastAndroid.show('获取航路失败请重试', ToastAndroid.SHORT);
+            DeviceEventEmitter.emit("routeChange", false);
           }
         });
       }
@@ -108,7 +115,7 @@ class PickerComponent extends React.Component {
       pickerValue2: value,
     });
     AsyncStorage.setItem("ROUTE_ID", value);
-    console.log('存储的航路id是',value)
+    console.log('存储的航路id是', value)
 
   }
 

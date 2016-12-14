@@ -13,8 +13,10 @@ import {
   Dimensions,
   StatusBar,
   Modal,
+  BackAndroid,
   ToastAndroid,
   AsyncStorage,
+  DeviceEventEmitter,
   TouchableOpacity,
   DrawerLayoutAndroid,
   TouchableHighlight
@@ -48,6 +50,7 @@ export default class Main extends React.Component {
       loginName: '犀利哥',
       isLogin: true,
       showLeadingModal: false,
+      isRouteTrue: false
     };
   }
 
@@ -65,6 +68,30 @@ export default class Main extends React.Component {
     let _this = this;
     _this.setState({
       loginStatus: false,
+    });
+    // const {navigator}=this.props;
+    // BackAndroid.removeEventListener('hardwareBackPress');
+    BackAndroid.addEventListener('hardwareBackPress', function () {
+      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
+        //最近2秒内按过back键，可以退出应用。
+        return false;
+      } else {
+        return true;
+      }
+      // const routers = navigator.getCurrentRoutes();
+
+      // 当前页面不为root页面时的处理
+      // if (routers.length > 1) {
+      //   _this.lastBackPressed = Date.now();
+      //   //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      //   _this.props.navigator.pop();
+      //   return true;
+      // }else{
+      //
+      // }
+    });
+    DeviceEventEmitter.addListener("routeChange", (events)=> {
+      _this.setState({isRouteTrue: events})
     });
     AsyncStorage.multiGet(["LOGIN_TOKEN", "LOGIN_USERNAME"], function (errs, result) {
       //TODO:错误处理
@@ -116,9 +143,14 @@ export default class Main extends React.Component {
     this.refs.drawerLayout.closeDrawer()
   }
 
-  fatherGetChildData() {
-    this.refs.picker.getChildData();
-    alert("来来来！")
+  _isLoadedRoute() {
+    if (this.state.isRouteTrue) {
+      this.setState({
+        showLeadingModal: true
+      })
+    }else{
+      ToastAndroid.show('没有选择航路，请先选择航路',ToastAndroid.SHORT)
+    }
   }
 
   _openLeftMenuPage(name) {
@@ -316,7 +348,7 @@ export default class Main extends React.Component {
             margin: 18,
             zIndex: 9999,
           }} onPress={()=> {
-            this.setState({showLeadingModal: true})
+            this._isLoadedRoute()
           }}>
             <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp(),}}>我要寄件</Text>
           </TouchableOpacity>
@@ -337,7 +369,7 @@ export default class Main extends React.Component {
           transparent={true}
           visible={this.state.showLeadingModal}
           onRequestClose={() => {
-            alert("Modal has been closed.")
+            {/*alert("Modal has been closed.")*/}
           }}
         >
           <View style={{
@@ -403,11 +435,11 @@ const LeadingStyle = StyleSheet.create({
   title: {
     fontSize: 23 * Ctrl.pxToDp(),
     color: '#fff',
-    marginBottom:20,
+    marginBottom: 20,
   },
   item: {
     fontSize: 16 * Ctrl.pxToDp(),
     color: '#fff',
-    marginBottom:10,
+    marginBottom: 10,
   }
 })

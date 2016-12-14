@@ -72,7 +72,7 @@ export default class getFlight extends React.Component {
         return false;
       }
       _this.lastBackPressed = Date.now();
-      ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
       _this.pageJump();
       return true;
     });
@@ -223,19 +223,19 @@ export default class getFlight extends React.Component {
             //   case 3:
             //     return errTips = "库存";
             // }
-            let errTips;
+            // let errTips;
             let planeStatus = curdata.msg;
-            if (planeStatus == "该状态不允许起飞: 1") {
-              errTips = "该id飞机已起飞，请先确认收货";
-            } else if (planeStatus == "该状态不允许起飞: 2") {
-              errTips = "该id飞机维修中,请使用其他飞机";
-            } else if (planeStatus == "该状态不允许起飞: 3") {
-              errTips = "该id飞机库存中，尚未激活,请使用其他飞机";
-            }
-            console.log('返回错误信息 ', errTips);
+            // if (planeStatus == "该状态不允许起飞: 1") {
+            //   errTips = "该id飞机已起飞，请先确认收货";
+            // } else if (planeStatus == "该状态不允许起飞: 2") {
+            //   errTips = "该id飞机维修中,请使用其他飞机";
+            // } else if (planeStatus == "该状态不允许起飞: 3") {
+            //   errTips = "该id飞机库存中，尚未激活,请使用其他飞机";
+            // }
+            // console.log('返回错误信息 ', errTips);
             Alert.alert(
               '起飞失败',
-              errTips,
+              planeStatus,
               [
                 {text: '确定',}
               ]
