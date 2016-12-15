@@ -454,7 +454,7 @@ const OrderListItem = StyleSheet.create({
     alignItems: 'center',
   },
   titleLeft1: {
-    flex: 1,
+    flex: 2,
     color: '#A09F9F',
     fontSize: 12 * Ctrl.pxToDp(),
   },
@@ -465,7 +465,7 @@ const OrderListItem = StyleSheet.create({
     fontSize: 13 * Ctrl.pxToDp(),
   },
   titleLeft2: {
-    flex: 1,
+    flex: 2,
     color: '#313131',
     fontSize: 12 * Ctrl.pxToDp(),
   },

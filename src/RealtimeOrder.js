@@ -162,7 +162,7 @@ export default class getFlight extends React.Component {
 
   orderConfirm() {
     let _this = this;
-    if (this.state.buttonStatus) {
+    // if (this.state.buttonStatus) {
       _this.setState({
         isLoadModalVisible: true,
       });
@@ -195,13 +195,13 @@ export default class getFlight extends React.Component {
           // alert("起飞失败，请重试，或联系客服！");
         }
       })
-    } else {
-      // alert("暂时无法确认，请稍后重试！");
-      _this.setState({
-        isLoadModalVisible: false,
-      });
-      ToastAndroid.show('暂时无法确认，请稍后重试！', ToastAndroid.SHORT);
-    }
+    // } else {
+    //   // alert("暂时无法确认，请稍后重试！");
+    //   _this.setState({
+    //     isLoadModalVisible: false,
+    //   });
+    //   ToastAndroid.show('暂时无法确认，请稍后重试！', ToastAndroid.SHORT);
+    // }
   }
 
 
