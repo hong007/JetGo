@@ -10,7 +10,9 @@ import {
   Navigator,
   Platform,
   Image,
+  AppState,
   StatusBar,
+  ToastAndroid,
   AsyncStorage,
   TouchableOpacity,
   TouchableHighlight,
@@ -28,25 +30,24 @@ export default class navigator extends Component {
     this.state = {
       defaultName: '',
       defaultComponent: '',
+      currentAppState: AppState.currentState,
     };
   }
-  componentWillMount() {
-    // // 判断横竖屏幕
-    // var initial = Orientation.getInitialOrientation();
-    // if (initial === 'PORTRAIT') {
-    //   //do stuff
-    // } else {
-    //   //do other stuff
-    // }
 
-    // 只允许竖屏
-    // Orientation.lockToPortrait();
-    //只允许横屏
-    // Orientation.lockToLandscape();
+  componentWillUnmount() {
+    //ToastAndroid.show('取消挂载',ToastAndroid.SHORT);
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange(currentAppState) {
+    if (currentAppState == 'background') {
+      ToastAndroid.show('当前状态为:' + currentAppState, ToastAndroid.SHORT);
+    }
   }
 
   componentDidMount() {
     StatusBar.setBackgroundColor('#000', true);
+    AppState.addEventListener('change', this._handleAppStateChange);
   }
 
   openDrawer() {
@@ -97,5 +98,6 @@ export default class navigator extends Component {
       />
     );
   }
+
   // }
 };

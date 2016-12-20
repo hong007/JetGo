@@ -9,7 +9,9 @@ import{
   StyleSheet,
   ListView,
   Platform,
+  Modal,
   StatusBar,
+  Dimensions,
   BackAndroid,
   ToastAndroid,
   AsyncStorage,
@@ -44,6 +46,9 @@ export default class OrderListView extends React.Component {
       isRefreshing: false,
       isLoadAll: false,
       hideLoadAll: false,
+
+      isOrderListAll: false,
+      showChooseOrderModal: false,
     };
   }
 
@@ -84,8 +89,13 @@ export default class OrderListView extends React.Component {
     if (curpageNo == '' || !curpageNo) {
       curpageNo = 0;
     }
+    let url;
     console.log("curpageNo is ", curpageNo);
-    let url = "http://jieyan.xyitech.com/order/search?&page_no=" + curpageNo + "&page_size=20&token=" + Token;
+    if (this.state.isLoadAll) {
+      url = "http://jieyan.xyitech.com/order/search?&page_no=" + curpageNo + "&page_size=20&token=" + Token;
+    } else {
+      url = "http://jieyan.xyitech.com/order/search?&uid=true&page_no=" + curpageNo + "&page_size=20&token=" + Token;
+    }
     NetUtil.postJson(url, (responseText)=> {
       if (!responseText || responseText == "") {
         ToastAndroid.show('错误，请重试', ToastAndroid.SHORT);
@@ -228,32 +238,42 @@ export default class OrderListView extends React.Component {
   }
 
   renderLoadingView() {
-    return (<View style={{flex: 1,}}>
+    return (
+      <View style={{flex: 1, flexDirection: 'column',}}>
         <View style={{
-          height: (Platform.OS === 'android' ? 42 : 50),
           backgroundColor: '#fff',
-          flexDeriction: 'row',
-          alignItem: 'center',
+          flexDirection: 'row',
+          alignItem: 'flex-start',
+          justifyContent: 'center',
           marginTop: 24,
           paddingTop: 15,
-          paddingLeft: 18
+          paddingLeft: 18,
         }}>
-          <TouchableOpacity
-            style={{
+          <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+            <TouchableOpacity style={{
               height: 44,
               width: 44,
-              top: 0,
-              left: 0,
-              position: 'absolute',
-              zIndex: 999999,
-              paddingLeft: 15,
-              paddingTop: 18,
+              paddingTop: 15,
             }}
-            onPress={() => this.props.navigator.pop()}
-          >
-            <Image source={require('../img/ic_back.png')}/>
-          </TouchableOpacity>
-          <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
+                              onPress={() => this._onBack()}
+            >
+              <Image source={require('../img/ic_back.png')}/>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
+          </View>
+          <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            <TouchableOpacity style={{
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              paddingRight: 18,
+              flexDirection: 'row',
+            }} onPress={() => this.setState({showChooseOrderModal: true})}>
+              <Image source={require('../img/order_type.png')}/>
+              <Text style={{marginTop:-2,}}>&nbsp;筛选</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
           <Text>{this.state.nonedata ? '没有数据' : '加载数据中......'}</Text>
@@ -379,36 +399,129 @@ export default class OrderListView extends React.Component {
     }
   }
 
+  _chooseOrderType(type) {
+    let tempType = type;
+    let _this = this;
+    console.log('当前订单筛选项是  ', tempType);
+    if (tempType == true) {
+      _this.setState({
+        showChooseOrderModal: false,
+        isLoadAll: false,
+      })
+    } else {
+      _this.setState({
+        showChooseOrderModal: false,
+        isLoadAll: true,
+      })
+    }
+    totalList = [];
+    _this.timer = setTimeout(
+      ()=> {
+        _this._fetchListData(0);
+      }, 300
+    );
+  }
+
   render() {
     if (!this.state.loaded || this.state.nonedata) {
       return this.renderLoadingView();
     }
     return (
-      <View style={{flex: 1,}}>
+      <View style={{flex: 1, flexDirection: 'column',}}>
         <View style={{
-          height: (Platform.OS === 'android' ? 42 : 50),
           backgroundColor: '#fff',
-          flexDeriction: 'row',
-          alignItem: 'center',
+          flexDirection: 'row',
+          alignItem: 'flex-start',
+          justifyContent: 'center',
           marginTop: 24,
           paddingTop: 15,
-          paddingLeft: 18
+          paddingLeft: 18,
         }}>
-          <TouchableOpacity style={{
-            height: 44,
-            width: 44,
-            top: 0,
-            left: 0,
-            position: 'absolute',
-            zIndex: 999999,
-            paddingLeft: 15,
-            paddingTop: 18,
-          }}
-                            onPress={() => this._onBack()}
+          <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+            <TouchableOpacity style={{
+              height: 44,
+              width: 44,
+              paddingTop: 15,
+            }}
+                              onPress={() => this._onBack()}
+            >
+              <Image source={require('../img/ic_back.png')}/>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
+          </View>
+          <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            <TouchableOpacity style={{
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              paddingRight: 18,
+              flexDirection: 'row',
+            }} onPress={() => this.setState({showChooseOrderModal: true})}>
+              <Image source={require('../img/order_type.png')}/>
+              <Text style={{marginTop:-2,}}>&nbsp;筛选</Text>
+            </TouchableOpacity>
+          </View>
+          <Modal
+            animationType={"fade"}
+            transparent={true}
+            visible={this.state.showChooseOrderModal}
+            onRequestClose={() => {
+            }}
           >
-            <Image source={require('../img/ic_back.png')}/>
-          </TouchableOpacity>
-          <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
+            <View style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.2)',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-end'
+            }}>
+              <View style={{
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: (Platform.OS === 'android' ? 52 : 60),
+                borderRadius: 3,
+                padding: 10,
+                paddingTop: 5,
+                paddingBottom: 5,
+                backgroundColor: '#fff'
+              }}>
+                <View style={{}}>
+                  <TouchableOpacity style={{
+                    backgroundColor: '#fff',
+                    paddingRight: 20,
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                    alignItems: 'flex-end',
+                    zIndex: 9999,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#f7f7f7',
+                    width: 100 * Ctrl.pxToDp(),
+                    marginBottom: 1,
+                  }} onPress={()=> {
+                    this._chooseOrderType(true)
+                  }}>
+                    <Text style={{color: '#313131', fontSize: 17 * Ctrl.pxToDp(),}}>默认</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{}}>
+                  <TouchableOpacity style={{
+                    backgroundColor: '#fff',
+                    paddingRight: 20,
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                    alignItems: 'flex-end',
+                    zIndex: 9999,
+                    width: 100 * Ctrl.pxToDp(),
+                  }} onPress={()=> {
+                    this._chooseOrderType(false)
+                  }}>
+                    <Text style={{color: '#313131', fontSize: 17 * Ctrl.pxToDp(),}}>全部</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
         </View>
         <ListView
           style={OrderListItem.listView}

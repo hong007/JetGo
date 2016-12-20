@@ -326,6 +326,7 @@ export default class ScanComponent extends React.Component {
       }
     });
   }
+  // editable={false}
 
   _textInputFocus() {
     this.setState({
