@@ -197,6 +197,7 @@ export default class getFlight extends React.Component {
           // if(responseText&&)
           let curdata = JSON.parse(responseText);
           console.log('发送起飞指令返回数据 ', curdata);
+          // alert('发送起飞指令返回数据 '+JSON.stringify(curdata));
           if (curdata.err == '0') {
             if (curdata.state == 2) {
               console.log('起飞成功后 ', curdata);
