@@ -40,9 +40,9 @@ export default class navigator extends Component {
   }
 
   _handleAppStateChange(currentAppState) {
-    if (currentAppState == 'background') {
-      ToastAndroid.show('当前状态为:' + currentAppState, ToastAndroid.SHORT);
-    }
+    // if (currentAppState == 'background') {
+    //   ToastAndroid.show('当前状态为:' + currentAppState, ToastAndroid.SHORT);
+    // }
   }
 
   componentDidMount() {
