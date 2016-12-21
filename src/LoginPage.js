@@ -99,11 +99,14 @@ export default class LoginPage extends Component {
           300
         );
       } else {
-        _this.setState({
-          isLoadModalVisible: false
-        });
-        // alert("用户名或密码错误，请重试");
-        ToastAndroid.show('用户名或密码错误，请重试', ToastAndroid.SHORT);
+        _this.Timer = setTimeout(
+          ()=> {
+            _this.setState({
+              isLoadModalVisible: false
+            });
+            ToastAndroid.show('用户名或密码错误，请重试', ToastAndroid.SHORT);
+          }, 800
+        );
       }
     });
   };

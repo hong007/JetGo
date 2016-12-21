@@ -28,33 +28,14 @@ export default class BarcodeScanner extends Component {
       cameraType: 'back',
       isBarCodeScann: false,
       scanResult: '',
-      id:null,
+      id: null,
     };
   }
-
-  // componentDidMount() {
-  //   this.setState({
-  //     id:this.props.id,
-  //   })
-  //   console.log('执行几次')
-  // }
-
-  // _onBack() {
-  //   let _this=this;
-  //   console.log(this.state.scanResult);
-  //   _this.props.changeBarCode(this.state.scanResult);
-  //   const {navigator} = this.props;
-  //   if (navigator) {
-  //     navigator.pop();
-  //     return
-  //   }
-  // }
 
   _barcodeReceived(e) {
 
     let _this = this;
     if (e.data != '') {
-      // AsyncStorage.setItem("SCANRESULT", e.data);
       console.log('这下你不嘚瑟了吧', e.data);
       if (this.state.isBarCodeScann) {
         return true;
@@ -62,13 +43,12 @@ export default class BarcodeScanner extends Component {
         this.setState({
           isBarCodeScann: true,
         });
-        DeviceEventEmitter.emit("changeBarCode",e.data);
+        DeviceEventEmitter.emit("changeBarCode", e.data);
         // _this._onBack();
         this.props.navigator.pop();
         console.log('有没有执行');
       }
     }
-
   }
 
 
