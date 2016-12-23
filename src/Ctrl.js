@@ -71,10 +71,10 @@ let ctrl = {
         return '异常';
         break;
       case 4:
-        return '已送达';
+        return '已完成';
         break;
       case 5:
-        return '返航中';
+        return '已送达';
         break;
       case 7:
         return '完成';

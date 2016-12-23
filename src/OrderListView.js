@@ -196,7 +196,7 @@ export default class OrderListView extends React.Component {
     let id = value;
     let curstate = state;
     AsyncStorage.setItem("DETAIL_ID", id);
-    if (curstate == 2) {
+    if (curstate == 2 || curstate == 5) {
       AsyncStorage.setItem("ORDER_CONFIRM", 'false');
       this.props.navigator.push({
         title: 'RealtimeOrder',
@@ -271,7 +271,7 @@ export default class OrderListView extends React.Component {
               flexDirection: 'row',
             }} onPress={() => this.setState({showChooseOrderModal: true})}>
               <Image source={require('../img/order_type.png')}/>
-              <Text style={{marginTop:-2,}}>&nbsp;筛选</Text>
+              <Text style={{marginTop: -2,}}>&nbsp;筛选</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -350,13 +350,10 @@ export default class OrderListView extends React.Component {
     let n = state;
     if (n == 0) {
       return require('../img/order1.png');
-    } else if (n == 2) {
+    } else if (n == 2 || n == 5) {
       return require('../img/order2.png');
-    }
-    else if (n == 4 || n == 7) {
+    } else if (n == 4 || n == 7) {
       return require('../img/order3.png');
-    } else if (n >= 5 && n != 9 && n != 10) {
-      return require('../img/order4.png');
     } else {
       return require('../img/order1.png');
     }
@@ -459,7 +456,7 @@ export default class OrderListView extends React.Component {
               flexDirection: 'row',
             }} onPress={() => this.setState({showChooseOrderModal: true})}>
               <Image source={require('../img/order_type.png')}/>
-              <Text style={{marginTop:-2,}}>&nbsp;筛选</Text>
+              <Text style={{marginTop: -2,}}>&nbsp;筛选</Text>
             </TouchableOpacity>
           </View>
           <Modal

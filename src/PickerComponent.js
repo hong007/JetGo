@@ -127,7 +127,8 @@ class PickerComponent extends React.Component {
 
   initEndAirports(n) {
     let item = n;
-    return <Picker.Item style={{fontSize: 23 * Ctrl.pxToDp()}} label={item.ename} value={item.id} airportType="eid"
+    return <Picker.Item style={{fontSize: 23 * Ctrl.pxToDp()}} label={item.ename + ' -- ' + item.name} value={item.id}
+                        airportType="eid"
                         eidValue={item.eid}
                         routeID={item.id}/>;
   }
