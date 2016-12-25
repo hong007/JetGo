@@ -262,7 +262,7 @@ export default class getFlight extends React.Component {
               <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
                 <Text style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
                 <Text
-                  style={[routeStyle.rTextRight, {flex: 1}]}>运送中</Text>
+                  style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
               </View>
 
               <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
