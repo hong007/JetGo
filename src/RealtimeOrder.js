@@ -252,6 +252,7 @@ export default class getFlight extends React.Component {
                   color: '#fff',
                   marginBottom: 50 * Ctrl.pxToDp(),
                   fontSize: 14 * Ctrl.pxToDp(),
+                  backgroundColor:'transparent'
                 }}>预计<Text
                 style={{fontSize: 22 * Ctrl.pxToDp(),}}
                 value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>

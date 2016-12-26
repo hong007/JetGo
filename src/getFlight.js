@@ -22,6 +22,8 @@ import  {
   TouchableWithoutFeedback,
 } from 'react-native';
 import LeftMenuList from './LeftMenuList';
+import {AnimatedCircularProgress}  from 'react-native-circular-progress';
+
 import NetUtil from './NetUtil';
 import SwitchComp from './SwitchComp';
 import Main from './Main';
@@ -45,22 +47,12 @@ export default class getFlight extends React.Component {
       isLoadModalVisible: false,
       modalGetFlightCountDown: false,
       planeFlightCount: 10,
+
+      fill: 0,
+      flightTimerStatus: false,
+      countFull: false,
     }
   }
-
-  // this._handleAppStateChange = this.handleAppStateChange.bind(this);
-  //
-  // componentWillMount() {
-  //   AppState.addEventListener('change', this._handleAppStateChange);
-  // }
-  //
-  // componentWillUnmount() {
-  //   AppState.removeEventListener('change', this._handleAppStateChange);
-  // }
-  //
-  // handleAppStateChange(appState) {
-  //   ToastAndroid.show('当前状态为:' + appState, ToastAndroid.SHORT);
-  // }
 
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
@@ -82,7 +74,6 @@ export default class getFlight extends React.Component {
         Token = result[0][1];
         let curfid = result[1][1];
         _this.getOrderDetail(curfid);
-        // alert("返回数据是  " + curdata + "  " + "  数据类型是  " + typeof curdata + "   token是" + Token + "  DETAIL_ID  是    " + curfid);
       }
     })
   }
@@ -125,28 +116,62 @@ export default class getFlight extends React.Component {
     });
   }
 
-  _orderPressOut() {
-    clearInterval(this.timer);
-  }
 
   _orderPressIn() {
     let count = 0;
-    this.timer = setInterval(
-      ()=> {
-        count++;
-        if (count == 3) {
-          Alert.alert(
-            '温馨提示',
-            '您确定要起飞吗？',
-            [
-              {text: '取消', onPress: () => console.log('Cancel Pressed!')},
-              {text: '确定', onPress: ()=>this._confirmPlaneFlight()}
-            ]
-          );
-          // this.CreateOrder()
-        }
-      }, 1000
-    );
+    let _this = this;
+    if (!_this.state.flightTimerStatus) {
+      this.timer = setInterval(
+        ()=> {
+          count++;
+          if (count > 30) {
+            _this.setState({
+              countFull: true,
+              fill: 100,
+            })
+          } else {
+            _this.setState({
+              flightTimerStatus: true,
+              fill: count * 10 / 3,
+            });
+          }
+          if (count == 30) {
+            _this.setState({
+              countFull: true,
+              fill: 90,
+            });
+            Alert.alert(
+              '温馨提示',
+              '您确定要起飞吗？',
+              [
+                {text: '取消', onPress: () => _this._canselFlight()},
+                {text: '确定', onPress: ()=>this._confirmPlaneFlight()}
+              ]
+            );
+            // this.CreateOrder()
+          }
+        }, 100
+      );
+    }
+  }
+
+  _orderPressOut() {
+    if (!this.state.countFull) {
+      this.setState({
+        fill: 0,
+        flightTimerStatus: false,
+      });
+    }
+    clearInterval(this.timer);
+  }
+
+  _canselFlight() {
+    this.refs.circularProgress.performLinearAnimation(0, 100);
+    this.setState({
+      flightTimerStatus: false,
+      countFull: false,
+      fill: 0,
+    });
   }
 
   _confirmPlaneFlight() {
@@ -211,29 +236,7 @@ export default class getFlight extends React.Component {
               );
             }
           } else if (curdata.err == 5) {
-
-            // let planeStatus = String(curdata.msg).split('：');
-            // planeStatus=planeStatus[1];
-            // let errTips;
-            // console.log('返回错误信息 ', errTips,' 错误编号是 ',planeStatus,'  ',curdata.msg);
-            // switch (planeStatus) {
-            //   case 1 :
-            //     return errTips = "使用中";
-            //   case 2:
-            //     return errTips = "维修中";
-            //   case 3:
-            //     return errTips = "库存";
-            // }
-            // let errTips;
             let planeStatus = curdata.msg;
-            // if (planeStatus == "该状态不允许起飞: 1") {
-            //   errTips = "该id飞机已起飞，请先确认收货";
-            // } else if (planeStatus == "该状态不允许起飞: 2") {
-            //   errTips = "该id飞机维修中,请使用其他飞机";
-            // } else if (planeStatus == "该状态不允许起飞: 3") {
-            //   errTips = "该id飞机库存中，尚未激活,请使用其他飞机";
-            // }
-            // console.log('返回错误信息 ', errTips);
             Alert.alert(
               '起飞失败',
               planeStatus,
@@ -241,9 +244,14 @@ export default class getFlight extends React.Component {
                 {text: '确定',}
               ]
             );
+            this.refs.circularProgress.performLinearAnimation(0, 100);
             _this.setState({
               isLoadModalVisible: false,
-              planeFlightCount: 10
+              planeFlightCount: 10,
+
+              flightTimerStatus: false,
+              countFull: false,
+              fill: 0,
             });
           } else {
             Alert.alert(
@@ -253,17 +261,26 @@ export default class getFlight extends React.Component {
                 {text: '确定',}
               ]
             );
+            this.refs.circularProgress.performLinearAnimation(0, 100);
             _this.setState({
               isLoadModalVisible: false,
-              planeFlightCount: 10
+              planeFlightCount: 10,
+
+              flightTimerStatus: false,
+              countFull: false,
+              fill: 0,
             });
           }
         }
       );
-
-    }
-    else {
+    } else {
       // alert('你想飞？必须全部点中哦😯！');
+      this.refs.circularProgress.performLinearAnimation(0, 100);
+      _this.setState({
+        flightTimerStatus: false,
+        countFull: false,
+        fill: 0,
+      });
       ToastAndroid.show('你想飞？必须全部点中哦😯！', ToastAndroid.SHORT);
     }
   }
@@ -386,43 +403,52 @@ export default class getFlight extends React.Component {
                         callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
 
           </View>
-          <View style={{alignItems: 'center'}}>
-            <TouchableOpacity style={{
-              backgroundColor: '#313131',
-              marginTop: 20,
-              height: 80 * Ctrl.pxToDp(),
-              width: 80 * Ctrl.pxToDp(),
-              borderRadius: 40 * Ctrl.pxToDp(),
-              borderWidth: 0.3,
-              borderColor: '#a09f9f',
-              justifyContent: 'center',
-              alignItems: 'center',
-              color: '#fff',
-            }} onPressIn={this._orderPressIn.bind(this)} onPressOut={this._orderPressOut.bind(this)}>
-              <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>起飞</Text>
-            </TouchableOpacity>
+          <View style={{alignItems: 'center', padding: 10,}}>
+            <AnimatedCircularProgress
+              ref='circularProgress'
+              size={120 * Ctrl.pxToDp()}
+              width={10}
+              fill={this.state.fill}
+              tintColor="#EB753A"
+              backgroundColor="#3d5875">
+              {
+                (fill) => (
+                  <TouchableOpacity style={{
+                    position: 'absolute',
+                    top: 20 * Ctrl.pxToDp(),
+                    left: 20 * Ctrl.pxToDp(),
+                    textAlign: 'center',
+                    backgroundColor: '#313131',
+                    height: 80 * Ctrl.pxToDp(),
+                    width: 80 * Ctrl.pxToDp(),
+                    borderRadius: 40 * Ctrl.pxToDp(),
+                    borderWidth: 0.3,
+                    borderColor: '#a09f9f',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: '#fff',
+                  }} onPressIn={this._orderPressIn.bind(this)} onPressOut={this._orderPressOut.bind(this)}>
+                    <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>起飞</Text>
+                  </TouchableOpacity>
+                )
+              }
+            </AnimatedCircularProgress>
             <Text style={{
               color: '#313131',
-              marginTop: 15,
+              marginTop: 10,
               textAlign: 'center',
               alignItems: 'center',
               justifyContent: 'center',
             }}>长按3秒</Text>
           </View>
-          <Modal
+          < Modal
             animationType={"fade"}
             transparent={true}
-            visible={this.state.modalGetFlightCountDown}
-            onRequestClose={() => {
-              alert("Modal has been closed.")
-            }}
+            visible={this.state.modalGetFlightCountDown
+            }
           >
-            <View style={{
-              flex: 1,
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+            <View
+              style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', alignItems: 'center',}}>
               <TouchableOpacity style={{
                 backgroundColor: '#313131',
                 marginTop: 20,

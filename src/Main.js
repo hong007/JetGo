@@ -21,6 +21,7 @@ import {
   DrawerLayoutAndroid,
   TouchableHighlight
 } from 'react-native';
+import SideMenu from 'react-native-side-menu';
 const menu_user = require('../img/menu_user.png');
 const menu_order = require('../img/menu_order.png');
 const menu_phone = require('../img/menu_phone.png');
@@ -29,8 +30,8 @@ const menu_about = require('../img/menu_about.png');
 const menu_quit = require('../img/menu_quit.png');
 
 import ScanComponent from './ScanComponent';
-import PickerComponent from './PickerComponent';
-// import PickerComponent from './ModalPicker';
+// import PickerComponent from './PickerComponent';
+import PickerComponent from './ModalPicker';
 import Button from './Button';
 import LeftMenuList from './LeftMenuList';
 import NetUtil from './NetUtil';
@@ -135,14 +136,23 @@ export default class Main extends React.Component {
       component: ScanComponent
     })
   }
-
-  openDrawer() {
-    this.refs.drawerLayout.openDrawer()
+  _sideMunuToggle() {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
   }
 
-  closeDrawer() {
-    this.refs.drawerLayout.closeDrawer()
+  updateMenuState(isOpen) {
+    this.setState({isOpen,});
   }
+
+  // openDrawer() {
+  //   this.refs.drawerLayout.openDrawer()
+  // }
+  //
+  // closeDrawer() {
+  //   this.refs.drawerLayout.closeDrawer()
+  // }
 
   _isLoadedRoute() {
     if (this.state.isRouteTrue) {
@@ -278,22 +288,10 @@ export default class Main extends React.Component {
     }
 
     return (
-      <DrawerLayoutAndroid
-        ref={'drawerLayout'}
-        drawerBackgroundColor="rgba(188,0,202,0.5)"
-        drawerWidth={260 * Ctrl.pxToDp()}
-        drawerPosition={DrawerLayoutAndroid.positions.Left}
-        renderNavigationView={() => navigationView}
-        onDrawerOpen={()=> {
-          console.log('打开了')
-        }}
-        onDrawerClose={()=> {
-          console.log('关闭了')
-        }}
-        onDrawerSlide={()=>console.log("正在交互......")}
-        keyboardDismissMode="on-drag"
-        statusBarBackgroundColor='transparent'
-      >
+      <SideMenu
+        menu={navigationView}
+        isOpen={this.state.isOpen}
+        onChange={(isOpen) => this.updateMenuState(isOpen)}>
         <View style={{
           flex: 1,
           flexDirection: 'column',
@@ -313,7 +311,7 @@ export default class Main extends React.Component {
                 justifyContent: 'center',
                 height: (Platform.OS === 'android' ? 42 : 50)
               }}
-                                onPress={()=>this.openDrawer()}>
+                                onPress={()=>this._sideMunuToggle()}>
                 <Image style={{}} source={require('../img/menu.png')}/>
               </TouchableOpacity>
             </View>
@@ -428,8 +426,7 @@ export default class Main extends React.Component {
 
           </View>
         </Modal>
-
-      </DrawerLayoutAndroid>
+      </SideMenu>
     );
   }
 }

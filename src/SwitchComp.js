@@ -24,12 +24,15 @@ export default class ChildCompontent extends React.Component {
     return (
       <View style={switchStyle.rItem}>
         <Text style={switchStyle.rTextLeft}>{this.props.text}</Text>
-        <Switch value={this.state.checked}
-                style={switchStyle.rTextRight}
-                onValueChange={(value)=> {
-                  this.setState({checked: value});
-                  this.props.callbackParent(this.state.checked);
-                }}/>
+        <View style={switchStyle.rTextRight}>
+          <Switch value={this.state.checked}
+                  style={switchStyle.rTextRightValue}
+                  onValueChange={(value)=> {
+                    this.setState({checked: value});
+                    this.props.callbackParent(this.state.checked);
+                  }}/>
+        </View>
+
       </View>
     )
   }
@@ -52,10 +55,19 @@ const switchStyle = StyleSheet.create({
     justifyContent: 'center',
     color: '#313131',
     fontSize: 15 * Ctrl.pxToDp(),
+    // backgroundColor:"#f00",
   },
   rTextRight: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    textAlign: 'right',
+    // backgroundColor:"#00f",
+  },
+
+  rTextRightValue: {
+    flex: 1,
+    alignItems: 'flex-end',
     justifyContent: 'center',
     textAlign: 'right',
     color: '#313131',
