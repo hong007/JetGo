@@ -30,6 +30,7 @@ const menu_quit = require('../img/menu_quit.png');
 
 import ScanComponent from './ScanComponent';
 import PickerComponent from './PickerComponent';
+// import PickerComponent from './ModalPicker';
 import Button from './Button';
 import LeftMenuList from './LeftMenuList';
 import NetUtil from './NetUtil';
@@ -148,8 +149,8 @@ export default class Main extends React.Component {
       this.setState({
         showLeadingModal: true
       })
-    }else{
-      ToastAndroid.show('没有选择航路，请先选择航路',ToastAndroid.SHORT)
+    } else {
+      ToastAndroid.show('没有选择航路，请先选择航路', ToastAndroid.SHORT)
     }
   }
 
@@ -369,7 +370,8 @@ export default class Main extends React.Component {
           transparent={true}
           visible={this.state.showLeadingModal}
           onRequestClose={() => {
-            {/*alert("Modal has been closed.")*/}
+            {/*alert("Modal has been closed.")*/
+            }
           }}
         >
           <View style={{
