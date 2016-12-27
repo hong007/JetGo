@@ -47,8 +47,9 @@ export default class OrderListView extends React.Component {
       isLoadAll: false,
       hideLoadAll: false,
 
-      isOrderListAll: false,
+      isLoadAllUserData: false,
       showChooseOrderModal: false,
+      chooseTypeText: '筛选',
     };
   }
 
@@ -91,10 +92,10 @@ export default class OrderListView extends React.Component {
     }
     let url;
     console.log("curpageNo is ", curpageNo);
-    if (this.state.isLoadAll) {
-      url = "http://jieyan.xyitech.com/order/search?&page_no=" + curpageNo + "&page_size=20&token=" + Token;
+    if (this.state.isLoadAllUserData) {
+      url = "http://jieyan.xyitech.com/order/search?page_no=" + curpageNo + "&page_size=20&token=" + Token;
     } else {
-      url = "http://jieyan.xyitech.com/order/search?&uid=true&page_no=" + curpageNo + "&page_size=20&token=" + Token;
+      url = "http://jieyan.xyitech.com/order/search?uid=true&page_no=" + curpageNo + "&page_size=20&token=" + Token;
     }
     NetUtil.postJson(url, (responseText)=> {
       if (!responseText || responseText == "") {
@@ -228,6 +229,8 @@ export default class OrderListView extends React.Component {
     // this.setState({isRefreshing: true});
     this.setState({
       isRefreshing: true,
+      isLoadAllUserData: false,
+      chooseTypeText: '筛选',
     });
     let _this = this;
     setTimeout(() => {
@@ -403,12 +406,14 @@ export default class OrderListView extends React.Component {
     if (tempType == true) {
       _this.setState({
         showChooseOrderModal: false,
-        isLoadAll: false,
+        isLoadAllUserData: true,
+        chooseTypeText: '全部',
       })
     } else {
       _this.setState({
         showChooseOrderModal: false,
-        isLoadAll: true,
+        isLoadAllUserData: false,
+        chooseTypeText: '默认',
       })
     }
     totalList = [];
@@ -456,7 +461,7 @@ export default class OrderListView extends React.Component {
               flexDirection: 'row',
             }} onPress={() => this.setState({showChooseOrderModal: true})}>
               <Image source={require('../img/order_type.png')}/>
-              <Text style={{marginTop: -2,}}>&nbsp;筛选</Text>
+              <Text style={{marginTop: -2,}}>&nbsp;{this.state.chooseTypeText}</Text>
             </TouchableOpacity>
           </View>
           <Modal
@@ -496,7 +501,7 @@ export default class OrderListView extends React.Component {
                     width: 100 * Ctrl.pxToDp(),
                     marginBottom: 1,
                   }} onPress={()=> {
-                    this._chooseOrderType(true)
+                    this._chooseOrderType(false)
                   }}>
                     <Text style={{color: '#313131', fontSize: 17 * Ctrl.pxToDp(),}}>默认</Text>
                   </TouchableOpacity>
@@ -511,7 +516,7 @@ export default class OrderListView extends React.Component {
                     zIndex: 9999,
                     width: 100 * Ctrl.pxToDp(),
                   }} onPress={()=> {
-                    this._chooseOrderType(false)
+                    this._chooseOrderType(true)
                   }}>
                     <Text style={{color: '#313131', fontSize: 17 * Ctrl.pxToDp(),}}>全部</Text>
                   </TouchableOpacity>
