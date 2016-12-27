@@ -9,13 +9,13 @@ import {
   // Platform,
   // BackAndroid,
 } from 'react-native';
-const deviceWidthDp = Dimensions.get('window').height;
+const deviceHeightDp = Dimensions.get('window').height;
 const uiWidthPx = 667;
 
 let ctrl = {
   pxToDp() {
-    const pxToDp = deviceWidthDp / uiWidthPx;
-    return deviceWidthDp / uiWidthPx;
+    const pxToDp = deviceHeightDp / uiWidthPx;
+    return deviceHeightDp / uiWidthPx;
   },
   setStatusBar(){
     StatusBar.setBackgroundColor('#000', true);

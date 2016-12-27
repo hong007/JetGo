@@ -162,7 +162,7 @@ class PickerComponent extends React.Component {
           <View>
             <Text style={PickerStyle.bgEPoint}> </Text>
             <ModalPicker
-              optionStyle={{height: 60 * Ctrl.pxToDp(),paddingTop:15}}
+              optionStyle={{height: 60 * Ctrl.pxToDp(),paddingTop:15,}}
               data={this.state.airportsEndData}
               initValue="--请选择--"
               cancelText="取消"
@@ -182,7 +182,7 @@ class PickerComponent extends React.Component {
           <View>
             <Text style={PickerStyle.bgSPoint}> </Text>
             <ModalPicker
-              optionStyle={{height: 60 * Ctrl.pxToDp(),paddingTop:15}}
+              optionStyle={{height: 60 * Ctrl.pxToDp(),paddingTop:15,}}
               data={this.state.airportsData}
               initValue="--请选择--"
               cancelText="取消"
