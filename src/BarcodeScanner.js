@@ -31,6 +31,12 @@ export default class BarcodeScanner extends Component {
       id: null,
     };
   }
+  _onBack() {
+    const {navigator} = this.props;
+    if (navigator) {
+      navigator.pop();
+    }
+  }
 
   _barcodeReceived(e) {
 
@@ -54,32 +60,35 @@ export default class BarcodeScanner extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+      <View style={{
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: '#f7f7f7'
+      }}>
         <View style={{
-          height: (Platform.OS === 'android' ? 42 : 50),
+          flexDirection: 'row',
+          justifyContent: 'center',
           backgroundColor: '#fff',
-          flexDeriction: 'row',
-          alignItem: 'center',
-          marginTop: 24,
-          paddingTop: 15,
-          paddingLeft: 18
+          paddingLeft: 18,
+          paddingTop: 5,
+          paddingBottom: 5,
         }}>
-          <TouchableOpacity
-            style={{
+          <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+            <TouchableOpacity style={{
               height: 44,
               width: 44,
-              top: 0,
-              left: 0,
-              position: 'absolute',
-              zIndex: 999999,
-              paddingLeft: 15,
-              paddingTop: 18,
+              paddingTop: 15,
             }}
-            onPress={() => this.props.navigator.pop()}
-          >
-            <Image source={require('../img/ic_back.png')}/>
-          </TouchableOpacity>
-          <Text style={{flex: 1, textAlign: 'center', color: '#313131', fontSize: 18,}}>扫一扫</Text>
+                              onPress={() => this._onBack()}
+            >
+              <Image source={require('../img/ic_back.png')}/>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>扫一扫</Text>
+          </View>
+          <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+          </View>
         </View>
         <BarScanner
           onBarCodeRead={(e)=> {

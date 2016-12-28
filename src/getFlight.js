@@ -313,32 +313,35 @@ export default class getFlight extends React.Component {
     var isChecked = this.state.checked ? 'yes' : 'no';
     if (this.state.detailDataLoaded) {
       return (
-        <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          backgroundColor: '#f7f7f7'
+        }}>
           <View style={{
-            height: (Platform.OS === 'android' ? 42 : 50),
+            flexDirection: 'row',
+            justifyContent: 'center',
             backgroundColor: '#fff',
-            flexDeriction: 'row',
-            alignItem: 'center',
-            marginTop: 24,
-            paddingTop: 15,
-            paddingLeft: 18
+            paddingLeft: 18,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
-            <TouchableOpacity
-              style={{
+            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
                 height: 44,
                 width: 44,
-                top: 0,
-                left: 0,
-                position: 'absolute',
-                zIndex: 999999,
-                paddingLeft: 15,
-                paddingTop: 18,
+                paddingTop: 15,
               }}
-              onPress={() => this.pageJump()}
-            >
-              <Image source={require('../img/ic_back.png')}/>
-            </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
+                                onPress={() => this.pageJump()}
+              >
+                <Image source={require('../img/ic_back.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            </View>
           </View>
           <View style={routeStyle.rContianer}>
             <View style={[routeStyle.rItem, {marginBottom: 1, marginTop: 1, height: 44 * Ctrl.pxToDp()}]}>
@@ -470,33 +473,37 @@ export default class getFlight extends React.Component {
       )
     } else {
       return (
-        <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          backgroundColor: '#f7f7f7'
+        }}>
           <View style={{
-            height: (Platform.OS === 'android' ? 42 : 50),
+            flexDirection: 'row',
+            justifyContent: 'center',
             backgroundColor: '#fff',
-            flexDeriction: 'row',
-            alignItem: 'center',
-            marginTop: 24,
-            paddingTop: 15,
-            paddingLeft: 18
+            paddingLeft: 18,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
-            <TouchableOpacity
-              style={{
+            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
                 height: 44,
                 width: 44,
-                top: 0,
-                left: 0,
-                position: 'absolute',
-                zIndex: 999999,
-                paddingLeft: 15,
-                paddingTop: 18,
+                paddingTop: 15,
               }}
-              onPress={() => this.pageJump()}
-            >
-              <Image source={require('../img/ic_back.png')}/>
-            </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
+                                onPress={() => this.pageJump()}
+              >
+                <Image source={require('../img/ic_back.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            </View>
           </View>
+
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
             <Text>加载数据中......</Text>
           </View>

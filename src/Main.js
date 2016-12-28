@@ -42,6 +42,7 @@ import Lawyer from './Lawyer';
 import AboutUS from './AboutUS';
 import Ctrl from './Ctrl';
 import ModalComp from './ModalComp';
+import PushyComp from './PushyComp';
 
 
 export default class Main extends React.Component {
@@ -136,6 +137,7 @@ export default class Main extends React.Component {
       component: ScanComponent
     })
   }
+
   _sideMunuToggle() {
     this.setState({
       isOpen: !this.state.isOpen,
@@ -196,6 +198,11 @@ export default class Main extends React.Component {
         name: "AboutUS",
         component: AboutUS,
       });
+    } else if (curPage == "PushyComp") {
+      this.props.navigator.push({
+        name: "PushyComp",
+        component: PushyComp,
+      });
     } else if (curPage == "QuitLogin") {
       AsyncStorage.setItem("LOGIN_USERNAME", '');
       AsyncStorage.setItem("LOGIN_USERPWD", '');
@@ -229,6 +236,9 @@ export default class Main extends React.Component {
             this._openLeftMenuPage(pageName)
           }}/>
           <LeftMenuList title='关于捷雁' pageName="AboutUS" imageSource={menu_about} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
+          <LeftMenuList title='版本' pageName="PushyComp" imageSource={menu_about} _leftMenuPress={(pageName)=> {
             this._openLeftMenuPage(pageName)
           }}/>
           <TouchableOpacity style={{
@@ -300,16 +310,17 @@ export default class Main extends React.Component {
           <View style={{
             flexDirection: 'row',
             justifyContent: 'center',
-            height: (Platform.OS === 'android' ? 42 : 50),
             backgroundColor: '#fff',
             paddingLeft: 18,
+            paddingTop:5,
+            paddingBottom:5,
           }}>
             <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
               <TouchableOpacity style={{
-                width: 34,
+                width: 44,
                 alignItems: 'flex-start',
                 justifyContent: 'center',
-                height: (Platform.OS === 'android' ? 42 : 50)
+                height: (Platform.OS === 'android' ? 44 : 50)
               }}
                                 onPress={()=>this._sideMunuToggle()}>
                 <Image style={{}} source={require('../img/menu.png')}/>

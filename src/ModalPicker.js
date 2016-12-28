@@ -148,6 +148,7 @@ class PickerComponent extends React.Component {
               data={this.state.airportsData}
               initValue="--请选择--"
               cancelText="取消"
+              cancelStyle={{height:50*Ctrl.pxToDp(),paddingTop:15*Ctrl.pxToDp()}}
               optionTextStyle={PickerStyle.OptionsText}
               onChange={(option)=> {
                 this.chooseAirPorts(option.index, option.label)
@@ -166,6 +167,7 @@ class PickerComponent extends React.Component {
               data={this.state.airportsEndData}
               initValue="--请选择--"
               cancelText="取消"
+              cancelStyle={{height:50*Ctrl.pxToDp(),paddingTop:15*Ctrl.pxToDp()}}
               optionTextStyle={PickerStyle.OptionsText}
               onChange={(option)=> {
                 this.chooseAirPortsEnd(option.index, option.label)
@@ -186,6 +188,7 @@ class PickerComponent extends React.Component {
               data={this.state.airportsData}
               initValue="--请选择--"
               cancelText="取消"
+              cancelStyle={{height:50*Ctrl.pxToDp(),paddingTop:15*Ctrl.pxToDp()}}
               optionTextStyle={PickerStyle.OptionsText}
               onChange={(option)=> {
                 this.chooseAirPorts(option.index, option.label)
@@ -204,6 +207,7 @@ class PickerComponent extends React.Component {
               data={this.state.airportsEndData}
               initValue="--请选择--"
               cancelText="取消"
+              cancelStyle={{height:50*Ctrl.pxToDp(),paddingTop:15*Ctrl.pxToDp()}}
               optionTextStyle={PickerStyle.OptionsText}
               onChange={(option)=> {
                 this.chooseAirPortsEnd(option.index, option.label)

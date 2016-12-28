@@ -326,6 +326,7 @@ export default class ScanComponent extends React.Component {
       }
     });
   }
+
   // editable={false}
 
   _textInputFocus() {
@@ -351,36 +352,35 @@ export default class ScanComponent extends React.Component {
           return (
             <View style={{
               flex: 1,
-              backgroundColor: '#f7f7f7',
-            }}
-            >
+              flexDirection: 'column',
+              backgroundColor: '#f7f7f7'
+            }}>
               <View style={{
-                height: (Platform.OS === 'android' ? 42 : 50),
+                flexDirection: 'row',
+                justifyContent: 'center',
                 backgroundColor: '#fff',
-                flexDeriction: 'row',
-                alignItem: 'center',
-                marginTop: 24,
-                paddingTop: 15,
-                paddingLeft: 18
+                paddingLeft: 18,
+                paddingTop: 5,
+                paddingBottom: 5,
               }}>
-                <TouchableOpacity
-                  style={{
+                <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                  <TouchableOpacity style={{
                     height: 44,
                     width: 44,
-                    top: 0,
-                    left: 0,
-                    position: 'absolute',
-                    zIndex: 999999,
-                    paddingLeft: 15,
-                    paddingTop: 18,
+                    paddingTop: 15,
                   }}
-                  onPress={() => this._onBack()}
-                >
-                  <Image source={require('../img/ic_back.png')}/>
-                </TouchableOpacity>
-                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+                                    onPress={() => this._onBack()}
+                  >
+                    <Image source={require('../img/ic_back.png')}/>
+                  </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                  <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+                </View>
+                <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                </View>
               </View>
-              <ScrollView style={{flex: 1, }} ref='scroll' keyboardShouldPersistTaps={true}>
+              <ScrollView style={{flex: 1,}} ref='scroll' keyboardShouldPersistTaps={true}>
                 <View style={{
                   flex: 1,
                   height: Dimensions.get('window').height - (Platform.OS === 'android' ? 66 : 50)
@@ -390,7 +390,7 @@ export default class ScanComponent extends React.Component {
                     this.refs.hour.blur();
                   }
                 }}>
-                  <View style={{flex: 1, }}>
+                  <View style={{flex: 1,}}>
 
                     <View style={scanStyle.TextInputView}>
                       <TextInput style={scanStyle.TextInput}
@@ -571,34 +571,33 @@ export default class ScanComponent extends React.Component {
         return (
           <View style={{
             flex: 1,
-            backgroundColor: '#f7f7f7',
-          }}
-          >
+            flexDirection: 'column',
+            backgroundColor: '#f7f7f7'
+          }}>
             <View style={{
-              height: (Platform.OS === 'android' ? 42 : 50),
+              flexDirection: 'row',
+              justifyContent: 'center',
               backgroundColor: '#fff',
-              flexDeriction: 'row',
-              alignItem: 'center',
-              marginTop: 24,
-              paddingTop: 15,
-              paddingLeft: 18
+              paddingLeft: 18,
+              paddingTop: 5,
+              paddingBottom: 5,
             }}>
-              <TouchableOpacity
-                style={{
+              <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                <TouchableOpacity style={{
                   height: 44,
                   width: 44,
-                  top: 0,
-                  left: 0,
-                  position: 'absolute',
-                  zIndex: 999999,
-                  paddingLeft: 15,
-                  paddingTop: 18,
+                  paddingTop: 15,
                 }}
-                onPress={() => this._onBack()}
-              >
-                <Image source={require('../img/ic_back.png')}/>
-              </TouchableOpacity>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+                                  onPress={() => this._onBack()}
+                >
+                  <Image source={require('../img/ic_back.png')}/>
+                </TouchableOpacity>
+              </View>
+              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+              </View>
+              <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+              </View>
             </View>
             <View style={scanStyle.TextInputView}>
               <TextInput style={scanStyle.TextInput}
@@ -742,32 +741,35 @@ export default class ScanComponent extends React.Component {
       }
     } else {
       return (
-        <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          backgroundColor: '#f7f7f7'
+        }}>
           <View style={{
-            height: (Platform.OS === 'android' ? 42 : 50),
+            flexDirection: 'row',
+            justifyContent: 'center',
             backgroundColor: '#fff',
-            flexDeriction: 'row',
-            alignItem: 'center',
-            marginTop: 24,
-            paddingTop: 15,
-            paddingLeft: 18
+            paddingLeft: 18,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
-            <TouchableOpacity
-              style={{
+            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
                 height: 44,
                 width: 44,
-                top: 0,
-                left: 0,
-                position: 'absolute',
-                zIndex: 999999,
-                paddingLeft: 15,
-                paddingTop: 18,
+                paddingTop: 15,
               }}
-              onPress={() => this._onBack()}
-            >
-              <Image source={require('../img/ic_back.png')}/>
-            </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 17 * Ctrl.pxToDp(),}}>飞机扫码</Text>
+                                onPress={() => this._onBack()}
+              >
+                <Image source={require('../img/ic_back.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            </View>
           </View>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
             <Text>加载数据中......</Text>

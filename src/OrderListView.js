@@ -248,8 +248,8 @@ export default class OrderListView extends React.Component {
           flexDirection: 'row',
           alignItem: 'flex-start',
           justifyContent: 'center',
-          marginTop: 24,
-          paddingTop: 15,
+          paddingBottom: 5,
+          paddingTop: 5,
           paddingLeft: 18,
         }}>
           <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
@@ -435,9 +435,9 @@ export default class OrderListView extends React.Component {
           flexDirection: 'row',
           alignItem: 'flex-start',
           justifyContent: 'center',
-          marginTop: 24,
-          paddingTop: 15,
           paddingLeft: 18,
+          paddingTop: 5,
+          paddingBottom: 5,
         }}>
           <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
             <TouchableOpacity style={{
@@ -481,11 +481,11 @@ export default class OrderListView extends React.Component {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: (Platform.OS === 'android' ? 52 : 60),
+                marginTop: 40,
                 borderRadius: 3,
-                padding: 10,
-                paddingTop: 5,
-                paddingBottom: 5,
+                padding: 10 * Ctrl.pxToDp(),
+                paddingTop: 5 * Ctrl.pxToDp(),
+                paddingBottom: 5 * Ctrl.pxToDp(),
                 backgroundColor: '#fff'
               }}>
                 <View style={{}}>

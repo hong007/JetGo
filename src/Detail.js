@@ -165,43 +165,46 @@ export default class Detail extends React.Component {
     if (this.state.detailDataLoaded) {
       if (this.state.noFlighting) {
         return (
-          <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+          <View style={{
+            flex: 1,
+            flexDirection: 'column',
+            backgroundColor: '#f7f7f7'
+          }}>
             <View style={{
-              height: (Platform.OS === 'android' ? 42 : 50),
+              flexDirection: 'row',
+              justifyContent: 'center',
               backgroundColor: '#fff',
-              flexDeriction: 'row',
-              alignItem: 'center',
-              marginTop: 24,
-              paddingTop: 15,
-              paddingLeft: 18
+              paddingLeft: 18,
+              paddingTop: 5,
+              paddingBottom: 5,
             }}>
-              <TouchableOpacity
-                style={{
+              <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                <TouchableOpacity style={{
                   height: 44,
                   width: 44,
-                  top: 0,
-                  left: 0,
-                  position: 'absolute',
-                  zIndex: 999999,
-                  paddingLeft: 15,
-                  paddingTop: 18,
+                  paddingTop: 15,
                 }}
-                onPress={() => this._onBack()}
-              >
-                <Image source={require('../img/ic_back.png')}/>
-              </TouchableOpacity>
-              <Text style={{flex: 1, textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
-              <Text style={{top: 18, right: 18, position: 'absolute', zIndex: 99999999, color: '#313131'}}
-
-                    onPress={()=> {
-                      this.orderCansle()
-                    }}>取消运单</Text>
+                                  onPress={() => this._onBack()}
+                >
+                  <Image source={require('../img/ic_back.png')}/>
+                </TouchableOpacity>
+              </View>
+              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+              </View>
+              <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                <Text style={{top: 18, right: 18, position: 'absolute', zIndex: 99999999, color: '#313131'}}
+                      onPress={()=> {
+                        this.orderCansle()
+                      }}>取消运单</Text>
+              </View>
             </View>
             <View style={routeStyle.rContianer}>
               <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
                 <Text
                   style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
-                <Text style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
+                <Text
+                  style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
               </View>
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -268,32 +271,35 @@ export default class Detail extends React.Component {
       } else {
         if (this.state.isOrderCansle) {
           return (
-            <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              backgroundColor: '#f7f7f7'
+            }}>
               <View style={{
-                height: (Platform.OS === 'android' ? 42 : 50),
+                flexDirection: 'row',
+                justifyContent: 'center',
                 backgroundColor: '#fff',
-                flexDeriction: 'row',
-                alignItem: 'center',
-                marginTop: 24,
-                paddingTop: 15,
-                paddingLeft: 18
+                paddingLeft: 18,
+                paddingTop: 5,
+                paddingBottom: 5,
               }}>
-                <TouchableOpacity
-                  style={{
+                <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                  <TouchableOpacity style={{
                     height: 44,
                     width: 44,
-                    top: 0,
-                    left: 0,
-                    position: 'absolute',
-                    zIndex: 999999,
-                    paddingLeft: 15,
-                    paddingTop: 18,
+                    paddingTop: 15,
                   }}
-                  onPress={() => this._onBack()}
-                >
-                  <Image source={require('../img/ic_back.png')}/>
-                </TouchableOpacity>
-                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                                    onPress={() => this._onBack()}
+                  >
+                    <Image source={require('../img/ic_back.png')}/>
+                  </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                  <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                </View>
+                <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                </View>
               </View>
               <View style={routeStyle.rContianer}>
                 <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
@@ -366,38 +372,42 @@ export default class Detail extends React.Component {
           )
         } else {
           return (
-            <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              backgroundColor: '#f7f7f7'
+            }}>
               <View style={{
-                height: (Platform.OS === 'android' ? 42 : 50),
+                flexDirection: 'row',
+                justifyContent: 'center',
                 backgroundColor: '#fff',
-                flexDeriction: 'row',
-                alignItem: 'center',
-                marginTop: 24,
-                paddingTop: 15,
-                paddingLeft: 18
+                paddingLeft: 18,
+                paddingTop: 5,
+                paddingBottom: 5,
               }}>
-                <TouchableOpacity
-                  style={{
+                <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                  <TouchableOpacity style={{
                     height: 44,
                     width: 44,
-                    top: 0,
-                    left: 0,
-                    position: 'absolute',
-                    zIndex: 999999,
-                    paddingLeft: 15,
-                    paddingTop: 18,
+                    paddingTop: 15,
                   }}
-                  onPress={() => this._onBack()}
-                >
-                  <Image source={require('../img/ic_back.png')}/>
-                </TouchableOpacity>
-                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                                    onPress={() => this._onBack()}
+                  >
+                    <Image source={require('../img/ic_back.png')}/>
+                  </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                  <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                </View>
+                <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                </View>
               </View>
               <View style={routeStyle.rContianer}>
                 <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
                   <Text
                     style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
-                  <Text style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
+                  <Text
+                    style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
                 </View>
                 <View style={routeStyle.rItem}>
                   <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -481,32 +491,35 @@ export default class Detail extends React.Component {
       }
     } else {
       return (
-        <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          backgroundColor: '#f7f7f7'
+        }}>
           <View style={{
-            height: (Platform.OS === 'android' ? 42 : 50),
+            flexDirection: 'row',
+            justifyContent: 'center',
             backgroundColor: '#fff',
-            flexDeriction: 'row',
-            alignItem: 'center',
-            marginTop: 24,
-            paddingTop: 15,
-            paddingLeft: 18
+            paddingLeft: 18,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
-            <TouchableOpacity
-              style={{
+            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
                 height: 44,
                 width: 44,
-                top: 0,
-                left: 0,
-                position: 'absolute',
-                zIndex: 999999,
-                paddingLeft: 15,
-                paddingTop: 18,
+                paddingTop: 15,
               }}
-              onPress={() => this._onBack()}
-            >
-              <Image source={require('../img/ic_back.png')}/>
-            </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                                onPress={() => this._onBack()}
+              >
+                <Image source={require('../img/ic_back.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            </View>
           </View>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
             <Text>加载数据中......</Text>
