@@ -105,7 +105,7 @@ export default class OrderListView extends React.Component {
         // console.log("默认信息是 ",responseText,'  数据类型是',typeof responseText);
         let curdata = JSON.parse(responseText);
         let list = curdata.msg;
-        console.log("返回的运单信息是  ", JSON.stringify(list), "  数据类型是  ", typeof JSON.stringify(list), ' 数据长度是  ', list.length);
+        console.log("返回的运单信息是  ", list, "  数据类型是  ", typeof JSON.stringify(list), ' 数据长度是  ', list.length);
         if (curdata.err == '0') {
           if (curdata.msg.length == 0) {
             console.log('数据长度是', '', curdata.msg.length);

@@ -48,10 +48,10 @@ class PickerComponent extends React.Component {
           let curdata = JSON.parse(responseText);
           console.log('返回的站点数据是 ', curdata);
           if (curdata.err == '0') {
-            console.log('初始化站点数据');
+            // console.log('初始化站点数据');
             let airports = JSON.stringify(curdata.msg);
             airports = JSON.parse(airports);
-            console.log('airports list is ', airports);
+            // console.log('airports list is ', airports);
             let TempStation = [];
             for (let i = 0; i < airports.length; i++) {
               let singleStation = {};
