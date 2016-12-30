@@ -38,7 +38,6 @@ export default class ModalComp extends React.Component {
         transparent={true}
         visible={this.props.modalValue}
         onRequestClose={() => {
-          alert("Modal has been closed.")
         }}
       >
         <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', alignItems: 'center', justifyContent: 'center'}}>
