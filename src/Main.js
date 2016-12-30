@@ -75,7 +75,7 @@ export default class Main extends React.Component {
     _this.setState({
       loginStatus: false,
     });
-    _this._checkIfUpdate();
+    // _this._checkIfUpdate();
     // const {navigator}=this.props;
     // BackAndroid.removeEventListener('hardwareBackPress');
     BackAndroid.addEventListener('hardwareBackPress', function () {

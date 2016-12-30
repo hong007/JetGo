@@ -383,7 +383,7 @@ export default class ScanComponent extends React.Component {
               <ScrollView style={{flex: 1,}} ref='scroll' keyboardShouldPersistTaps={true}>
                 <View style={{
                   flex: 1,
-                  height: Dimensions.get('window').height - (Platform.OS === 'android' ? 66 : 50)
+                  height: Dimensions.get('window').height - (Platform.OS === 'android' ? 80 : 50)
                 }} onStartShouldSetResponderCapture={(e) => {
                   let target = e.nativeEvent.target;
                   if (target !== ReactNative.findNodeHandle(this.refs.hour)) {

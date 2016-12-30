@@ -59,6 +59,7 @@ export default class OrderListView extends React.Component {
     Ctrl.setStatusBar();
     let _this = this;
     BackAndroid.addEventListener('hardwareBackPress', function () {
+      console.log('安卓返回键触发')
       if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
         //最近2秒内按过back键，可以退出应用。
         return false;
@@ -91,7 +92,7 @@ export default class OrderListView extends React.Component {
       curpageNo = 0;
     }
     let url;
-    console.log("curpageNo is ", curpageNo);
+    // console.log("curpageNo is ", curpageNo);
     if (this.state.isLoadAllUserData) {
       url = "http://jieyan.xyitech.com/order/search?page_no=" + curpageNo + "&page_size=20&token=" + Token;
     } else {
@@ -105,10 +106,10 @@ export default class OrderListView extends React.Component {
         // console.log("默认信息是 ",responseText,'  数据类型是',typeof responseText);
         let curdata = JSON.parse(responseText);
         let list = curdata.msg;
-        console.log("返回的运单信息是  ", list, "  数据类型是  ", typeof JSON.stringify(list), ' 数据长度是  ', list.length);
+        // console.log("返回的运单信息是  ", list, "  数据类型是  ", typeof JSON.stringify(list), ' 数据长度是  ', list.length);
         if (curdata.err == '0') {
           if (curdata.msg.length == 0) {
-            console.log('数据长度是', '', curdata.msg.length);
+            // console.log('数据长度是', '', curdata.msg.length);
             this.setState({
               nonedata: true,
             });
@@ -120,14 +121,14 @@ export default class OrderListView extends React.Component {
             // 判断数据是否全部加载
             if (lastPageCount < pageCount) {
               lastPageCount = pageCount;
-              console.log("lastPageCount is ", lastPageCount);
+              // console.log("lastPageCount is ", lastPageCount);
             } else {
               this.setState({
                 isLoadAll: true,
               });
               // console.log("数据已经全部加载了哦！请先再去创建运单哦！");
             }
-            console.log("运单总数据是  ", JSON.stringify(totalList), "  数据类型是  ", typeof JSON.stringify(totalList), ' 数据长度是  ', totalList.length);
+            // console.log("运单总数据是  ", JSON.stringify(totalList), "  数据类型是  ", typeof JSON.stringify(totalList), ' 数据长度是  ', totalList.length);
 
             // 重新绑定listView数据
             this.setState({
@@ -387,10 +388,10 @@ export default class OrderListView extends React.Component {
   // 是否显示底部文字提示
   showOrHideFooter() {
     if (this.state.hideLoadAll) {
-      console.log('加载更多隐藏！');
+      // console.log('加载更多隐藏！');
       return null;
     } else {
-      console.log('加载更多显示！');
+      // console.log('加载更多显示！');
       return (
         <View style={OrderListItem.footer}>
           <Text style={OrderListItem.footerTitle}>{this.state.isLoadAll ? '已加载全部' : '向下滚动加载更多……'}</Text>

@@ -13,7 +13,6 @@ import {
   Platform,
   StatusBar,
   ToastAndroid,
-  BackAndroid,
   AsyncStorage,
   ProgressBarAndroid,
   TouchableOpacity
@@ -25,12 +24,6 @@ import NetUtil from './NetUtil';
 import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
 import ModalComp from './ModalComp';
-
-
-// import LoadingView from './LoadingView';
-
-
-// import RealtimeOrder from './RealtimeOrder';
 
 export default class LoginPage extends Component {
   constructor(props) {
@@ -44,38 +37,15 @@ export default class LoginPage extends Component {
   }
 
   componentDidMount() {
-    // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
     let _this = this;
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      return true;
-    });
   }
 
   openDrawer() {
     this.refs.drawerLayout.openDrawer()
   }
 
-  // _showLoading() {
-  //   this.setState({
-  //     showLoading: true
-  //   })
-  // }
-  //
-  // _closeLoading() {
-  //   this.setState({
-  //     showLoading: false
-  //   })
-  // }
   onPressCallback() {
-    // this.pageJump();
-
     let _this = this;
     this.setState({
       isLoadModalVisible: true

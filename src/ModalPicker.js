@@ -42,11 +42,11 @@ class PickerComponent extends React.Component {
       //TODO:错误处理
       if (!errs) {
         let Token = result;
-        console.log("取得缓存中的Token是  ", Token, "  ");
+        // console.log("取得缓存中的Token是  ", Token, "  ");
         let url = "http://jieyan.xyitech.com/spoint/search?token=" + Token;
         NetUtil.postJson(url, (responseText)=> {
           let curdata = JSON.parse(responseText);
-          console.log('返回的站点数据是 ', curdata);
+          // console.log('返回的站点数据是 ', curdata);
           if (curdata.err == '0') {
             // console.log('初始化站点数据');
             let airports = JSON.stringify(curdata.msg);
@@ -62,7 +62,7 @@ class PickerComponent extends React.Component {
                 _this.chooseAirPorts(airports[i].id, airports[i].name)
               }
             }
-            console.log("转换后的数据是  ", TempStation);
+            // console.log("转换后的数据是  ", TempStation);
             _this.setState({
               airports_status: true,
               airportsData: TempStation,
@@ -80,20 +80,20 @@ class PickerComponent extends React.Component {
     this.setState({
       stationStart: value,
     });
-    console.log("取得的站点id是", index);
+    // console.log("取得的站点id是", index);
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
       if (!errs) {
         let Token = result;
-        console.log("取得缓存中的Token是  ", Token, "  ");
+        // console.log("取得缓存中的Token是  ", Token, "  ");
         let url = "http://jieyan.xyitech.com/route/search?sid=" + index + "&token=" + Token;
         NetUtil.postJson(url, (responseText)=> {
           let curdata = JSON.parse(responseText);
           if (curdata.err == '0') {
             let routes = JSON.stringify(curdata.msg);
             routes = JSON.parse(routes);
-            console.log('routes list is ', routes, '  ', typeof routes);
+            // console.log('routes list is ', routes, '  ', typeof routes);
             if (routes.length > 0) {
               let TempStation = [];
               for (let i = 0; i < routes.length; i++) {
@@ -133,7 +133,7 @@ class PickerComponent extends React.Component {
       stationEnd: value,
     });
     AsyncStorage.setItem("ROUTE_ID", index);
-    console.log('存储的航路id是', index)
+    // console.log('存储的航路id是', index);
 
   }
 
