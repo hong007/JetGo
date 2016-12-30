@@ -13,6 +13,7 @@ import {
   Dimensions,
   StatusBar,
   Modal,
+  Linking,
   BackAndroid,
   ToastAndroid,
   AsyncStorage,
@@ -30,7 +31,6 @@ const menu_about = require('../img/menu_about.png');
 const menu_quit = require('../img/menu_quit.png');
 
 import ScanComponent from './ScanComponent';
-// import PickerComponent from './PickerComponent';
 import PickerComponent from './ModalPicker';
 import Button from './Button';
 import LeftMenuList from './LeftMenuList';
@@ -42,7 +42,8 @@ import Lawyer from './Lawyer';
 import AboutUS from './AboutUS';
 import Ctrl from './Ctrl';
 import ModalComp from './ModalComp';
-import PushyComp from './PushyComp';
+
+import _updateConfig from '../package.json';
 
 
 export default class Main extends React.Component {
@@ -53,7 +54,9 @@ export default class Main extends React.Component {
       loginName: '犀利哥',
       isLogin: true,
       showLeadingModal: false,
-      isRouteTrue: false
+      isRouteTrue: false,
+
+      isLoadModalVisible: false,
     };
   }
 
@@ -72,6 +75,7 @@ export default class Main extends React.Component {
     _this.setState({
       loginStatus: false,
     });
+    _this._checkIfUpdate();
     // const {navigator}=this.props;
     // BackAndroid.removeEventListener('hardwareBackPress');
     BackAndroid.addEventListener('hardwareBackPress', function () {
@@ -117,6 +121,28 @@ export default class Main extends React.Component {
         }
         // console.log("取得缓存中的Token是  ", curToken, "  长度是  ",curToken.lenght);
         // alert("取得缓存中的result是  " + curToken + "  长度是  " + curToken.length+"   "+ "curUsername  "+curUsername+"  长度是  " + curUsername.length+"   ");
+      }
+    });
+  }
+
+  // 检查是否更新
+  _checkIfUpdate() {
+    let _this = this;
+    let url = 'http://jieyan.xyitech.com/static/metadata.android.json';
+    NetUtil.postJson(url, (responseText)=> {
+      let curdata = JSON.parse(responseText);
+      // let curdata = responseText;
+      let localVesion = _updateConfig.version;
+      console.log('返回的JSON数据是  ', curdata, curdata.version, localVesion);
+      if (curdata.version != localVesion) {
+        _this.setState({
+          isLoadModalVisible: true
+        });
+        let linkUrl = 'http://jieyan.xyitech.com/static/app-release.apk';
+        Linking.openURL(linkUrl)
+          .catch((err)=> {
+            console.log('An error occurred', err);
+          });
       }
     });
   }
@@ -198,11 +224,6 @@ export default class Main extends React.Component {
         name: "AboutUS",
         component: AboutUS,
       });
-    } else if (curPage == "PushyComp") {
-      this.props.navigator.push({
-        name: "PushyComp",
-        component: PushyComp,
-      });
     } else if (curPage == "QuitLogin") {
       AsyncStorage.setItem("LOGIN_USERNAME", '');
       AsyncStorage.setItem("LOGIN_USERPWD", '');
@@ -236,9 +257,6 @@ export default class Main extends React.Component {
             this._openLeftMenuPage(pageName)
           }}/>
           <LeftMenuList title='关于捷雁' pageName="AboutUS" imageSource={menu_about} _leftMenuPress={(pageName)=> {
-            this._openLeftMenuPage(pageName)
-          }}/>
-          <LeftMenuList title='版本' pageName="PushyComp" imageSource={menu_about} _leftMenuPress={(pageName)=> {
             this._openLeftMenuPage(pageName)
           }}/>
           <TouchableOpacity style={{
@@ -291,9 +309,6 @@ export default class Main extends React.Component {
             this._openLeftMenuPage(pageName)
           }}/>
           <LeftMenuList title='关于捷雁' pageName="AboutUS" imageSource={menu_about} _leftMenuPress={(pageName)=> {
-            this._openLeftMenuPage(pageName)
-          }}/>
-          <LeftMenuList title='版本' pageName="PushyComp" imageSource={menu_about} _leftMenuPress={(pageName)=> {
             this._openLeftMenuPage(pageName)
           }}/>
         </View>
@@ -440,6 +455,7 @@ export default class Main extends React.Component {
 
           </View>
         </Modal>
+        <ModalComp modalValue={this.state.isLoadModalVisible}/>
       </SideMenu>
     );
   }

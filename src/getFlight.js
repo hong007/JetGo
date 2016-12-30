@@ -413,7 +413,7 @@ export default class getFlight extends React.Component {
               width={10}
               fill={this.state.fill}
               tintColor="#EB753A"
-              backgroundColor="#3d5875">
+              backgroundColor="#313131">
               {
                 (fill) => (
                   <TouchableOpacity style={{
