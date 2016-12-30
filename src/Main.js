@@ -293,6 +293,9 @@ export default class Main extends React.Component {
           <LeftMenuList title='关于捷雁' pageName="AboutUS" imageSource={menu_about} _leftMenuPress={(pageName)=> {
             this._openLeftMenuPage(pageName)
           }}/>
+          <LeftMenuList title='版本' pageName="PushyComp" imageSource={menu_about} _leftMenuPress={(pageName)=> {
+            this._openLeftMenuPage(pageName)
+          }}/>
         </View>
       );
     }
@@ -312,8 +315,8 @@ export default class Main extends React.Component {
             justifyContent: 'center',
             backgroundColor: '#fff',
             paddingLeft: 18,
-            paddingTop:5,
-            paddingBottom:5,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
             <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
               <TouchableOpacity style={{
