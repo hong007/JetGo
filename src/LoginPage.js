@@ -11,6 +11,7 @@ import {
   Image,
   TextInput,
   Platform,
+  BackAndroid,
   StatusBar,
   ToastAndroid,
   AsyncStorage,
@@ -34,6 +35,25 @@ export default class LoginPage extends Component {
     this.userName = "";
     this.password = "";
 
+  }
+
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    // let _this = this;
+    // let curTitle = _this.props.title;
+    // // alert(_this.props.title);
+    // if (curTitle == 'Detail') {
+    //   BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+    //   _this.props.navigator.pop();
+    return true;
+    // }
   }
 
   componentDidMount() {
@@ -83,12 +103,15 @@ export default class LoginPage extends Component {
 
   //跳转到第二个页面去
   pageJump() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     const {navigator} = this.props;
     if (navigator) {
       navigator.push({
-        title: '主页',
         name: 'Main',
         component: Main,
+        params: {
+          title: 'main'
+        },
       });
     }
   }

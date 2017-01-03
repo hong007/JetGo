@@ -34,10 +34,6 @@ export default class navigator extends Component {
     };
   }
 
-  componentWillMount() {
-
-  }
-
   componentDidMount() {
     StatusBar.setBackgroundColor('#000', true);
     SplashScreen.hide();

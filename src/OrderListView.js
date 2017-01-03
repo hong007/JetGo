@@ -53,22 +53,37 @@ export default class OrderListView extends React.Component {
     };
   }
 
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    let _this = this;
+    let curTitle = _this.props.title;
+    if (curTitle == 'OrderListView') {
+      BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+      _this.props.navigator.push({
+        // title: '',
+        name: 'Main',
+        component: Main,
+        params: {
+          title: 'main'
+        },
+      });
+      return true;
+    }else{
+      return true;
+    }
+  }
 // 页面render之后请求数据
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
     let _this = this;
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      console.log('安卓返回键触发')
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      _this._onBack();
-      return true;
-    });
     AsyncStorage.getItem('LOGIN_TOKEN', function (errs, result) {
       if (!errs) {
         let curdata = result;
@@ -201,13 +216,19 @@ export default class OrderListView extends React.Component {
     if (curstate == 2 || curstate == 5) {
       AsyncStorage.setItem("ORDER_CONFIRM", 'false');
       this.props.navigator.push({
-        title: 'RealtimeOrder',
-        component: RealtimeOrder
+        name: 'RealtimeOrder',
+        component: RealtimeOrder,
+        params: {
+          title: 'RealtimeOrder'
+        },
       });
     } else {
       this.props.navigator.push({
-        title: 'Detail',
-        component: Detail
+        name: 'Detail',
+        component: Detail,
+        params: {
+          title: 'Detail'
+        },
       });
     }
     // alert("想先上车再买票？那你就只能想了~~~" + (n));
@@ -217,7 +238,10 @@ export default class OrderListView extends React.Component {
     this.props.navigator.push({
       // title: '',
       name: 'Main',
-      component: Main
+      component: Main,
+      params: {
+        title: 'Main'
+      },
     });
     // const {navigator} = this.props;
     // if (navigator) {

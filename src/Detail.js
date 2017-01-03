@@ -39,37 +39,29 @@ export default class Detail extends React.Component {
       isOrderCansle: false,
     }
   }
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
 
-  // this.setState({isPackageType: (this.state.isPackageType ? false : true)})
-
-  // componentWillMount() {
-  //   if (Platform.OS === 'android') {
-  //     BackAndroid.addEventListener('hardwareBackPress', this._onBack());
-  //   }
-  // }
-  //
-  // componentWillUnmount() {
-  //   if (Platform.OS === 'android') {
-  //     BackAndroid.removeEventListener('hardwareBackPress', this._onBack());
-  //   }
-  // }
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+  onBackAndroid = () => {
+    let _this = this;
+    let curTitle = _this.props.title;
+    // alert(_this.props.title);
+    if (curTitle == 'Detail') {
+      BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+      _this.props.navigator.pop();
+      return true;
+    }else{
+      return true;
+    }
+  }
 
   componentDidMount() {
-    // StatusBar.setBackgroundColor('#000', true);
-    // BackAndroid.addEventListener('hardwareBackPress', this._onBack());
-
     Ctrl.setStatusBar();
     let _this = this;
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      _this._onBack();
-      return true;
-    });
     AsyncStorage.multiGet(['LOGIN_TOKEN', 'DETAIL_ID'], function (errs, result) {
       if (!errs) {
         let curdata = result;
@@ -82,9 +74,13 @@ export default class Detail extends React.Component {
   }
 
   openOrderItem() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     this.props.navigator.push({
-      title: 'getFlight',
-      component: getFlight
+      name: 'getFlight',
+      component: getFlight,
+      params: {
+        title: 'getFlight'
+      },
     });
     // alert("想先上车再买票？那你就只能想了~~~");
   }
@@ -118,11 +114,6 @@ export default class Detail extends React.Component {
   }
 
   _onBack() {
-    // this.props.navigator.push({
-    //   // title: '',
-    //   name: 'OrderListView',
-    //   component: OrderListView
-    // });
     const {navigator} = this.props;
     if (navigator) {
       navigator.pop();
@@ -148,10 +139,14 @@ export default class Detail extends React.Component {
       let curdata = JSON.parse(responseText);
       console.log('返回数据是 ', curdata);
       if (curdata.err == '0') {
+        BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
         this.props.navigator.push({
           // title: '',
           name: 'OrderListView',
-          component: OrderListView
+          component: OrderListView,
+          params: {
+            title: 'OrderListView'
+          },
         });
       } else {
         ToastAndroid.show('暂时无法取消，请重试！', ToastAndroid.SHORT);

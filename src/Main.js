@@ -75,28 +75,12 @@ export default class Main extends React.Component {
     _this.setState({
       loginStatus: false,
     });
-    _this._checkIfUpdate();
-    // const {navigator}=this.props;
-    // BackAndroid.removeEventListener('hardwareBackPress');
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      } else {
-        return true;
-      }
-      // const routers = navigator.getCurrentRoutes();
 
-      // 当前页面不为root页面时的处理
-      // if (routers.length > 1) {
-      //   _this.lastBackPressed = Date.now();
-      //   //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      //   _this.props.navigator.pop();
-      //   return true;
-      // }else{
-      //
-      // }
-    });
+    _this._checkIfUpdate();
+
+
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+
     DeviceEventEmitter.addListener("routeChange", (events)=> {
       _this.setState({isRouteTrue: events})
     });
@@ -125,6 +109,25 @@ export default class Main extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    const nav = this.props.navigator;
+    const routers = nav.getCurrentRoutes();
+    let curTitle = this.props.title;
+    // alert(this.state.routeTitle);
+    if (curTitle == 'main') {
+      if (this.lastBackPressed && this.lastBackPressed + 500 >= Date.now()) {
+        //最近2秒内按过back键，可以退出应用。
+        return false;
+      }
+      this.lastBackPressed = Date.now();
+      return true;
+    }
+  }
+
   // 检查是否更新
   _checkIfUpdate() {
     let _this = this;
@@ -138,6 +141,7 @@ export default class Main extends React.Component {
         _this.setState({
           isLoadModalVisible: true
         });
+        BackAndroid.exitApp();
         let linkUrl = 'http://jieyan.xyitech.com/static/app-release.apk';
         Linking.openURL(linkUrl)
           .catch((err)=> {
@@ -148,19 +152,24 @@ export default class Main extends React.Component {
   }
 
   pageJump() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     this.props.navigator.push({
-      title: '订单列表',
       name: 'OrderListView',
       component: OrderListView,
+      params: {
+        title: 'OrderListView'
+      },
     });
   }
 
   _openPage() {
     this.setState({showLeadingModal: false});
     this.props.navigator.push({
-      title: '飞机扫码',
       name: 'ScanComponent',
-      component: ScanComponent
+      component: ScanComponent,
+      params: {
+        title: 'ScanComponent'
+      },
     })
   }
 
@@ -199,6 +208,9 @@ export default class Main extends React.Component {
         this.props.navigator.push({
           name: "LoginPage",
           component: LoginPage,
+          params: {
+            title: 'ScanComponent'
+          },
         });
       } else {
         return
@@ -208,21 +220,33 @@ export default class Main extends React.Component {
       this.props.navigator.push({
         name: "OrderListView",
         component: OrderListView,
+        params: {
+          title: 'OrderListView'
+        },
       });
     } else if (curPage == "OnlineHelp") {
       this.props.navigator.push({
         name: "OnlineHelp",
         component: OnlineHelp,
+        params: {
+          title: 'OnlineHelp'
+        },
       });
     } else if (curPage == "Lawyer") {
       this.props.navigator.push({
         name: "Lawyer",
         component: Lawyer,
+        params: {
+          title: 'Lawyer'
+        },
       });
     } else if (curPage == "AboutUS") {
       this.props.navigator.push({
         name: "AboutUS",
         component: AboutUS,
+        params: {
+          title: 'AboutUS'
+        },
       });
     } else if (curPage == "QuitLogin") {
       AsyncStorage.setItem("LOGIN_USERNAME", '');

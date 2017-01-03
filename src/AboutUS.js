@@ -23,6 +23,26 @@ export default class BarcodeScanner extends Component {
     super(props);
   }
 
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    let _this = this;
+    let curTitle = _this.props.title;
+    if (curTitle == 'AboutUS') {
+      BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+      _this._onBack();
+      return true;
+    } else {
+      return true;
+    }
+  }
+
   _onBack() {
     const {navigator} = this.props;
     if (navigator) {
@@ -33,16 +53,6 @@ export default class BarcodeScanner extends Component {
   componentDidMount() {
     StatusBar.setBackgroundColor('#000', true);
     let _this = this;
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      _this.props.navigator.pop();
-      return true;
-    });
   }
 
   render() {
