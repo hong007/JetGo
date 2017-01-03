@@ -16,13 +16,15 @@ import {
   TouchableHighlight,
   DrawerLayoutAndroid,
 } from 'react-native';
-// import Orientation from 'react-native-orientation';
 
 import LoginPage from './LoginPage';
 import Main from './Main';
 import OrderListView from './OrderListView';
 import APPStart from './APPStart';
 import HelloJetGo from './HelloJetGo';
+
+import SplashScreen from 'react-native-splash-screen';
+
 export default class navigator extends Component {
   constructor(props) {
     super(props);
@@ -33,22 +35,12 @@ export default class navigator extends Component {
   }
 
   componentWillMount() {
-    // // 判断横竖屏幕
-    // var initial = Orientation.getInitialOrientation();
-    // if (initial === 'PORTRAIT') {
-    //   //do stuff
-    // } else {
-    //   //do other stuff
-    // }
 
-    // 只允许竖屏
-    // Orientation.lockToPortrait();
-    //只允许横屏
-    // Orientation.lockToLandscape();
   }
 
   componentDidMount() {
     StatusBar.setBackgroundColor('#000', true);
+    SplashScreen.hide();
   }
 
   openDrawer() {
