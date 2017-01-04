@@ -73,7 +73,7 @@ export default class ScanComponent extends React.Component {
     let _this = this;
     let curTitle = _this.props.title;
     // alert(_this.props.title);
-    console.log("当前title是",_this.props.title)
+    console.log("当前title是", _this.props.title)
     if (curTitle == 'ScanComponent') {
       BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       _this.props.navigator.push({
@@ -85,7 +85,7 @@ export default class ScanComponent extends React.Component {
         },
       });
       return true;
-    }else{
+    } else {
       return true;
     }
   }
@@ -314,7 +314,10 @@ export default class ScanComponent extends React.Component {
                 )
               } else {
                 // alert("错误，请重试");
-                ToastAndroid.show('错误，请重试!', ToastAndroid.SHORT);
+                _this.setState({
+                  isLoadModalVisible: false
+                });
+                ToastAndroid.show(curdata.msg, ToastAndroid.SHORT);
               }
             }
           })

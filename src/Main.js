@@ -142,7 +142,7 @@ export default class Main extends React.Component {
           isLoadModalVisible: true
         });
         BackAndroid.exitApp();
-        let linkUrl = 'http://jieyan.xyitech.com/static/app-release.apk';
+        let linkUrl = 'http://jieyan.xyitech.com/static/app-release-v' + curdata.version + '.apk';
         Linking.openURL(linkUrl)
           .catch((err)=> {
             console.log('An error occurred', err);
