@@ -18,6 +18,8 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native';
+import _updateConfig from '../package.json';
+
 export default class BarcodeScanner extends Component {
   constructor(props) {
     super(props);
@@ -88,7 +90,7 @@ export default class BarcodeScanner extends Component {
           </View>
         </View>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-          <Text>更多内容敬请期待......</Text>
+          <Text>当前版本号是：{_updateConfig.version}</Text>
         </View>
       </View>
     );
