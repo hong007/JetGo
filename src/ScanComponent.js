@@ -313,10 +313,13 @@ export default class ScanComponent extends React.Component {
                   }, 300
                 )
               } else {
-                // alert("错误，请重试");
-                _this.setState({
-                  isLoadModalVisible: false
-                });
+                _this.timer = setTimeout(
+                  ()=> {
+                    _this.setState({
+                      isLoadModalVisible: false
+                    });
+                  }, 2000
+                )
                 ToastAndroid.show(curdata.msg, ToastAndroid.SHORT);
               }
             }
