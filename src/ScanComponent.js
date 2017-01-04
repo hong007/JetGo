@@ -73,6 +73,7 @@ export default class ScanComponent extends React.Component {
     let _this = this;
     let curTitle = _this.props.title;
     // alert(_this.props.title);
+    console.log("当前title是",_this.props.title)
     if (curTitle == 'ScanComponent') {
       BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       _this.props.navigator.push({
@@ -331,6 +332,7 @@ export default class ScanComponent extends React.Component {
   }
 
   pageJump() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     this.props.navigator.push({
       name: 'getFlight',
       component: getFlight,

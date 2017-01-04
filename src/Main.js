@@ -163,6 +163,7 @@ export default class Main extends React.Component {
   }
 
   _openPage() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     this.setState({showLeadingModal: false});
     this.props.navigator.push({
       name: 'ScanComponent',
@@ -202,6 +203,7 @@ export default class Main extends React.Component {
   }
 
   _openLeftMenuPage(name) {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     let curPage = name;
     if (curPage == "LoginPage") {
       if (this.state.loginName == "登录") {
@@ -209,7 +211,7 @@ export default class Main extends React.Component {
           name: "LoginPage",
           component: LoginPage,
           params: {
-            title: 'ScanComponent'
+            title: 'LoginPage'
           },
         });
       } else {

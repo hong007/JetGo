@@ -52,7 +52,14 @@ export default class Detail extends React.Component {
     // alert(_this.props.title);
     if (curTitle == 'Detail') {
       BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
-      _this.props.navigator.pop();
+      this.props.navigator.push({
+        // title: '',
+        name: 'OrderListView',
+        component: OrderListView,
+        params: {
+          title: 'OrderListView'
+        },
+      });
       return true;
     }else{
       return true;

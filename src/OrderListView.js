@@ -213,6 +213,7 @@ export default class OrderListView extends React.Component {
     let id = value;
     let curstate = state;
     AsyncStorage.setItem("DETAIL_ID", id);
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     if (curstate == 2 || curstate == 5) {
       AsyncStorage.setItem("ORDER_CONFIRM", 'false');
       this.props.navigator.push({
