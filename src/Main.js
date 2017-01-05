@@ -43,9 +43,6 @@ import AboutUS from './AboutUS';
 import Ctrl from './Ctrl';
 import ModalComp from './ModalComp';
 
-import _updateConfig from '../package.json';
-
-
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -75,9 +72,6 @@ export default class Main extends React.Component {
     _this.setState({
       loginStatus: false,
     });
-
-    _this._checkIfUpdate();
-
 
     BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
 
@@ -126,29 +120,6 @@ export default class Main extends React.Component {
       this.lastBackPressed = Date.now();
       return true;
     }
-  }
-
-  // 检查是否更新
-  _checkIfUpdate() {
-    let _this = this;
-    let url = 'http://jieyan.xyitech.com/static/metadata.android.json';
-    NetUtil.postJson(url, (responseText)=> {
-      let curdata = JSON.parse(responseText);
-      // let curdata = responseText;
-      let localVesion = _updateConfig.version;
-      console.log('返回的JSON数据是  ', curdata, curdata.version, localVesion);
-      if (curdata.version != localVesion) {
-        _this.setState({
-          isLoadModalVisible: true
-        });
-        BackAndroid.exitApp();
-        let linkUrl = 'http://jieyan.xyitech.com/static/app-release-v' + curdata.version + '.apk';
-        Linking.openURL(linkUrl)
-          .catch((err)=> {
-            console.log('An error occurred', err);
-          });
-      }
-    });
   }
 
   pageJump() {

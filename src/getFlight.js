@@ -77,7 +77,7 @@ export default class getFlight extends React.Component {
         },
       });
       return true;
-    }else{
+    } else {
       return true;
     }
   }
@@ -136,40 +136,50 @@ export default class getFlight extends React.Component {
 
 
   _orderPressIn() {
-    let count = 0;
     let _this = this;
-    if (!_this.state.flightTimerStatus) {
-      this.timer = setInterval(
-        ()=> {
-          count++;
-          if (count > 30) {
-            _this.setState({
-              countFull: true,
-              fill: 100,
-            })
-          } else {
-            _this.setState({
-              flightTimerStatus: true,
-              fill: count * 10 / 3,
-            });
-          }
-          if (count == 30) {
-            _this.setState({
-              countFull: true,
-              fill: 90,
-            });
-            Alert.alert(
-              '温馨提示',
-              '您确定要起飞吗？',
-              [
-                {text: '取消', onPress: () => _this._canselFlight()},
-                {text: '确定', onPress: ()=>this._confirmPlaneFlight()}
-              ]
-            );
-            // this.CreateOrder()
-          }
-        }, 100
-      );
+    if (_this.state.totalChecked == 6) {
+      let count = 0;
+      if (!_this.state.flightTimerStatus) {
+        this.timer = setInterval(
+          ()=> {
+            count++;
+            if (count > 30) {
+              _this.setState({
+                countFull: true,
+                fill: 100,
+              })
+            } else {
+              _this.setState({
+                flightTimerStatus: true,
+                fill: count * 10 / 3,
+              });
+            }
+            if (count == 30) {
+              _this.setState({
+                countFull: true,
+                fill: 90,
+              });
+              Alert.alert(
+                '温馨提示',
+                '您确定要起飞吗？',
+                [
+                  {text: '取消', onPress: () => _this._canselFlight()},
+                  {text: '确定', onPress: ()=>this._confirmPlaneFlight()}
+                ]
+              );
+              // this.CreateOrder()
+            }
+          }, 100
+        );
+      }
+    } else {
+      _this.refs.circularProgress.performLinearAnimation(0, 100);
+      _this.setState({
+        flightTimerStatus: false,
+        countFull: false,
+        fill: 0,
+      });
+      ToastAndroid.show('你想飞？必须全部点中哦😯！', ToastAndroid.SHORT);
     }
   }
 
@@ -221,86 +231,74 @@ export default class getFlight extends React.Component {
 
   CreateOrder() {
     let _this = this;
-    if (this.state.totalChecked == 6) {
-      // alert('飞机起飞');
-      _this.setState({
-        isLoadModalVisible: true,
-      });
-      _this.timer = setTimeout(
-        ()=> {
-          _this.setState({
-            isLoadModalVisible: false
-          });
-        }, 20000
-      );
-      let curId = this.state.detailData.order.id;
-      let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
-      console.log("发送的起飞指令是 ", url)
-      NetUtil.postJson(url, (responseText)=> {
-          // if(responseText&&)
-          let curdata = JSON.parse(responseText);
-          console.log('发送起飞指令返回数据 ', curdata);
-          // alert('发送起飞指令返回数据 '+JSON.stringify(curdata));
-          if (curdata.err == '0') {
-            if (curdata.state == 2) {
-              console.log('起飞成功后 ', curdata);
-              _this.timer = setTimeout(
-                ()=> {
-                  _this.setState({
-                    isLoadModalVisible: false
-                  });
-                  _this.pageJump('order');
-                }, 300
-              );
-            }
-          } else if (curdata.err == 5) {
-            let planeStatus = curdata.msg;
-            Alert.alert(
-              '起飞失败',
-              planeStatus,
-              [
-                {text: '确定',}
-              ]
+    _this.setState({
+      isLoadModalVisible: true,
+    });
+    _this.timer = setTimeout(
+      ()=> {
+        _this.setState({
+          isLoadModalVisible: false
+        });
+      }, 20000
+    );
+    let curId = this.state.detailData.order.id;
+    let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
+    console.log("发送的起飞指令是 ", url)
+    NetUtil.postJson(url, (responseText)=> {
+        // if(responseText&&)
+        let curdata = JSON.parse(responseText);
+        console.log('发送起飞指令返回数据 ', curdata);
+        // alert('发送起飞指令返回数据 '+JSON.stringify(curdata));
+        if (curdata.err == '0') {
+          if (curdata.state == 2) {
+            console.log('起飞成功后 ', curdata);
+            _this.timer = setTimeout(
+              ()=> {
+                _this.setState({
+                  isLoadModalVisible: false
+                });
+                _this.pageJump('order');
+              }, 300
             );
-            this.refs.circularProgress.performLinearAnimation(0, 100);
-            _this.setState({
-              isLoadModalVisible: false,
-              planeFlightCount: 10,
-
-              flightTimerStatus: false,
-              countFull: false,
-              fill: 0,
-            });
-          } else {
-            Alert.alert(
-              '起飞失败',
-              curdata.msg,
-              [
-                {text: '确定',}
-              ]
-            );
-            this.refs.circularProgress.performLinearAnimation(0, 100);
-            _this.setState({
-              isLoadModalVisible: false,
-              planeFlightCount: 10,
-
-              flightTimerStatus: false,
-              countFull: false,
-              fill: 0,
-            });
           }
+        } else if (curdata.err == 5) {
+          let planeStatus = curdata.msg;
+          Alert.alert(
+            '起飞失败',
+            planeStatus,
+            [
+              {text: '确定',}
+            ]
+          );
+          this.refs.circularProgress.performLinearAnimation(0, 100);
+          _this.setState({
+            isLoadModalVisible: false,
+            planeFlightCount: 10,
+
+            flightTimerStatus: false,
+            countFull: false,
+            fill: 0,
+          });
+        } else {
+          Alert.alert(
+            '起飞失败',
+            curdata.msg,
+            [
+              {text: '确定',}
+            ]
+          );
+          this.refs.circularProgress.performLinearAnimation(0, 100);
+          _this.setState({
+            isLoadModalVisible: false,
+            planeFlightCount: 10,
+
+            flightTimerStatus: false,
+            countFull: false,
+            fill: 0,
+          });
         }
-      );
-    } else {
-      // alert('你想飞？必须全部点中哦😯！');
-      this.refs.circularProgress.performLinearAnimation(0, 100);
-      _this.setState({
-        flightTimerStatus: false,
-        countFull: false,
-        fill: 0,
-      });
-      ToastAndroid.show('你想飞？必须全部点中哦😯！', ToastAndroid.SHORT);
-    }
+      }
+    );
   }
 
   pageJump(value) {

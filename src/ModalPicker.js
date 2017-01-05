@@ -46,7 +46,7 @@ class PickerComponent extends React.Component {
         let url = "http://jieyan.xyitech.com/spoint/search?token=" + Token;
         NetUtil.postJson(url, (responseText)=> {
           let curdata = JSON.parse(responseText);
-          // console.log('返回的站点数据是 ', curdata);
+          console.log('返回的站点数据是 ', curdata);
           if (curdata.err == '0') {
             // console.log('初始化站点数据');
             let airports = JSON.stringify(curdata.msg);
@@ -93,7 +93,7 @@ class PickerComponent extends React.Component {
           if (curdata.err == '0') {
             let routes = JSON.stringify(curdata.msg);
             routes = JSON.parse(routes);
-            // console.log('routes list is ', routes, '  ', typeof routes);
+            console.log('routes list is ', routes, '  ', typeof routes);
             if (routes.length > 0) {
               let TempStation = [];
               for (let i = 0; i < routes.length; i++) {
