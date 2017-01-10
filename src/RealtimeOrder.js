@@ -274,7 +274,7 @@ export default class getFlight extends React.Component {
             </View>
             <View style={{backgroundColor: '#f7f7f7', height: 180 * Ctrl.pxToDp()}}>
               <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                         title={this.state.detailData.order.route.airport[1].phone}/>
+                         title={this.state.detailData.order.route.airport[1].contact_name+' '+this.state.detailData.order.route.airport[1].phone}/>
               <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
                 <Text
                   style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>

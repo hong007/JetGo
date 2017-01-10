@@ -72,8 +72,10 @@ export default class LoginPage extends Component {
     });
     let url = "http://jieyan.xyitech.com/login/?username=" + this.userName + "&password=" + this.passWord;
 
+    console.log('登录信息是 ', url)
     NetUtil.postJson(url, (responseText)=> {
       let curdata = JSON.parse(responseText);
+      console.log("登录返回信息是  ", curdata)
       if (curdata.err == '0') {
         AsyncStorage.setItem("LOGIN_USERNAME", this.userName);
         AsyncStorage.setItem("LOGIN_USERPWD", this.passWord);

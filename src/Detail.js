@@ -39,6 +39,7 @@ export default class Detail extends React.Component {
       isOrderCansle: false,
     }
   }
+
   componentWillMount() {
     BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
   }
@@ -46,6 +47,7 @@ export default class Detail extends React.Component {
   componentWillUnmount() {
     BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
   }
+
   onBackAndroid = () => {
     let _this = this;
     let curTitle = _this.props.title;
@@ -61,7 +63,7 @@ export default class Detail extends React.Component {
         },
       });
       return true;
-    }else{
+    } else {
       return true;
     }
   }
@@ -230,7 +232,7 @@ export default class Detail extends React.Component {
                   style={routeStyle.rTextName}>分钟</Text></Text>
               </View>
               <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                         title={this.state.detailData.order.route.airport[1].phone}/>
+                         title={this.state.detailData.order.route.airport[1].contact_name + ' ' + this.state.detailData.order.route.airport[1].phone}/>
             </View>
 
             <View style={routeStyle.container}>
@@ -332,7 +334,7 @@ export default class Detail extends React.Component {
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
                 <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                           title={this.state.detailData.order.route.airport[1].phone}/>
+                           title={this.state.detailData.order.route.airport[1].contact_name+' '+this.state.detailData.order.route.airport[1].phone}/>
               </View>
 
               <View style={routeStyle.container}>
@@ -433,7 +435,7 @@ export default class Detail extends React.Component {
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
                 <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                           title={this.state.detailData.order.route.airport[1].phone}/>
+                           title={this.state.detailData.order.route.airport[1].contact_name+' '+this.state.detailData.order.route.airport[1].phone}/>
               </View>
 
               <View style={routeStyle.container}>

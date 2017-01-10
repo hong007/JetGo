@@ -400,7 +400,7 @@ export default class getFlight extends React.Component {
 
             </View>
             <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                       title={this.state.detailData.order.route.airport[1].phone}/>
+                       title={this.state.detailData.order.route.airport[1].contact_name + ' ' + this.state.detailData.order.route.airport[1].phone}/>
             <Text style={routeStyle.rTitle}>飞前准备</Text>
             <SwitchComp text='货物已装载完成'
                         initialChecked={this.state.initialChecked}

@@ -32,12 +32,24 @@ class PickerComponent extends React.Component {
       airportsEndData: [],
       stationStart: '--请选择--',
       stationEnd: '--请选择--',
+
+      isLoadModalVisible: false,
     };
   }
 
   componentDidMount() {
     // let url = "http://jieyan.xyitech.com/config/allroute?token=" + token;
     let _this = this;
+    _this.setState({
+      isLoadModalVisible: true
+    });
+    _this.timer = setTimeout(
+      ()=> {
+        _this.setState({
+          isLoadModalVisible: false
+        });
+      }, 25000
+    );
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
       if (!errs) {
@@ -66,8 +78,12 @@ class PickerComponent extends React.Component {
             _this.setState({
               airports_status: true,
               airportsData: TempStation,
+              isLoadModalVisible: false
             });
           } else {
+            _this.setState({
+              isLoadModalVisible: false
+            });
             ToastAndroid.show('获取航路失败请重试', ToastAndroid.SHORT);
             DeviceEventEmitter.emit("routeChange", false);
           }
@@ -82,6 +98,16 @@ class PickerComponent extends React.Component {
     });
     // console.log("取得的站点id是", index);
     let _this = this;
+    _this.setState({
+      isLoadModalVisible: true
+    });
+    _this.timer = setTimeout(
+      ()=> {
+        _this.setState({
+          isLoadModalVisible: false
+        });
+      }, 25000
+    );
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       //TODO:错误处理
       if (!errs) {
@@ -108,18 +134,25 @@ class PickerComponent extends React.Component {
               _this.setState({
                 // start_airports_load: true,
                 airportsEndData: TempStation,
+                isLoadModalVisible: false
               });
               DeviceEventEmitter.emit("routeChange", true);
 
             } else {
               _this.setState({
-                stationEnd: '--请选择--'
+                stationEnd: '--请选择--',
+                airportsEndData: [],
+                isLoadModalVisible: false,
               });
               ToastAndroid.show('该站点没有对应航路，请重试', ToastAndroid.SHORT);
               DeviceEventEmitter.emit("routeChange", false);
             }
 
           } else {
+            _this.setState({
+              airportsEndData: [],
+              isLoadModalVisible: false
+            });
             ToastAndroid.show('获取航路失败请重试', ToastAndroid.SHORT);
             DeviceEventEmitter.emit("routeChange", false);
           }
@@ -133,7 +166,7 @@ class PickerComponent extends React.Component {
       stationEnd: value,
     });
     AsyncStorage.setItem("ROUTE_ID", index);
-    // console.log('存储的航路id是', index);
+    console.log('存储的航路id是', index);
 
   }
 
@@ -144,11 +177,11 @@ class PickerComponent extends React.Component {
           <View>
             <Text style={PickerStyle.bgSPoint}> </Text>
             <ModalPicker
-              optionStyle={{height: 60 * Ctrl.pxToDp(),paddingTop:15}}
+              optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15}}
               data={this.state.airportsData}
               initValue="--请选择--"
               cancelText="取消"
-              cancelStyle={{height:50*Ctrl.pxToDp(),paddingTop:15*Ctrl.pxToDp()}}
+              cancelStyle={{height: 50 * Ctrl.pxToDp(), paddingTop: 15 * Ctrl.pxToDp()}}
               optionTextStyle={PickerStyle.OptionsText}
               onChange={(option)=> {
                 this.chooseAirPorts(option.index, option.label)
@@ -163,11 +196,11 @@ class PickerComponent extends React.Component {
           <View>
             <Text style={PickerStyle.bgEPoint}> </Text>
             <ModalPicker
-              optionStyle={{height: 60 * Ctrl.pxToDp(),paddingTop:15,}}
+              optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15,}}
               data={this.state.airportsEndData}
               initValue="--请选择--"
               cancelText="取消"
-              cancelStyle={{height:50*Ctrl.pxToDp(),paddingTop:15*Ctrl.pxToDp()}}
+              cancelStyle={{height: 50 * Ctrl.pxToDp(), paddingTop: 15 * Ctrl.pxToDp()}}
               optionTextStyle={PickerStyle.OptionsText}
               onChange={(option)=> {
                 this.chooseAirPortsEnd(option.index, option.label)
@@ -176,6 +209,7 @@ class PickerComponent extends React.Component {
                 style={PickerStyle.pickerText}>{this.state.stationEnd}</Text>
             </ModalPicker>
           </View>
+          <ModalComp modalValue={this.state.isLoadModalVisible}/>
         </View>
       )
     } else {
@@ -184,11 +218,11 @@ class PickerComponent extends React.Component {
           <View>
             <Text style={PickerStyle.bgSPoint}> </Text>
             <ModalPicker
-              optionStyle={{height: 60 * Ctrl.pxToDp(),paddingTop:15,}}
+              optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15,}}
               data={this.state.airportsData}
               initValue="--请选择--"
               cancelText="取消"
-              cancelStyle={{height:50*Ctrl.pxToDp(),paddingTop:15*Ctrl.pxToDp()}}
+              cancelStyle={{height: 50 * Ctrl.pxToDp(), paddingTop: 15 * Ctrl.pxToDp()}}
               optionTextStyle={PickerStyle.OptionsText}
               onChange={(option)=> {
                 this.chooseAirPorts(option.index, option.label)
@@ -203,11 +237,11 @@ class PickerComponent extends React.Component {
           <View>
             <Text style={PickerStyle.bgEPoint}> </Text>
             <ModalPicker
-              optionStyle={{height: 60 * Ctrl.pxToDp(),paddingTop:15}}
+              optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15}}
               data={this.state.airportsEndData}
               initValue="--请选择--"
               cancelText="取消"
-              cancelStyle={{height:50*Ctrl.pxToDp(),paddingTop:15*Ctrl.pxToDp()}}
+              cancelStyle={{height: 50 * Ctrl.pxToDp(), paddingTop: 15 * Ctrl.pxToDp()}}
               optionTextStyle={PickerStyle.OptionsText}
               onChange={(option)=> {
                 this.chooseAirPortsEnd(option.index, option.label)
@@ -216,6 +250,7 @@ class PickerComponent extends React.Component {
                 style={PickerStyle.pickerText}>{this.state.stationEnd}</Text>
             </ModalPicker>
           </View>
+          <ModalComp modalValue={this.state.isLoadModalVisible}/>
         </View>
       )
     }
