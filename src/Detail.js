@@ -40,36 +40,37 @@ export default class Detail extends React.Component {
     }
   }
 
-  // this.setState({isPackageType: (this.state.isPackageType ? false : true)})
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
 
-  // componentWillMount() {
-  //   if (Platform.OS === 'android') {
-  //     BackAndroid.addEventListener('hardwareBackPress', this._onBack());
-  //   }
-  // }
-  //
-  // componentWillUnmount() {
-  //   if (Platform.OS === 'android') {
-  //     BackAndroid.removeEventListener('hardwareBackPress', this._onBack());
-  //   }
-  // }
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    let _this = this;
+    let curTitle = _this.props.title;
+    // alert(_this.props.title);
+    if (curTitle == 'Detail') {
+      BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+      this.props.navigator.push({
+        // title: '',
+        name: 'OrderListView',
+        component: OrderListView,
+        params: {
+          title: 'OrderListView'
+        },
+      });
+      return true;
+    } else {
+      return true;
+    }
+  }
 
   componentDidMount() {
-    // StatusBar.setBackgroundColor('#000', true);
-    // BackAndroid.addEventListener('hardwareBackPress', this._onBack());
-
     Ctrl.setStatusBar();
     let _this = this;
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      _this._onBack();
-      return true;
-    });
     AsyncStorage.multiGet(['LOGIN_TOKEN', 'DETAIL_ID'], function (errs, result) {
       if (!errs) {
         let curdata = result;
@@ -82,9 +83,13 @@ export default class Detail extends React.Component {
   }
 
   openOrderItem() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     this.props.navigator.push({
-      title: 'getFlight',
-      component: getFlight
+      name: 'getFlight',
+      component: getFlight,
+      params: {
+        title: 'getFlight'
+      },
     });
     // alert("想先上车再买票？那你就只能想了~~~");
   }
@@ -118,11 +123,6 @@ export default class Detail extends React.Component {
   }
 
   _onBack() {
-    // this.props.navigator.push({
-    //   // title: '',
-    //   name: 'OrderListView',
-    //   component: OrderListView
-    // });
     const {navigator} = this.props;
     if (navigator) {
       navigator.pop();
@@ -148,10 +148,14 @@ export default class Detail extends React.Component {
       let curdata = JSON.parse(responseText);
       console.log('返回数据是 ', curdata);
       if (curdata.err == '0') {
+        BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
         this.props.navigator.push({
           // title: '',
           name: 'OrderListView',
-          component: OrderListView
+          component: OrderListView,
+          params: {
+            title: 'OrderListView'
+          },
         });
       } else {
         ToastAndroid.show('暂时无法取消，请重试！', ToastAndroid.SHORT);
@@ -165,43 +169,46 @@ export default class Detail extends React.Component {
     if (this.state.detailDataLoaded) {
       if (this.state.noFlighting) {
         return (
-          <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+          <View style={{
+            flex: 1,
+            flexDirection: 'column',
+            backgroundColor: '#f7f7f7'
+          }}>
             <View style={{
-              height: (Platform.OS === 'android' ? 42 : 50),
+              flexDirection: 'row',
+              justifyContent: 'center',
               backgroundColor: '#fff',
-              flexDeriction: 'row',
-              alignItem: 'center',
-              marginTop: 24,
-              paddingTop: 15,
-              paddingLeft: 18
+              paddingLeft: 18,
+              paddingTop: 5,
+              paddingBottom: 5,
             }}>
-              <TouchableOpacity
-                style={{
+              <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                <TouchableOpacity style={{
                   height: 44,
                   width: 44,
-                  top: 0,
-                  left: 0,
-                  position: 'absolute',
-                  zIndex: 999999,
-                  paddingLeft: 15,
-                  paddingTop: 18,
+                  paddingTop: 15,
                 }}
-                onPress={() => this._onBack()}
-              >
-                <Image source={require('../img/ic_back.png')}/>
-              </TouchableOpacity>
-              <Text style={{flex: 1, textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
-              <Text style={{top: 18, right: 18, position: 'absolute', zIndex: 99999999, color: '#313131'}}
-
-                    onPress={()=> {
-                      this.orderCansle()
-                    }}>取消运单</Text>
+                                  onPress={() => this._onBack()}
+                >
+                  <Image source={require('../img/ic_back.png')}/>
+                </TouchableOpacity>
+              </View>
+              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+              </View>
+              <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                <Text style={{top: 18, right: 18, position: 'absolute', zIndex: 99999999, color: '#313131'}}
+                      onPress={()=> {
+                        this.orderCansle()
+                      }}>取消运单</Text>
+              </View>
             </View>
             <View style={routeStyle.rContianer}>
               <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
                 <Text
                   style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
-                <Text style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
+                <Text
+                  style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
               </View>
               <View style={routeStyle.rItem}>
                 <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -225,7 +232,7 @@ export default class Detail extends React.Component {
                   style={routeStyle.rTextName}>分钟</Text></Text>
               </View>
               <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                         title={this.state.detailData.order.route.airport[1].phone}/>
+                         title={this.state.detailData.order.route.airport[1].contact_name + ' ' + this.state.detailData.order.route.airport[1].phone}/>
             </View>
 
             <View style={routeStyle.container}>
@@ -268,32 +275,35 @@ export default class Detail extends React.Component {
       } else {
         if (this.state.isOrderCansle) {
           return (
-            <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              backgroundColor: '#f7f7f7'
+            }}>
               <View style={{
-                height: (Platform.OS === 'android' ? 42 : 50),
+                flexDirection: 'row',
+                justifyContent: 'center',
                 backgroundColor: '#fff',
-                flexDeriction: 'row',
-                alignItem: 'center',
-                marginTop: 24,
-                paddingTop: 15,
-                paddingLeft: 18
+                paddingLeft: 18,
+                paddingTop: 5,
+                paddingBottom: 5,
               }}>
-                <TouchableOpacity
-                  style={{
+                <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                  <TouchableOpacity style={{
                     height: 44,
                     width: 44,
-                    top: 0,
-                    left: 0,
-                    position: 'absolute',
-                    zIndex: 999999,
-                    paddingLeft: 15,
-                    paddingTop: 18,
+                    paddingTop: 15,
                   }}
-                  onPress={() => this._onBack()}
-                >
-                  <Image source={require('../img/ic_back.png')}/>
-                </TouchableOpacity>
-                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                                    onPress={() => this._onBack()}
+                  >
+                    <Image source={require('../img/ic_back.png')}/>
+                  </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                  <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                </View>
+                <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                </View>
               </View>
               <View style={routeStyle.rContianer}>
                 <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
@@ -324,7 +334,7 @@ export default class Detail extends React.Component {
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
                 <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                           title={this.state.detailData.order.route.airport[1].phone}/>
+                           title={this.state.detailData.order.route.airport[1].contact_name+' '+this.state.detailData.order.route.airport[1].phone}/>
               </View>
 
               <View style={routeStyle.container}>
@@ -366,38 +376,42 @@ export default class Detail extends React.Component {
           )
         } else {
           return (
-            <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+            <View style={{
+              flex: 1,
+              flexDirection: 'column',
+              backgroundColor: '#f7f7f7'
+            }}>
               <View style={{
-                height: (Platform.OS === 'android' ? 42 : 50),
+                flexDirection: 'row',
+                justifyContent: 'center',
                 backgroundColor: '#fff',
-                flexDeriction: 'row',
-                alignItem: 'center',
-                marginTop: 24,
-                paddingTop: 15,
-                paddingLeft: 18
+                paddingLeft: 18,
+                paddingTop: 5,
+                paddingBottom: 5,
               }}>
-                <TouchableOpacity
-                  style={{
+                <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                  <TouchableOpacity style={{
                     height: 44,
                     width: 44,
-                    top: 0,
-                    left: 0,
-                    position: 'absolute',
-                    zIndex: 999999,
-                    paddingLeft: 15,
-                    paddingTop: 18,
+                    paddingTop: 15,
                   }}
-                  onPress={() => this._onBack()}
-                >
-                  <Image source={require('../img/ic_back.png')}/>
-                </TouchableOpacity>
-                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                                    onPress={() => this._onBack()}
+                  >
+                    <Image source={require('../img/ic_back.png')}/>
+                  </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                  <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                </View>
+                <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                </View>
               </View>
               <View style={routeStyle.rContianer}>
                 <View style={[routeStyle.rItem, {marginBottom: 15, marginTop: 1,}]}>
                   <Text
                     style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
-                  <Text style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
+                  <Text
+                    style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
                 </View>
                 <View style={routeStyle.rItem}>
                   <Text style={routeStyle.rTextLeft}>无人机编号</Text>
@@ -421,7 +435,7 @@ export default class Detail extends React.Component {
                     style={routeStyle.rTextName}>分钟</Text></Text>
                 </View>
                 <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                           title={this.state.detailData.order.route.airport[1].phone}/>
+                           title={this.state.detailData.order.route.airport[1].contact_name+' '+this.state.detailData.order.route.airport[1].phone}/>
               </View>
 
               <View style={routeStyle.container}>
@@ -481,32 +495,35 @@ export default class Detail extends React.Component {
       }
     } else {
       return (
-        <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          backgroundColor: '#f7f7f7'
+        }}>
           <View style={{
-            height: (Platform.OS === 'android' ? 42 : 50),
+            flexDirection: 'row',
+            justifyContent: 'center',
             backgroundColor: '#fff',
-            flexDeriction: 'row',
-            alignItem: 'center',
-            marginTop: 24,
-            paddingTop: 15,
-            paddingLeft: 18
+            paddingLeft: 18,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
-            <TouchableOpacity
-              style={{
+            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
                 height: 44,
                 width: 44,
-                top: 0,
-                left: 0,
-                position: 'absolute',
-                zIndex: 999999,
-                paddingLeft: 15,
-                paddingTop: 18,
+                paddingTop: 15,
               }}
-              onPress={() => this._onBack()}
-            >
-              <Image source={require('../img/ic_back.png')}/>
-            </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                                onPress={() => this._onBack()}
+              >
+                <Image source={require('../img/ic_back.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            </View>
           </View>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
             <Text>加载数据中......</Text>

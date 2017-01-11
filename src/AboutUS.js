@@ -18,52 +18,82 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native';
+import _updateConfig from '../package.json';
+
 export default class BarcodeScanner extends Component {
   constructor(props) {
     super(props);
   }
+
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    let _this = this;
+    let curTitle = _this.props.title;
+    if (curTitle == 'AboutUS') {
+      BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+      _this._onBack();
+      return true;
+    } else {
+      return true;
+    }
+  }
+
+  _onBack() {
+    const {navigator} = this.props;
+    if (navigator) {
+      navigator.pop();
+    }
+  }
+
   componentDidMount() {
     StatusBar.setBackgroundColor('#000', true);
-    let _this=this;
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      _this.props.navigator.pop();
-      return true;
-    });
+    let _this = this;
   }
+
   render() {
     return (
       <View style={{
         flex: 1,
-        backgroundColor: '#f7f7f7',
-      }}
-      >
+        flexDirection: 'column',
+        backgroundColor: '#f7f7f7'
+      }}>
         <View style={{
-          height: (Platform.OS === 'android' ? 42 : 50),
+          flexDirection: 'row',
+          justifyContent: 'center',
           backgroundColor: '#fff',
-          flexDeriction: 'row',
-          alignItem: 'center',
-          marginTop: 24,
-          paddingTop: 15,
-          paddingLeft: 18
+          paddingLeft: 18,
+          paddingTop: 5,
+          paddingBottom: 5,
         }}>
-          <TouchableOpacity
-            style={{height: 42, width: 42, top: 0, left: 18, position: 'absolute', zIndex: 999999}}
-            onPress={() => this.props.navigator.pop()}
-          >
-            <Image style={{marginTop: 15,}} source={require('../img/ic_back.png')}/>
-          </TouchableOpacity>
-          <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>关于捷雁</Text>
+          <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+            <TouchableOpacity style={{
+              height: 44,
+              width: 44,
+              paddingTop: 15,
+            }}
+                              onPress={() => this._onBack()}
+            >
+              <Image source={require('../img/ic_back.png')}/>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>关于捷雁</Text>
+          </View>
+          <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+          </View>
         </View>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-          <Text>更多内容敬请期待......</Text>
+          <Text>当前版本号是：{_updateConfig.version}</Text>
         </View>
       </View>
     );
   }
 }
+

@@ -49,7 +49,10 @@ export default class HelloJetGo extends React.Component {
               });
               _this.props.navigator.push({
                 name: 'Main',
-                component: Main
+                component: Main,
+                params: {
+                  title: 'main'
+                }
               });
             }, 300
           )
@@ -85,19 +88,28 @@ export default class HelloJetGo extends React.Component {
           });
           _this.props.navigator.push({
             name: 'Main',
-            component: Main
+            component: Main,
+            params: {
+              title: 'main'
+            }
           });
         } else {
           _this.props.navigator.push({
             name: 'LoginPage',
-            component: LoginPage
+            component: LoginPage,
+            params: {
+              title: 'loginpage'
+            }
           });
         }
         console.log("取得的Token 是", TOKEN);
       } else {
         _this.props.navigator.push({
           name: 'LoginPage',
-          component: LoginPage
+          component: LoginPage,
+          params: {
+            title: 'loginpage'
+          },
         });
         console.log('LOGIN_TOKEN 不存在，请重新登录')
       }

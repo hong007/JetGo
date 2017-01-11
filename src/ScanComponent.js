@@ -61,30 +61,34 @@ export default class ScanComponent extends React.Component {
     this.fid = '';
   }
 
-  // componentWillMount() {
-  //   this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
-  //   this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
-  // }
-  //
-  // componentWillUnmount() {
-  //   this.keyboardDidShowListener.remove();
-  //   this.keyboardDidHideListener.remove();
-  // }
-  //
-  // _keyboardDidShow() {
-  //   this.setState({
-  //     ShowSubmitButtonStatus: false,
-  //   })
-  //   // alert('Keyboard Shown');
-  // }
-  //
-  // _keyboardDidHide() {
-  //   this.setState({
-  //     ShowSubmitButtonStatus: true,
-  //   })
-  //   // alert('Keyboard Hidden');
-  // }
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
 
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    let _this = this;
+    let curTitle = _this.props.title;
+    // alert(_this.props.title);
+    console.log("当前title是", _this.props.title)
+    if (curTitle == 'ScanComponent') {
+      BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+      _this.props.navigator.push({
+        // title: '',
+        name: 'Main',
+        component: Main,
+        params: {
+          title: 'main'
+        },
+      });
+      return true;
+    } else {
+      return true;
+    }
+  }
 
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
@@ -94,17 +98,6 @@ export default class ScanComponent extends React.Component {
     DeviceEventEmitter.addListener("changeBarCode", (events)=> {
       _this.setState({scannText: events})
     })
-
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      _this._onBack();
-      return true;
-    });
     AsyncStorage.multiGet(["LOGIN_TOKEN", "ROUTE_ID"], function (errs, result) {
       //TODO:错误处理
       if (!errs) {
@@ -163,7 +156,10 @@ export default class ScanComponent extends React.Component {
   _onBack() {
     this.props.navigator.push({
       name: 'Main',
-      component: Main
+      component: Main,
+      params: {
+        title: 'Main'
+      },
     });
   }
 
@@ -317,8 +313,14 @@ export default class ScanComponent extends React.Component {
                   }, 300
                 )
               } else {
-                // alert("错误，请重试");
-                ToastAndroid.show('错误，请重试!', ToastAndroid.SHORT);
+                _this.timer = setTimeout(
+                  ()=> {
+                    _this.setState({
+                      isLoadModalVisible: false
+                    });
+                  }, 2000
+                )
+                ToastAndroid.show(curdata.msg, ToastAndroid.SHORT);
               }
             }
           })
@@ -326,6 +328,7 @@ export default class ScanComponent extends React.Component {
       }
     });
   }
+
   // editable={false}
 
   _textInputFocus() {
@@ -335,10 +338,13 @@ export default class ScanComponent extends React.Component {
   }
 
   pageJump() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     this.props.navigator.push({
-      title: '飞机起飞',
       name: 'getFlight',
-      component: getFlight
+      component: getFlight,
+      params: {
+        title: 'getFlight'
+      },
     });
   }
 
@@ -351,46 +357,45 @@ export default class ScanComponent extends React.Component {
           return (
             <View style={{
               flex: 1,
-              backgroundColor: '#f7f7f7',
-            }}
-            >
+              flexDirection: 'column',
+              backgroundColor: '#f7f7f7'
+            }}>
               <View style={{
-                height: (Platform.OS === 'android' ? 42 : 50),
+                flexDirection: 'row',
+                justifyContent: 'center',
                 backgroundColor: '#fff',
-                flexDeriction: 'row',
-                alignItem: 'center',
-                marginTop: 24,
-                paddingTop: 15,
-                paddingLeft: 18
+                paddingLeft: 18,
+                paddingTop: 5,
+                paddingBottom: 5,
               }}>
-                <TouchableOpacity
-                  style={{
+                <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                  <TouchableOpacity style={{
                     height: 44,
                     width: 44,
-                    top: 0,
-                    left: 0,
-                    position: 'absolute',
-                    zIndex: 999999,
-                    paddingLeft: 15,
-                    paddingTop: 18,
+                    paddingTop: 15,
                   }}
-                  onPress={() => this._onBack()}
-                >
-                  <Image source={require('../img/ic_back.png')}/>
-                </TouchableOpacity>
-                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+                                    onPress={() => this._onBack()}
+                  >
+                    <Image source={require('../img/ic_back.png')}/>
+                  </TouchableOpacity>
+                </View>
+                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                  <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+                </View>
+                <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                </View>
               </View>
-              <ScrollView style={{flex: 1, }} ref='scroll' keyboardShouldPersistTaps={true}>
+              <ScrollView style={{flex: 1,}} ref='scroll' keyboardShouldPersistTaps={true}>
                 <View style={{
                   flex: 1,
-                  height: Dimensions.get('window').height - (Platform.OS === 'android' ? 66 : 50)
+                  height: Dimensions.get('window').height - (Platform.OS === 'android' ? 80 : 50)
                 }} onStartShouldSetResponderCapture={(e) => {
                   let target = e.nativeEvent.target;
                   if (target !== ReactNative.findNodeHandle(this.refs.hour)) {
                     this.refs.hour.blur();
                   }
                 }}>
-                  <View style={{flex: 1, }}>
+                  <View style={{flex: 1,}}>
 
                     <View style={scanStyle.TextInputView}>
                       <TextInput style={scanStyle.TextInput}
@@ -571,34 +576,33 @@ export default class ScanComponent extends React.Component {
         return (
           <View style={{
             flex: 1,
-            backgroundColor: '#f7f7f7',
-          }}
-          >
+            flexDirection: 'column',
+            backgroundColor: '#f7f7f7'
+          }}>
             <View style={{
-              height: (Platform.OS === 'android' ? 42 : 50),
+              flexDirection: 'row',
+              justifyContent: 'center',
               backgroundColor: '#fff',
-              flexDeriction: 'row',
-              alignItem: 'center',
-              marginTop: 24,
-              paddingTop: 15,
-              paddingLeft: 18
+              paddingLeft: 18,
+              paddingTop: 5,
+              paddingBottom: 5,
             }}>
-              <TouchableOpacity
-                style={{
+              <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+                <TouchableOpacity style={{
                   height: 44,
                   width: 44,
-                  top: 0,
-                  left: 0,
-                  position: 'absolute',
-                  zIndex: 999999,
-                  paddingLeft: 15,
-                  paddingTop: 18,
+                  paddingTop: 15,
                 }}
-                onPress={() => this._onBack()}
-              >
-                <Image source={require('../img/ic_back.png')}/>
-              </TouchableOpacity>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+                                  onPress={() => this._onBack()}
+                >
+                  <Image source={require('../img/ic_back.png')}/>
+                </TouchableOpacity>
+              </View>
+              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+              </View>
+              <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+              </View>
             </View>
             <View style={scanStyle.TextInputView}>
               <TextInput style={scanStyle.TextInput}
@@ -742,32 +746,35 @@ export default class ScanComponent extends React.Component {
       }
     } else {
       return (
-        <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          backgroundColor: '#f7f7f7'
+        }}>
           <View style={{
-            height: (Platform.OS === 'android' ? 42 : 50),
+            flexDirection: 'row',
+            justifyContent: 'center',
             backgroundColor: '#fff',
-            flexDeriction: 'row',
-            alignItem: 'center',
-            marginTop: 24,
-            paddingTop: 15,
-            paddingLeft: 18
+            paddingLeft: 18,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
-            <TouchableOpacity
-              style={{
+            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
                 height: 44,
                 width: 44,
-                top: 0,
-                left: 0,
-                position: 'absolute',
-                zIndex: 999999,
-                paddingLeft: 15,
-                paddingTop: 18,
+                paddingTop: 15,
               }}
-              onPress={() => this._onBack()}
-            >
-              <Image source={require('../img/ic_back.png')}/>
-            </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 17 * Ctrl.pxToDp(),}}>飞机扫码</Text>
+                                onPress={() => this._onBack()}
+              >
+                <Image source={require('../img/ic_back.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            </View>
           </View>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
             <Text>加载数据中......</Text>

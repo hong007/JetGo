@@ -13,6 +13,7 @@ import {
   Dimensions,
   StatusBar,
   Modal,
+  Linking,
   BackAndroid,
   ToastAndroid,
   AsyncStorage,
@@ -21,6 +22,7 @@ import {
   DrawerLayoutAndroid,
   TouchableHighlight
 } from 'react-native';
+import SideMenu from 'react-native-side-menu';
 const menu_user = require('../img/menu_user.png');
 const menu_order = require('../img/menu_order.png');
 const menu_phone = require('../img/menu_phone.png');
@@ -29,8 +31,7 @@ const menu_about = require('../img/menu_about.png');
 const menu_quit = require('../img/menu_quit.png');
 
 import ScanComponent from './ScanComponent';
-import PickerComponent from './PickerComponent';
-// import PickerComponent from './ModalPicker';
+import PickerComponent from './ModalPicker';
 import Button from './Button';
 import LeftMenuList from './LeftMenuList';
 import NetUtil from './NetUtil';
@@ -42,7 +43,6 @@ import AboutUS from './AboutUS';
 import Ctrl from './Ctrl';
 import ModalComp from './ModalComp';
 
-
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -51,7 +51,9 @@ export default class Main extends React.Component {
       loginName: '犀利哥',
       isLogin: true,
       showLeadingModal: false,
-      isRouteTrue: false
+      isRouteTrue: false,
+
+      isLoadModalVisible: false,
     };
   }
 
@@ -70,27 +72,9 @@ export default class Main extends React.Component {
     _this.setState({
       loginStatus: false,
     });
-    // const {navigator}=this.props;
-    // BackAndroid.removeEventListener('hardwareBackPress');
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      } else {
-        return true;
-      }
-      // const routers = navigator.getCurrentRoutes();
 
-      // 当前页面不为root页面时的处理
-      // if (routers.length > 1) {
-      //   _this.lastBackPressed = Date.now();
-      //   //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      //   _this.props.navigator.pop();
-      //   return true;
-      // }else{
-      //
-      // }
-    });
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+
     DeviceEventEmitter.addListener("routeChange", (events)=> {
       _this.setState({isRouteTrue: events})
     });
@@ -119,30 +103,65 @@ export default class Main extends React.Component {
     });
   }
 
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    const nav = this.props.navigator;
+    const routers = nav.getCurrentRoutes();
+    let curTitle = this.props.title;
+    // alert(this.state.routeTitle);
+    if (curTitle == 'main') {
+      if (this.lastBackPressed && this.lastBackPressed + 500 >= Date.now()) {
+        //最近2秒内按过back键，可以退出应用。
+        return false;
+      }
+      this.lastBackPressed = Date.now();
+      return true;
+    }
+  }
+
   pageJump() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     this.props.navigator.push({
-      title: '订单列表',
       name: 'OrderListView',
       component: OrderListView,
+      params: {
+        title: 'OrderListView'
+      },
     });
   }
 
   _openPage() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     this.setState({showLeadingModal: false});
     this.props.navigator.push({
-      title: '飞机扫码',
       name: 'ScanComponent',
-      component: ScanComponent
+      component: ScanComponent,
+      params: {
+        title: 'ScanComponent'
+      },
     })
   }
 
-  openDrawer() {
-    this.refs.drawerLayout.openDrawer()
+  _sideMunuToggle() {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
   }
 
-  closeDrawer() {
-    this.refs.drawerLayout.closeDrawer()
+  updateMenuState(isOpen) {
+    this.setState({isOpen,});
   }
+
+  // openDrawer() {
+  //   this.refs.drawerLayout.openDrawer()
+  // }
+  //
+  // closeDrawer() {
+  //   this.refs.drawerLayout.closeDrawer()
+  // }
 
   _isLoadedRoute() {
     if (this.state.isRouteTrue) {
@@ -155,12 +174,16 @@ export default class Main extends React.Component {
   }
 
   _openLeftMenuPage(name) {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     let curPage = name;
     if (curPage == "LoginPage") {
       if (this.state.loginName == "登录") {
         this.props.navigator.push({
           name: "LoginPage",
           component: LoginPage,
+          params: {
+            title: 'LoginPage'
+          },
         });
       } else {
         return
@@ -170,21 +193,33 @@ export default class Main extends React.Component {
       this.props.navigator.push({
         name: "OrderListView",
         component: OrderListView,
+        params: {
+          title: 'OrderListView'
+        },
       });
     } else if (curPage == "OnlineHelp") {
       this.props.navigator.push({
         name: "OnlineHelp",
         component: OnlineHelp,
+        params: {
+          title: 'OnlineHelp'
+        },
       });
     } else if (curPage == "Lawyer") {
       this.props.navigator.push({
         name: "Lawyer",
         component: Lawyer,
+        params: {
+          title: 'Lawyer'
+        },
       });
     } else if (curPage == "AboutUS") {
       this.props.navigator.push({
         name: "AboutUS",
         component: AboutUS,
+        params: {
+          title: 'AboutUS'
+        },
       });
     } else if (curPage == "QuitLogin") {
       AsyncStorage.setItem("LOGIN_USERNAME", '');
@@ -278,22 +313,10 @@ export default class Main extends React.Component {
     }
 
     return (
-      <DrawerLayoutAndroid
-        ref={'drawerLayout'}
-        drawerBackgroundColor="rgba(188,0,202,0.5)"
-        drawerWidth={260 * Ctrl.pxToDp()}
-        drawerPosition={DrawerLayoutAndroid.positions.Left}
-        renderNavigationView={() => navigationView}
-        onDrawerOpen={()=> {
-          console.log('打开了')
-        }}
-        onDrawerClose={()=> {
-          console.log('关闭了')
-        }}
-        onDrawerSlide={()=>console.log("正在交互......")}
-        keyboardDismissMode="on-drag"
-        statusBarBackgroundColor='transparent'
-      >
+      <SideMenu
+        menu={navigationView}
+        isOpen={this.state.isOpen}
+        onChange={(isOpen) => this.updateMenuState(isOpen)}>
         <View style={{
           flex: 1,
           flexDirection: 'column',
@@ -302,18 +325,19 @@ export default class Main extends React.Component {
           <View style={{
             flexDirection: 'row',
             justifyContent: 'center',
-            height: (Platform.OS === 'android' ? 42 : 50),
             backgroundColor: '#fff',
             paddingLeft: 18,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
             <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
               <TouchableOpacity style={{
-                width: 34,
+                width: 44,
                 alignItems: 'flex-start',
                 justifyContent: 'center',
-                height: (Platform.OS === 'android' ? 42 : 50)
+                height: (Platform.OS === 'android' ? 44 : 50)
               }}
-                                onPress={()=>this.openDrawer()}>
+                                onPress={()=>this._sideMunuToggle()}>
                 <Image style={{}} source={require('../img/menu.png')}/>
               </TouchableOpacity>
             </View>
@@ -428,8 +452,8 @@ export default class Main extends React.Component {
 
           </View>
         </Modal>
-
-      </DrawerLayoutAndroid>
+        <ModalComp modalValue={this.state.isLoadModalVisible}/>
+      </SideMenu>
     );
   }
 }

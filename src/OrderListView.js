@@ -47,26 +47,43 @@ export default class OrderListView extends React.Component {
       isLoadAll: false,
       hideLoadAll: false,
 
-      isOrderListAll: false,
+      isLoadAllUserData: false,
       showChooseOrderModal: false,
+      chooseTypeText: '筛选',
     };
   }
 
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    let _this = this;
+    let curTitle = _this.props.title;
+    if (curTitle == 'OrderListView') {
+      BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+      _this.props.navigator.push({
+        // title: '',
+        name: 'Main',
+        component: Main,
+        params: {
+          title: 'main'
+        },
+      });
+      return true;
+    }else{
+      return true;
+    }
+  }
 // 页面render之后请求数据
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
     let _this = this;
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      _this._onBack();
-      return true;
-    });
     AsyncStorage.getItem('LOGIN_TOKEN', function (errs, result) {
       if (!errs) {
         let curdata = result;
@@ -90,11 +107,11 @@ export default class OrderListView extends React.Component {
       curpageNo = 0;
     }
     let url;
-    console.log("curpageNo is ", curpageNo);
-    if (this.state.isLoadAll) {
-      url = "http://jieyan.xyitech.com/order/search?&page_no=" + curpageNo + "&page_size=20&token=" + Token;
+    // console.log("curpageNo is ", curpageNo);
+    if (this.state.isLoadAllUserData) {
+      url = "http://jieyan.xyitech.com/order/search?page_no=" + curpageNo + "&page_size=20&token=" + Token;
     } else {
-      url = "http://jieyan.xyitech.com/order/search?&uid=true&page_no=" + curpageNo + "&page_size=20&token=" + Token;
+      url = "http://jieyan.xyitech.com/order/search?uid=true&page_no=" + curpageNo + "&page_size=20&token=" + Token;
     }
     NetUtil.postJson(url, (responseText)=> {
       if (!responseText || responseText == "") {
@@ -104,10 +121,10 @@ export default class OrderListView extends React.Component {
         // console.log("默认信息是 ",responseText,'  数据类型是',typeof responseText);
         let curdata = JSON.parse(responseText);
         let list = curdata.msg;
-        console.log("返回的运单信息是  ", JSON.stringify(list), "  数据类型是  ", typeof JSON.stringify(list), ' 数据长度是  ', list.length);
+        // console.log("返回的运单信息是  ", list, "  数据类型是  ", typeof JSON.stringify(list), ' 数据长度是  ', list.length);
         if (curdata.err == '0') {
           if (curdata.msg.length == 0) {
-            console.log('数据长度是', '', curdata.msg.length);
+            // console.log('数据长度是', '', curdata.msg.length);
             this.setState({
               nonedata: true,
             });
@@ -119,14 +136,14 @@ export default class OrderListView extends React.Component {
             // 判断数据是否全部加载
             if (lastPageCount < pageCount) {
               lastPageCount = pageCount;
-              console.log("lastPageCount is ", lastPageCount);
+              // console.log("lastPageCount is ", lastPageCount);
             } else {
               this.setState({
                 isLoadAll: true,
               });
               // console.log("数据已经全部加载了哦！请先再去创建运单哦！");
             }
-            console.log("运单总数据是  ", JSON.stringify(totalList), "  数据类型是  ", typeof JSON.stringify(totalList), ' 数据长度是  ', totalList.length);
+            // console.log("运单总数据是  ", JSON.stringify(totalList), "  数据类型是  ", typeof JSON.stringify(totalList), ' 数据长度是  ', totalList.length);
 
             // 重新绑定listView数据
             this.setState({
@@ -196,16 +213,23 @@ export default class OrderListView extends React.Component {
     let id = value;
     let curstate = state;
     AsyncStorage.setItem("DETAIL_ID", id);
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     if (curstate == 2 || curstate == 5) {
       AsyncStorage.setItem("ORDER_CONFIRM", 'false');
       this.props.navigator.push({
-        title: 'RealtimeOrder',
-        component: RealtimeOrder
+        name: 'RealtimeOrder',
+        component: RealtimeOrder,
+        params: {
+          title: 'RealtimeOrder'
+        },
       });
     } else {
       this.props.navigator.push({
-        title: 'Detail',
-        component: Detail
+        name: 'Detail',
+        component: Detail,
+        params: {
+          title: 'Detail'
+        },
       });
     }
     // alert("想先上车再买票？那你就只能想了~~~" + (n));
@@ -215,7 +239,10 @@ export default class OrderListView extends React.Component {
     this.props.navigator.push({
       // title: '',
       name: 'Main',
-      component: Main
+      component: Main,
+      params: {
+        title: 'Main'
+      },
     });
     // const {navigator} = this.props;
     // if (navigator) {
@@ -228,6 +255,8 @@ export default class OrderListView extends React.Component {
     // this.setState({isRefreshing: true});
     this.setState({
       isRefreshing: true,
+      isLoadAllUserData: false,
+      chooseTypeText: '筛选',
     });
     let _this = this;
     setTimeout(() => {
@@ -245,8 +274,8 @@ export default class OrderListView extends React.Component {
           flexDirection: 'row',
           alignItem: 'flex-start',
           justifyContent: 'center',
-          marginTop: 24,
-          paddingTop: 15,
+          paddingBottom: 5,
+          paddingTop: 5,
           paddingLeft: 18,
         }}>
           <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
@@ -384,10 +413,10 @@ export default class OrderListView extends React.Component {
   // 是否显示底部文字提示
   showOrHideFooter() {
     if (this.state.hideLoadAll) {
-      console.log('加载更多隐藏！');
+      // console.log('加载更多隐藏！');
       return null;
     } else {
-      console.log('加载更多显示！');
+      // console.log('加载更多显示！');
       return (
         <View style={OrderListItem.footer}>
           <Text style={OrderListItem.footerTitle}>{this.state.isLoadAll ? '已加载全部' : '向下滚动加载更多……'}</Text>
@@ -403,12 +432,14 @@ export default class OrderListView extends React.Component {
     if (tempType == true) {
       _this.setState({
         showChooseOrderModal: false,
-        isLoadAll: false,
+        isLoadAllUserData: true,
+        chooseTypeText: '全部',
       })
     } else {
       _this.setState({
         showChooseOrderModal: false,
-        isLoadAll: true,
+        isLoadAllUserData: false,
+        chooseTypeText: '默认',
       })
     }
     totalList = [];
@@ -430,9 +461,9 @@ export default class OrderListView extends React.Component {
           flexDirection: 'row',
           alignItem: 'flex-start',
           justifyContent: 'center',
-          marginTop: 24,
-          paddingTop: 15,
           paddingLeft: 18,
+          paddingTop: 5,
+          paddingBottom: 5,
         }}>
           <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
             <TouchableOpacity style={{
@@ -456,7 +487,7 @@ export default class OrderListView extends React.Component {
               flexDirection: 'row',
             }} onPress={() => this.setState({showChooseOrderModal: true})}>
               <Image source={require('../img/order_type.png')}/>
-              <Text style={{marginTop: -2,}}>&nbsp;筛选</Text>
+              <Text style={{marginTop: -2,}}>&nbsp;{this.state.chooseTypeText}</Text>
             </TouchableOpacity>
           </View>
           <Modal
@@ -476,11 +507,11 @@ export default class OrderListView extends React.Component {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: (Platform.OS === 'android' ? 52 : 60),
+                marginTop: 40,
                 borderRadius: 3,
-                padding: 10,
-                paddingTop: 5,
-                paddingBottom: 5,
+                padding: 10 * Ctrl.pxToDp(),
+                paddingTop: 5 * Ctrl.pxToDp(),
+                paddingBottom: 5 * Ctrl.pxToDp(),
                 backgroundColor: '#fff'
               }}>
                 <View style={{}}>
@@ -496,7 +527,7 @@ export default class OrderListView extends React.Component {
                     width: 100 * Ctrl.pxToDp(),
                     marginBottom: 1,
                   }} onPress={()=> {
-                    this._chooseOrderType(true)
+                    this._chooseOrderType(false)
                   }}>
                     <Text style={{color: '#313131', fontSize: 17 * Ctrl.pxToDp(),}}>默认</Text>
                   </TouchableOpacity>
@@ -511,7 +542,7 @@ export default class OrderListView extends React.Component {
                     zIndex: 9999,
                     width: 100 * Ctrl.pxToDp(),
                   }} onPress={()=> {
-                    this._chooseOrderType(false)
+                    this._chooseOrderType(true)
                   }}>
                     <Text style={{color: '#313131', fontSize: 17 * Ctrl.pxToDp(),}}>全部</Text>
                   </TouchableOpacity>

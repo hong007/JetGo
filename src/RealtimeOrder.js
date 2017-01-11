@@ -47,20 +47,29 @@ export default class getFlight extends React.Component {
     }
   }
 
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    let _this = this;
+    let curTitle = _this.props.title;
+    if (curTitle == 'RealtimeOrder') {
+      BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+      _this.pageJump();
+      return true;
+    }else{
+      return true;
+    }
+  }
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
     let _this = this;
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      _this.pageJump();
-      return true;
-    });
     AsyncStorage.multiGet(['LOGIN_TOKEN', 'DETAIL_ID'], function (errs, result) {
       if (!errs) {
         let curdata = result;
@@ -152,49 +161,52 @@ export default class getFlight extends React.Component {
   }
 
   pageJump() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     clearInterval(this.timer);
     this.props.navigator.push({
-      // title: '',
       name: 'OrderListView',
-      component: OrderListView
+      component: OrderListView,
+      params: {
+        title: 'OrderListView'
+      },
     });
   }
 
   orderConfirm() {
     let _this = this;
     // if (this.state.buttonStatus) {
-      _this.setState({
-        isLoadModalVisible: true,
-      });
-      let curId = this.state.detailData.order.id;
-      let url = "http://jieyan.xyitech.com/order/update?token=" + Token + "&id=" + curId + "&state=4";
-      NetUtil.postJson(url, (responseText)=> {
-        let curdata = JSON.parse(responseText);
-        console.log('发送指令返回数据 ', curdata);
-        if (curdata.err == '0') {
-          AsyncStorage.setItem("ORDER_CONFIRM", 'true');
-          _this.timer = setTimeout(
-            ()=> {
-              _this.setState({
-                isLoadModalVisible: false
-              });
-              _this.pageJump();
-            }, 300
-          )
-        } else {
-          Alert.alert(
-            '温馨提示',
-            '无法确认收货，请联系客服！',
-            [
-              {text: '确定',}
-            ]
-          );
-          _this.setState({
-            isLoadModalVisible: false,
-          });
-          // alert("起飞失败，请重试，或联系客服！");
-        }
-      })
+    _this.setState({
+      isLoadModalVisible: true,
+    });
+    let curId = this.state.detailData.order.id;
+    let url = "http://jieyan.xyitech.com/order/update?token=" + Token + "&id=" + curId + "&state=4";
+    NetUtil.postJson(url, (responseText)=> {
+      let curdata = JSON.parse(responseText);
+      console.log('发送指令返回数据 ', curdata);
+      if (curdata.err == '0') {
+        AsyncStorage.setItem("ORDER_CONFIRM", 'true');
+        _this.timer = setTimeout(
+          ()=> {
+            _this.setState({
+              isLoadModalVisible: false
+            });
+            _this.pageJump();
+          }, 300
+        )
+      } else {
+        Alert.alert(
+          '温馨提示',
+          '无法确认收货，请联系客服！',
+          [
+            {text: '确定',}
+          ]
+        );
+        _this.setState({
+          isLoadModalVisible: false,
+        });
+        // alert("起飞失败，请重试，或联系客服！");
+      }
+    })
     // } else {
     //   // alert("暂时无法确认，请稍后重试！");
     //   _this.setState({
@@ -211,32 +223,35 @@ export default class getFlight extends React.Component {
     var isChecked = this.state.checked ? 'yes' : 'no';
     if (this.state.detailDataLoaded) {
       return (
-        <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          backgroundColor: '#f7f7f7'
+        }}>
           <View style={{
-            height: (Platform.OS === 'android' ? 42 : 50),
+            flexDirection: 'row',
+            justifyContent: 'center',
             backgroundColor: '#fff',
-            flexDeriction: 'row',
-            alignItem: 'center',
-            marginTop: 24,
-            paddingTop: 15,
-            paddingLeft: 18
+            paddingLeft: 18,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
-            <TouchableOpacity
-              style={{
+            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
                 height: 44,
                 width: 44,
-                top: 0,
-                left: 0,
-                position: 'absolute',
-                zIndex: 999999,
-                paddingLeft: 15,
-                paddingTop: 18,
+                paddingTop: 15,
               }}
-              onPress={() => this.pageJump()}
-            >
-              <Image source={require('../img/ic_back.png')}/>
-            </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
+                                onPress={() => this.pageJump()}
+              >
+                <Image source={require('../img/ic_back.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            </View>
           </View>
           <View style={routeStyle.rContianer}>
             <View style={{}}>
@@ -252,15 +267,17 @@ export default class getFlight extends React.Component {
                   color: '#fff',
                   marginBottom: 50 * Ctrl.pxToDp(),
                   fontSize: 14 * Ctrl.pxToDp(),
+                  backgroundColor: 'transparent'
                 }}>预计<Text
                 style={{fontSize: 22 * Ctrl.pxToDp(),}}
                 value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>
             </View>
             <View style={{backgroundColor: '#f7f7f7', height: 180 * Ctrl.pxToDp()}}>
               <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                         title={this.state.detailData.order.route.airport[1].phone}/>
+                         title={this.state.detailData.order.route.airport[1].contact_name+' '+this.state.detailData.order.route.airport[1].phone}/>
               <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
-                <Text style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
+                <Text
+                  style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
                 <Text
                   style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
               </View>
@@ -314,32 +331,35 @@ export default class getFlight extends React.Component {
       )
     } else {
       return (
-        <View style={{flex: 1, backgroundColor: '#f7f7f7',}}>
+        <View style={{
+          flex: 1,
+          flexDirection: 'column',
+          backgroundColor: '#f7f7f7'
+        }}>
           <View style={{
-            height: (Platform.OS === 'android' ? 42 : 50),
+            flexDirection: 'row',
+            justifyContent: 'center',
             backgroundColor: '#fff',
-            flexDeriction: 'row',
-            alignItem: 'center',
-            marginTop: 24,
-            paddingTop: 15,
-            paddingLeft: 18
+            paddingLeft: 18,
+            paddingTop: 5,
+            paddingBottom: 5,
           }}>
-            <TouchableOpacity
-              style={{
+            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
+              <TouchableOpacity style={{
                 height: 44,
                 width: 44,
-                top: 0,
-                left: 0,
-                position: 'absolute',
-                zIndex: 999999,
-                paddingLeft: 15,
-                paddingTop: 18,
+                paddingTop: 15,
               }}
-              onPress={() => this.pageJump()}
-            >
-              <Image source={require('../img/ic_back.png')}/>
-            </TouchableOpacity>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
+                                onPress={() => this.pageJump()}
+              >
+                <Image source={require('../img/ic_back.png')}/>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
+            </View>
+            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            </View>
           </View>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
             <Text

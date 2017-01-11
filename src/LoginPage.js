@@ -11,9 +11,9 @@ import {
   Image,
   TextInput,
   Platform,
+  BackAndroid,
   StatusBar,
   ToastAndroid,
-  BackAndroid,
   AsyncStorage,
   ProgressBarAndroid,
   TouchableOpacity
@@ -26,12 +26,6 @@ import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
 import ModalComp from './ModalComp';
 
-
-// import LoadingView from './LoadingView';
-
-
-// import RealtimeOrder from './RealtimeOrder';
-
 export default class LoginPage extends Component {
   constructor(props) {
     super(props);
@@ -43,47 +37,45 @@ export default class LoginPage extends Component {
 
   }
 
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    // let _this = this;
+    // let curTitle = _this.props.title;
+    // // alert(_this.props.title);
+    // if (curTitle == 'Detail') {
+    //   BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+    //   _this.props.navigator.pop();
+    return true;
+    // }
+  }
+
   componentDidMount() {
-    // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
     let _this = this;
-    BackAndroid.addEventListener('hardwareBackPress', function () {
-      if (_this.lastBackPressed && _this.lastBackPressed + 1000 >= Date.now()) {
-        //最近2秒内按过back键，可以退出应用。
-        return false;
-      }
-      _this.lastBackPressed = Date.now();
-      //ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
-      return true;
-    });
   }
 
   openDrawer() {
     this.refs.drawerLayout.openDrawer()
   }
 
-  // _showLoading() {
-  //   this.setState({
-  //     showLoading: true
-  //   })
-  // }
-  //
-  // _closeLoading() {
-  //   this.setState({
-  //     showLoading: false
-  //   })
-  // }
   onPressCallback() {
-    // this.pageJump();
-
     let _this = this;
     this.setState({
       isLoadModalVisible: true
     });
     let url = "http://jieyan.xyitech.com/login/?username=" + this.userName + "&password=" + this.passWord;
 
+    console.log('登录信息是 ', url)
     NetUtil.postJson(url, (responseText)=> {
       let curdata = JSON.parse(responseText);
+      console.log("登录返回信息是  ", curdata)
       if (curdata.err == '0') {
         AsyncStorage.setItem("LOGIN_USERNAME", this.userName);
         AsyncStorage.setItem("LOGIN_USERPWD", this.passWord);
@@ -113,12 +105,15 @@ export default class LoginPage extends Component {
 
   //跳转到第二个页面去
   pageJump() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
     const {navigator} = this.props;
     if (navigator) {
       navigator.push({
-        title: '主页',
         name: 'Main',
         component: Main,
+        params: {
+          title: 'main'
+        },
       });
     }
   }
