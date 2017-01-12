@@ -30,6 +30,8 @@ const menu_lay = require('../img/menu_lay.png');
 const menu_about = require('../img/menu_about.png');
 const menu_quit = require('../img/menu_quit.png');
 
+import CommonStyle from './CommonStyle';
+
 import ScanComponent from './ScanComponent';
 import PickerComponent from './ModalPicker';
 import Button from './Button';
@@ -317,40 +319,19 @@ export default class Main extends React.Component {
         menu={navigationView}
         isOpen={this.state.isOpen}
         onChange={(isOpen) => this.updateMenuState(isOpen)}>
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: '#FFF'
-        }}>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-            paddingLeft: 18,
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-              <TouchableOpacity style={{
-                width: 44,
-                alignItems: 'flex-start',
-                justifyContent: 'center',
-                height: (Platform.OS === 'android' ? 44 : 50)
-              }}
+        <View style={CommonStyle.container}>
+          <View style={CommonStyle.navigationBar}>
+            <View style={CommonStyle.onbackArea}>
+              <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                 onPress={()=>this._sideMunuToggle()}>
                 <Image style={{}} source={require('../img/menu.png')}/>
               </TouchableOpacity>
             </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <View style={CommonStyle.title}>
               <Image source={require('../img/jy_logo.png')}/>
             </View>
-            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
-              <TouchableOpacity style={{
-                alignItems: 'flex-start',
-                justifyContent: 'center',
-                height: (Platform.OS === 'android' ? 42 : 50),
-                paddingRight: 18,
-              }} onPress={() => this.pageJump()}>
+            <View style={CommonStyle.titleRight}>
+              <TouchableOpacity style={CommonStyle.titleRightText} onPress={() => this.pageJump()}>
                 <Image source={require('../img/icon_order.png')}/>
               </TouchableOpacity>
             </View>

@@ -20,6 +20,8 @@ import  {
   AsyncStorage,
   ProgressBarAndroid,
 } from 'react-native';
+import CommonStyle from './CommonStyle';
+
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
 import DialPhone from './DialPhone';
@@ -223,34 +225,19 @@ export default class getFlight extends React.Component {
     var isChecked = this.state.checked ? 'yes' : 'no';
     if (this.state.detailDataLoaded) {
       return (
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: '#f7f7f7'
-        }}>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-            paddingLeft: 18,
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-              <TouchableOpacity style={{
-                height: 44,
-                width: 44,
-                paddingTop: 15,
-              }}
+        <View style={CommonStyle.container}>
+          <View style={CommonStyle.navigationBar}>
+            <View style={CommonStyle.onbackArea}>
+              <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                 onPress={() => this.pageJump()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
             </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
+            <View style={CommonStyle.title}>
+              <Text style={CommonStyle.titleText}>实时运单</Text>
             </View>
-            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            <View style={CommonStyle.titleRight}>
             </View>
           </View>
           <View style={routeStyle.rContianer}>
@@ -331,34 +318,19 @@ export default class getFlight extends React.Component {
       )
     } else {
       return (
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: '#f7f7f7'
-        }}>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-            paddingLeft: 18,
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-              <TouchableOpacity style={{
-                height: 44,
-                width: 44,
-                paddingTop: 15,
-              }}
+        <View style={CommonStyle.container}>
+          <View style={CommonStyle.navigationBar}>
+            <View style={CommonStyle.onbackArea}>
+              <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                 onPress={() => this.pageJump()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
             </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
+            <View style={CommonStyle.title}>
+              <Text style={CommonStyle.titleText}>实时运单</Text>
             </View>
-            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            <View style={CommonStyle.titleRight}>
             </View>
           </View>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>

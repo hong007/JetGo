@@ -22,6 +22,9 @@ import  {
   ToastAndroid,
   AsyncStorage,
 } from 'react-native';
+
+import CommonStyle from './CommonStyle';
+
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
 import getFlight from './getFlight';
@@ -169,35 +172,20 @@ export default class Detail extends React.Component {
     if (this.state.detailDataLoaded) {
       if (this.state.noFlighting) {
         return (
-          <View style={{
-            flex: 1,
-            flexDirection: 'column',
-            backgroundColor: '#f7f7f7'
-          }}>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              backgroundColor: '#fff',
-              paddingLeft: 18,
-              paddingTop: 5,
-              paddingBottom: 5,
-            }}>
-              <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-                <TouchableOpacity style={{
-                  height: 44,
-                  width: 44,
-                  paddingTop: 15,
-                }}
+          <View style={CommonStyle.container}>
+            <View style={CommonStyle.navigationBar}>
+              <View style={CommonStyle.onbackArea}>
+                <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                   onPress={() => this._onBack()}
                 >
                   <Image source={require('../img/ic_back.png')}/>
                 </TouchableOpacity>
               </View>
-              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+              <View style={CommonStyle.title}>
+                <Text style={CommonStyle.titleText}>运单详情</Text>
               </View>
-              <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
-                <Text style={{top: 18, right: 18, position: 'absolute', zIndex: 99999999, color: '#313131'}}
+              <View style={CommonStyle.titleRight}>
+                <Text style={[CommonStyle.titleRightText, {color: '#313131',}]}
                       onPress={()=> {
                         this.orderCansle()
                       }}>取消运单</Text>
@@ -275,34 +263,19 @@ export default class Detail extends React.Component {
       } else {
         if (this.state.isOrderCansle) {
           return (
-            <View style={{
-              flex: 1,
-              flexDirection: 'column',
-              backgroundColor: '#f7f7f7'
-            }}>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                backgroundColor: '#fff',
-                paddingLeft: 18,
-                paddingTop: 5,
-                paddingBottom: 5,
-              }}>
-                <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-                  <TouchableOpacity style={{
-                    height: 44,
-                    width: 44,
-                    paddingTop: 15,
-                  }}
+            <View style={CommonStyle.container}>
+              <View style={CommonStyle.navigationBar}>
+                <View style={CommonStyle.onbackArea}>
+                  <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                     onPress={() => this._onBack()}
                   >
                     <Image source={require('../img/ic_back.png')}/>
                   </TouchableOpacity>
                 </View>
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-                  <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                <View style={CommonStyle.title}>
+                  <Text style={CommonStyle.titleText}>运单详情</Text>
                 </View>
-                <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                <View style={CommonStyle.titleRight}>
                 </View>
               </View>
               <View style={routeStyle.rContianer}>
@@ -376,34 +349,19 @@ export default class Detail extends React.Component {
           )
         } else {
           return (
-            <View style={{
-              flex: 1,
-              flexDirection: 'column',
-              backgroundColor: '#f7f7f7'
-            }}>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                backgroundColor: '#fff',
-                paddingLeft: 18,
-                paddingTop: 5,
-                paddingBottom: 5,
-              }}>
-                <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-                  <TouchableOpacity style={{
-                    height: 44,
-                    width: 44,
-                    paddingTop: 15,
-                  }}
+            <View style={CommonStyle.container}>
+              <View style={CommonStyle.navigationBar}>
+                <View style={CommonStyle.onbackArea}>
+                  <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                     onPress={() => this._onBack()}
                   >
                     <Image source={require('../img/ic_back.png')}/>
                   </TouchableOpacity>
                 </View>
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-                  <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+                <View style={CommonStyle.title}>
+                  <Text style={CommonStyle.titleText}>运单详情</Text>
                 </View>
-                <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                <View style={CommonStyle.titleRight}>
                 </View>
               </View>
               <View style={routeStyle.rContianer}>
@@ -495,37 +453,22 @@ export default class Detail extends React.Component {
       }
     } else {
       return (
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: '#f7f7f7'
-        }}>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-            paddingLeft: 18,
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-              <TouchableOpacity style={{
-                height: 44,
-                width: 44,
-                paddingTop: 15,
-              }}
+        <View style={CommonStyle.container}>
+          <View style={CommonStyle.navigationBar}>
+            <View style={CommonStyle.onbackArea}>
+              <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                 onPress={() => this._onBack()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
             </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>运单详情</Text>
+            <View style={CommonStyle.title}>
+              <Text style={CommonStyle.titleText}>运单详情</Text>
             </View>
-            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            <View style={CommonStyle.titleRight}>
             </View>
           </View>
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+          <View style={CommonStyle.content}>
             <Text>加载数据中......</Text>
           </View>
         </View>

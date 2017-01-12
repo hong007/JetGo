@@ -19,7 +19,8 @@ import{
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
-// import ListViewItem from './ListViewItem';
+import CommonStyle from './CommonStyle';
+
 import NetUtil from './NetUtil';
 import Detail from './Detail';
 import RealtimeOrder from './RealtimeOrder';
@@ -268,31 +269,19 @@ export default class OrderListView extends React.Component {
 
   renderLoadingView() {
     return (
-      <View style={{flex: 1, flexDirection: 'column',}}>
-        <View style={{
-          backgroundColor: '#fff',
-          flexDirection: 'row',
-          alignItem: 'flex-start',
-          justifyContent: 'center',
-          paddingBottom: 5,
-          paddingTop: 5,
-          paddingLeft: 18,
-        }}>
-          <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-            <TouchableOpacity style={{
-              height: 44,
-              width: 44,
-              paddingTop: 15,
-            }}
+      <View style={CommonStyle.container}>
+        <View style={CommonStyle.navigationBar}>
+          <View style={CommonStyle.onbackArea}>
+            <TouchableOpacity style={CommonStyle.onbackAreaCont}
                               onPress={() => this._onBack()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
+          <View style={CommonStyle.title}>
+            <Text style={CommonStyle.titleText}>我的运单</Text>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+          <View style={CommonStyle.titleRight}>
             <TouchableOpacity style={{
               alignItems: 'flex-start',
               justifyContent: 'center',
@@ -300,7 +289,7 @@ export default class OrderListView extends React.Component {
               flexDirection: 'row',
             }} onPress={() => this.setState({showChooseOrderModal: true})}>
               <Image source={require('../img/order_type.png')}/>
-              <Text style={{marginTop: -2,}}>&nbsp;筛选</Text>
+              <Text style={{marginTop: -2,}}>&nbsp;{this.state.chooseTypeText}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -455,31 +444,19 @@ export default class OrderListView extends React.Component {
       return this.renderLoadingView();
     }
     return (
-      <View style={{flex: 1, flexDirection: 'column',}}>
-        <View style={{
-          backgroundColor: '#fff',
-          flexDirection: 'row',
-          alignItem: 'flex-start',
-          justifyContent: 'center',
-          paddingLeft: 18,
-          paddingTop: 5,
-          paddingBottom: 5,
-        }}>
-          <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-            <TouchableOpacity style={{
-              height: 44,
-              width: 44,
-              paddingTop: 15,
-            }}
+      <View style={CommonStyle.container}>
+        <View style={CommonStyle.navigationBar}>
+          <View style={CommonStyle.onbackArea}>
+            <TouchableOpacity style={CommonStyle.onbackAreaCont}
                               onPress={() => this._onBack()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
+          <View style={CommonStyle.title}>
+            <Text style={CommonStyle.titleText}>我的运单</Text>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+          <View style={CommonStyle.titleRight}>
             <TouchableOpacity style={{
               alignItems: 'flex-start',
               justifyContent: 'center',

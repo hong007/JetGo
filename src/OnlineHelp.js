@@ -15,10 +15,13 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native';
+import CommonStyle from './CommonStyle';
+
 export default class BarcodeScanner extends Component {
   constructor(props) {
     super(props);
   }
+
   componentWillMount() {
     BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
   }
@@ -38,6 +41,7 @@ export default class BarcodeScanner extends Component {
       return true;
     }
   }
+
   componentDidMount() {
     StatusBar.setBackgroundColor('#000', true);
   }
@@ -51,40 +55,26 @@ export default class BarcodeScanner extends Component {
 
   render() {
     return (
-      <View style={{
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: '#f7f7f7'
-      }}>
-        <View style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          backgroundColor: '#fff',
-          paddingLeft: 18,
-          paddingTop: 5,
-          paddingBottom: 5,
-        }}>
-          <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-            <TouchableOpacity style={{
-              height: 44,
-              width: 44,
-              paddingTop: 15,
-            }}
+      <View style={CommonStyle.container}>
+        <View style={CommonStyle.navigationBar}>
+          <View style={CommonStyle.onbackArea}>
+            <TouchableOpacity style={CommonStyle.onbackAreaCont}
                               onPress={() => this._onBack()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>在线帮助</Text>
+          <View style={CommonStyle.title}>
+            <Text style={CommonStyle.titleText}>在线帮助</Text>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+          <View style={CommonStyle.titleRight}>
           </View>
         </View>
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+        <View style={CommonStyle.content}>
           <Text>更多内容敬请期待......</Text>
         </View>
       </View>
     );
   }
 }
+
