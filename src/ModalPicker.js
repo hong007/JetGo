@@ -175,7 +175,6 @@ class PickerComponent extends React.Component {
       return (
         <View style={PickerStyle.Container}>
           <View>
-            <Text style={PickerStyle.bgSPoint}> </Text>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15}}
               data={this.state.airportsData}
@@ -192,9 +191,9 @@ class PickerComponent extends React.Component {
                   borderColor: '#F2F2F2',
                 }]}>{this.state.stationStart}</Text>
             </ModalPicker>
+            <View style={PickerStyle.bgSPoint}></View>
           </View>
           <View>
-            <Text style={PickerStyle.bgEPoint}> </Text>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15,}}
               data={this.state.airportsEndData}
@@ -208,6 +207,7 @@ class PickerComponent extends React.Component {
               <Text
                 style={PickerStyle.pickerText}>{this.state.stationEnd}</Text>
             </ModalPicker>
+            <View style={PickerStyle.bgEPoint}></View>
           </View>
           <ModalComp modalValue={this.state.isLoadModalVisible}/>
         </View>
@@ -216,7 +216,6 @@ class PickerComponent extends React.Component {
       return (
         <View style={PickerStyle.Container}>
           <View>
-            <Text style={PickerStyle.bgSPoint}> </Text>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15,}}
               data={this.state.airportsData}
@@ -233,9 +232,9 @@ class PickerComponent extends React.Component {
                   borderColor: '#F2F2F2',
                 }]}>{this.state.stationStart}</Text>
             </ModalPicker>
+            <View style={PickerStyle.bgSPoint}></View>
           </View>
           <View>
-            <Text style={PickerStyle.bgEPoint}> </Text>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15}}
               data={this.state.airportsEndData}
@@ -249,6 +248,7 @@ class PickerComponent extends React.Component {
               <Text
                 style={PickerStyle.pickerText}>{this.state.stationEnd}</Text>
             </ModalPicker>
+            <View style={PickerStyle.bgEPoint}></View>
           </View>
           <ModalComp modalValue={this.state.isLoadModalVisible}/>
         </View>
