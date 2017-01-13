@@ -98,7 +98,7 @@ class PickerComponent extends React.Component {
     // console.log("取得的站点id是", index);
     let _this = this;
     _this.setState({
-      // isLoadModalVisible: true
+      isLoadModalVisible: true
     });
     _this.timer = setTimeout(
       ()=> {
