@@ -1,10 +1,4 @@
 /**
- * Created by hongty on 2016/11/24.
- */
-/**
- * Created by hongty on 2016/11/14.
- */
-/**
  * Created by hongty on 2016/11/14.
  */
 import React, {Component} from 'react';

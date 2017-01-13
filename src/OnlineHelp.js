@@ -16,6 +16,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 import CommonStyle from './CommonStyle';
+import RefreshControlComp from './common/RefreshControlComp';
 
 export default class BarcodeScanner extends Component {
   constructor(props) {
@@ -71,7 +72,7 @@ export default class BarcodeScanner extends Component {
           </View>
         </View>
         <View style={CommonStyle.content}>
-          <Text>更多内容敬请期待......</Text>
+          <RefreshControlComp contentText='更多内容敬请期待......'/>
         </View>
       </View>
     );

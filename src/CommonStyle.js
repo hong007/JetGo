@@ -58,6 +58,7 @@ const CommonStyle = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    // backgroundColor:'#10f'
   }
 });
 export default CommonStyle
