@@ -173,7 +173,7 @@ class PickerComponent extends React.Component {
     if (this.state.airports_status) {
       return (
         <View style={PickerStyle.Container}>
-          <View>
+          <View style={PickerStyle.ModalItem}>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15}}
               data={this.state.airportsData}
@@ -192,7 +192,7 @@ class PickerComponent extends React.Component {
             </ModalPicker>
             <View style={PickerStyle.bgSPoint}></View>
           </View>
-          <View>
+          <View style={PickerStyle.ModalItem}>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15,}}
               data={this.state.airportsEndData}
@@ -214,7 +214,7 @@ class PickerComponent extends React.Component {
     } else {
       return (
         <View style={PickerStyle.Container}>
-          <View>
+          <View style={PickerStyle.ModalItem}>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15,}}
               data={this.state.airportsData}
@@ -233,7 +233,7 @@ class PickerComponent extends React.Component {
             </ModalPicker>
             <View style={PickerStyle.bgSPoint}></View>
           </View>
-          <View>
+          <View style={PickerStyle.ModalItem}>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15}}
               data={this.state.airportsEndData}
@@ -260,6 +260,11 @@ const PickerStyle = StyleSheet.create({
     height: 100 * Ctrl.pxToDp(),
     backgroundColor: '#fff',
     borderRadius: 5,
+  },
+  ModalItem:{
+    borderRadius: 5,
+    borderWidth:1,
+    borderColor:'#fff',
   },
   pickerText: {
     padding: 15 * Ctrl.pxToDp(),
