@@ -13,11 +13,11 @@ import {
   Platform,
   BackAndroid,
   StatusBar,
-  ToastAndroid,
   AsyncStorage,
   ProgressBarAndroid,
   TouchableOpacity
 } from 'react-native';
+import {toastShort} from './common/ToastUtil';
 import EditView from './EditView';
 import Button from './Button';
 import Main from './Main';
@@ -82,7 +82,7 @@ export default class LoginPage extends Component {
         AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
         this.timer = setTimeout(
           ()=> {
-            ToastAndroid.show('登录成功', ToastAndroid.SHORT);
+            toastShort('登录成功');
             _this.setState({
               isLoadModalVisible: false
             });
@@ -96,7 +96,7 @@ export default class LoginPage extends Component {
             _this.setState({
               isLoadModalVisible: false
             });
-            ToastAndroid.show('用户名或密码错误，请重试', ToastAndroid.SHORT);
+            toastShort('用户名或密码错误，请重试');
           }, 800
         );
       }

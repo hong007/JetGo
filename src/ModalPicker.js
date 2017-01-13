@@ -11,11 +11,10 @@ import{
   Image,
   TextInput,
   DeviceEventEmitter,
-  ToastAndroid,
   AsyncStorage,
   Dimensions,
 } from 'react-native';
-
+import {toastShort} from './common/ToastUtil';
 import ModalPicker from 'react-native-modal-picker'
 
 import NetUtil from './NetUtil';
@@ -84,7 +83,7 @@ class PickerComponent extends React.Component {
             _this.setState({
               isLoadModalVisible: false
             });
-            ToastAndroid.show('获取航路失败请重试', ToastAndroid.SHORT);
+            toastShort('获取航路失败请重试');
             DeviceEventEmitter.emit("routeChange", false);
           }
         });
@@ -144,7 +143,7 @@ class PickerComponent extends React.Component {
                 airportsEndData: [],
                 isLoadModalVisible: false,
               });
-              ToastAndroid.show('该站点没有对应航路，请重试', ToastAndroid.SHORT);
+              toastShort('该站点没有对应航路，请重试');
               DeviceEventEmitter.emit("routeChange", false);
             }
 
@@ -153,7 +152,7 @@ class PickerComponent extends React.Component {
               airportsEndData: [],
               isLoadModalVisible: false
             });
-            ToastAndroid.show('获取航路失败请重试', ToastAndroid.SHORT);
+            toastShort('获取航路失败请重试');
             DeviceEventEmitter.emit("routeChange", false);
           }
         });

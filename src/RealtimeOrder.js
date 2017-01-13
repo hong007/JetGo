@@ -15,12 +15,12 @@ import  {
   Platform,
   StatusBar,
   Dimensions,
-  ToastAndroid,
   BackAndroid,
   AsyncStorage,
   ProgressBarAndroid,
 } from 'react-native';
 import CommonStyle from './CommonStyle';
+import {toastShort} from './common/ToastUtil';
 
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
@@ -214,7 +214,7 @@ export default class getFlight extends React.Component {
     //   _this.setState({
     //     isLoadModalVisible: false,
     //   });
-    //   ToastAndroid.show('暂时无法确认，请稍后重试！', ToastAndroid.SHORT);
+    //   toastShort('暂时无法确认，请稍后重试！');
     // }
   }
 

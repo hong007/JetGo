@@ -13,13 +13,13 @@ import{
   StatusBar,
   Dimensions,
   BackAndroid,
-  ToastAndroid,
   AsyncStorage,
   RefreshControl,
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
 import CommonStyle from './CommonStyle';
+import {toastShort} from './common/ToastUtil';
 
 import NetUtil from './NetUtil';
 import Detail from './Detail';
@@ -116,7 +116,7 @@ export default class OrderListView extends React.Component {
     }
     NetUtil.postJson(url, (responseText)=> {
       if (!responseText || responseText == "") {
-        ToastAndroid.show('错误，请重试', ToastAndroid.SHORT);
+        toastShort('错误，请重试');
       } else {
         // let curdata = responseText;
         // console.log("默认信息是 ",responseText,'  数据类型是',typeof responseText);
@@ -164,7 +164,7 @@ export default class OrderListView extends React.Component {
 
         } else {
           // alert("错误，请重试");
-          ToastAndroid.show('错误，请重试', ToastAndroid.SHORT);
+          toastShort('错误，请重试');
         }
       }
     })

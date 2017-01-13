@@ -15,13 +15,13 @@ import {
   Modal,
   Linking,
   BackAndroid,
-  ToastAndroid,
   AsyncStorage,
   DeviceEventEmitter,
   TouchableOpacity,
   DrawerLayoutAndroid,
   TouchableHighlight
 } from 'react-native';
+import {toastShort} from './common/ToastUtil';
 import SideMenu from 'react-native-side-menu';
 const menu_user = require('../img/menu_user.png');
 const menu_order = require('../img/menu_order.png');
@@ -171,7 +171,7 @@ export default class Main extends React.Component {
         showLeadingModal: true
       })
     } else {
-      ToastAndroid.show('没有选择航路，请先选择航路', ToastAndroid.SHORT)
+      toastShort('没有选择航路，请先选择航路')
     }
   }
 

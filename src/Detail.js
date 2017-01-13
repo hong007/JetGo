@@ -19,11 +19,11 @@ import  {
   StatusBar,
   Alert,
   BackAndroid,
-  ToastAndroid,
   AsyncStorage,
 } from 'react-native';
-
 import CommonStyle from './CommonStyle';
+import {toastShort} from './common/ToastUtil';
+
 
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
@@ -161,7 +161,7 @@ export default class Detail extends React.Component {
           },
         });
       } else {
-        ToastAndroid.show('暂时无法取消，请重试！', ToastAndroid.SHORT);
+        toastShort('暂时无法取消，请重试！');
       }
     });
   }

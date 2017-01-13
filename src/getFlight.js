@@ -17,13 +17,13 @@ import  {
   Modal,
   BackAndroid,
   StatusBar,
-  ToastAndroid,
   AsyncStorage,
   TouchableWithoutFeedback,
 } from 'react-native';
 import LeftMenuList from './LeftMenuList';
 import {AnimatedCircularProgress}  from 'react-native-circular-progress';
 import CommonStyle from './CommonStyle';
+import {toastShort} from './common/ToastUtil';
 
 import NetUtil from './NetUtil';
 import SwitchComp from './SwitchComp';
@@ -180,7 +180,7 @@ export default class getFlight extends React.Component {
         countFull: false,
         fill: 0,
       });
-      ToastAndroid.show('你想飞？必须全部点中哦😯！', ToastAndroid.SHORT);
+      toastShort('你想飞？必须全部点中哦😯！');
     }
   }
 
@@ -223,6 +223,7 @@ export default class getFlight extends React.Component {
           })
           // alert(12);
           console.log('飞机起飞指令发送！');
+          toastShort('飞机起飞指令发送！');
           this.CreateOrder();
         }
       }, 1000
