@@ -76,7 +76,7 @@ export default class OrderListView extends React.Component {
         },
       });
       return true;
-    }else{
+    } else {
       return true;
     }
   }
@@ -484,11 +484,10 @@ export default class OrderListView extends React.Component {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: 40,
+                marginTop: (Platform.OS === 'android' ? 40 : 54),
                 borderRadius: 3,
-                padding: 10 * Ctrl.pxToDp(),
-                paddingTop: 5 * Ctrl.pxToDp(),
-                paddingBottom: 5 * Ctrl.pxToDp(),
+                paddingTop: 8 * Ctrl.pxToDp(),
+                paddingBottom: 6 * Ctrl.pxToDp(),
                 backgroundColor: '#fff'
               }}>
                 <View style={{}}>
@@ -501,7 +500,9 @@ export default class OrderListView extends React.Component {
                     zIndex: 9999,
                     borderBottomWidth: 1,
                     borderBottomColor: '#f7f7f7',
-                    width: 100 * Ctrl.pxToDp(),
+                    width: 110 * Ctrl.pxToDp(),
+                    height: 30 * Ctrl.pxToDp(),
+                    paddingBottom:10*Ctrl.pxToDp(),
                     marginBottom: 1,
                   }} onPress={()=> {
                     this._chooseOrderType(false)
@@ -517,7 +518,9 @@ export default class OrderListView extends React.Component {
                     justifyContent: 'flex-end',
                     alignItems: 'flex-end',
                     zIndex: 9999,
-                    width: 100 * Ctrl.pxToDp(),
+                    width: 110 * Ctrl.pxToDp(),
+                    height: 30 * Ctrl.pxToDp(),
+                    paddingBottom:5*Ctrl.pxToDp(),
                   }} onPress={()=> {
                     this._chooseOrderType(true)
                   }}>

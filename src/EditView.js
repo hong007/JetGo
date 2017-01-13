@@ -24,6 +24,7 @@ export default class EditView extends Component {
       <View style={LoginStyles.TextInputView}>
         <TextInput underlineColorAndroid='transparent'
                    clearButtonMode="unless-editing"
+                   autoCapitalize="none"
                    secureTextEntry={this.props.name == "password" ? true : false} style={LoginStyles.TextInput}
                    onChangeText={
                      (text) => {

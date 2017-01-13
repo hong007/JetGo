@@ -418,7 +418,7 @@ export default class Main extends React.Component {
               style={{
                 position: 'absolute',
                 right: 0,
-                top: 0,
+                top: (Platform.OS === 'android' ? 0 : 20),
                 width: 40,
                 height: 40,
                 paddingRight: 18,
