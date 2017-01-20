@@ -1,5 +1,5 @@
 /**
- * Created by hongty on 2016/11/8.
+ * Created by Skipper on 2017/1/17.
  */
 import React, {Component} from 'react';
 import {
@@ -7,21 +7,24 @@ import {
   StyleSheet,
   Text,
   View,
-  ViewPagerAndroid,
+  Alert,
   Image,
+  Dimensions,
   AsyncStorage,
-  ToastAndroid,
   TouchableHighlight,
 } from 'react-native';
+
+const windowsWidth = Dimensions.get('window').width;
+const windowsHeight = Dimensions.get('window').height;
+import AppIntro from 'react-native-app-intro';
 import LoginPage from './LoginPage';
 import Main from './Main';
 import ModalComp from './ModalComp';
 
-export default class HelloJetGo extends React.Component {
+export default class HelloJetGo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: 0,
       isLogin: false,
       isLoadModalVisible: false
     }
@@ -38,43 +41,40 @@ export default class HelloJetGo extends React.Component {
         console.log("取得的Token是", TOKEN, "  长度是  ", TOKEN.length)
         if (TOKEN && TOKEN != "" && TOKEN.length > 50) {
           _this.setState({
-            isLogin: false,
-            isLoadModalVisible: true
+            // isLogin: true,
+            isLoadModalVisible: false
           });
-          _this.timer = setTimeout(
-            ()=> {
-              _this.setState({
-                isLogin: false,
-                isLoadModalVisible: false
-              });
-              _this.props.navigator.push({
-                name: 'Main',
-                component: Main,
-                params: {
-                  title: 'main'
-                }
-              });
-            }, 300
-          )
-
+          _this.props.navigator.push({
+            name: 'Main',
+            component: Main,
+            params: {
+              title: 'main'
+            }
+          });
         } else {
           _this.setState({
             isLogin: true,
+            isLoadModalVisible: false
           });
         }
       }
     })
   }
 
-  //坚挺页面变化
-  onPageSelected = function (e) {
-    //默认从0 开始，0是第一页
-    this.setState({page: e.nativeEvent});
-    // console.log('CurrentPage: ' + e.nativeEvent.position);
-    // ToastAndroid.show('CurrentPage: ' + e.nativeEvent.position, ToastAndroid.SHORT);
-  }
-
-  pageJump() {
+  // onSkipBtnHandle = (index) => {
+  // Alert.alert('Skip','欢迎使用来到安静的猫的APP');
+  // this.props.navigator.push({
+  //   name: "Main",
+  //   component: Main,
+  // });
+  // console.log(index);
+// }
+  doneBtnHandle = () => {
+    // Alert.alert('Done','欢迎使用来到安静的猫的APP');
+    // this.props.navigator.push({
+    //   name: "Main",
+    //   component: Main,
+    // });
     let _this = this;
     AsyncStorage.getItem("LOGIN_TOKEN", function (errs, result) {
       if (!errs) {
@@ -115,124 +115,217 @@ export default class HelloJetGo extends React.Component {
       }
     })
   }
+  nextBtnHandle = (index) => {
+    // Alert.alert('Next');
+    console.log(index);
+  }
+  onSlideChangeHandle = (index, total) => {
+    console.log(index, total);
+  }
 
   render() {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
-    let page = this.state.page;
     if (!this.state.isLogin) {
       return (
         <ModalComp modalValue={this.state.isLoadModalVisible}/>
       )
+    } else {
+      return (
+        <AppIntro
+          onNextBtnClick={this.nextBtnHandle}
+          onDoneBtnClick={this.doneBtnHandle}
+          onSkipBtnClick={this.doneBtnHandle}
+          onSlideChange={this.onSlideChangeHandle}
+        >
+          <View style={[styles.slide, {backgroundColor: '#fa931d'}]}>
+            <View style={[styles.header, {width: windowsWidth}]}>
+              <View>
+                <Image style={{width: 75 * 2.5, height: 63 * 2.5}} source={require('../img/1/c1.jpg')}/>
+              </View>
+              <View style={{
+                position: 'absolute',
+                top: 80,
+                left: 30,
+                width: windowsWidth,
+                height: windowsHeight,
+              }} level={20}
+              >
+                <Image style={{width: 46 * 2.5, height: 28 * 2.5}} source={require('../img/1/c2.jpg')}/>
+              </View>
+              <View style={{
+                position: 'absolute',
+                top: 23,
+                left: 25,
+                width: windowsWidth,
+                height: windowsHeight,
+              }} level={20}
+              >
+                <Image style={{width: 109 * 2.5, height: 68 * 2.5}} source={require('../img/1/c5.png')}/>
+              </View>
+              <View style={{
+                position: 'absolute',
+                top: 65,
+                left: 35,
+                width: windowsWidth,
+                height: windowsHeight,
+              }} level={5}
+              >
+                <Image style={{width: 23 * 2.5, height: 17 * 2.5}} source={require('../img/1/c3.png')}/>
+              </View>
+            </View>
+            <View style={styles.info}>
+              <View level={10}><Text style={styles.title}>JetGo</Text></View>
+              <View level={15}><Text style={styles.description}>医生叫我进行光合作用{'\n'}
+                不要熬夜了!</Text></View>
+            </View>
+          </View>
+          <View style={[styles.slide, {backgroundColor: '#a4b602'}]}>
+            <View style={[styles.header, {width: windowsWidth}]}>
+              <View>
+                <Image style={{width: 75 * 2.5, height: 63 * 2.5}} source={require('../img/2/1.jpg')}/>
+              </View>
+              <View style={{
+                position: 'absolute',
+                top: 30,
+                left: 40,
+                width: windowsWidth,
+                height: windowsHeight,
+              }} level={20}
+              >
+                <Image style={{width: 101 * 2.5, height: 71 * 2.5}} source={require('../img/2/2.png')}/>
+              </View>
+              <View style={{
+                position: 'absolute',
+                top: 10,
+                left: 50,
+                width: windowsWidth,
+                height: windowsHeight,
+              }} level={-20}
+              >
+                <Image style={{width: 85 * 2.5, height: 73 * 2.5}} source={require('../img/2/3.png')}/>
+              </View>
+            </View>
+            <View style={styles.info}>
+              <View level={10}><Text style={styles.title}>JetGo</Text></View>
+              <View level={15}><Text style={styles.description}>人生不断向前的秘诀{'\n'}
+                就是忘记从那里来{'\n'}记得到哪里去!</Text></View>
+            </View>
+          </View>
+          <View style={[styles.slide, {backgroundColor: '#406E9F'}]}>
+            <View style={[styles.header, {width: windowsWidth}]}>
+              <View style={{
+                position: 'absolute',
+                top: 20,
+                left: 20,
+                width: windowsWidth,
+                height: windowsHeight,
+              }}
+              >
+                <Image style={{width: 138 * 2.5, height: 83 * 2.5}} source={require('../img/3/3.png')}/>
+              </View>
+              <View style={{
+                position: 'absolute',
+                top: 25,
+                left: 40,
+                width: windowsWidth,
+                height: windowsHeight,
+              }} level={-15}
+              >
+                <Image style={{width: 103 * 2.5, height: 42 * 2.5}} source={require('../img/3/4.png')}/>
+              </View>
+              <View level={10}>
+                <Image style={{width: 95 * 2.5, height: 55 * 2.5}} source={require('../img/3/1.jpg')}/>
+              </View>
+              <View style={{
+                position: 'absolute',
+                top: 65,
+                left: 120,
+                width: windowsWidth,
+                height: windowsHeight,
+              }} level={25}
+              >
+                <Image style={{width: 47 * 2.5, height: 43 * 2.5}} source={require('../img/3/2.png')}/>
+              </View>
+            </View>
+            <View style={styles.info}>
+              <View level={10}><Text style={styles.title}>JetGo</Text></View>
+              <View level={15}><Text style={styles.description}>天下物流，唯快不破{'\n'}!</Text></View>
+            </View>
+          </View>
+          <View style={[styles.slide, {backgroundColor: '#DB4302'}]}>
+            <View style={[styles.header, {width: windowsWidth}]}>
+              <View style={{
+                position: 'absolute',
+                top: 25,
+                left: 55,
+                width: windowsWidth,
+                height: windowsHeight,
+              }} level={15}
+              >
+                <Image style={{width: 96 * 2.5, height: 69 * 2.5}} source={require('../img/4/4.png')}/>
+              </View>
+              <View>
+                <Image style={{width: 50 * 2.5, height: 63 * 2.5}} source={require('../img/4/1.jpg')}/>
+              </View>
+              <View style={{
+                position: 'absolute',
+                top: 20,
+                left: 70,
+                width: windowsWidth,
+                height: windowsHeight,
+              }} level={20}
+              >
+                <Image style={{width: 46 * 2.5, height: 98 * 2.5}} source={require('../img/4/3.png')}/>
+              </View>
+            </View>
+            <View style={styles.info}>
+              <View level={10}><Text style={styles.title}>JetGo</Text></View>
+              <View level={15}><Text style={styles.description}>欢迎使用JetGo无人机{'\n'}
+                我在，阻隔不再!</Text></View>
+            </View>
+          </View>
+        </AppIntro>
+      );
     }
-    return (
-      <View style={styles.bg}>
-        <ViewPagerAndroid style={styles.container}
-                          onPageSelected={this.onPageSelected.bind(this)}
-          // 初始化页面，从第一个开始
-                          initialPage={0}>
-          <View style={styles.container}>
-            <Image source={require('../img/bg1.jpg')} style={styles.image}/>
-            <Text style={styles.welcome}>
-              医生叫我进行光合作用{'\n'}
-              不要熬夜了
-            </Text>
-          </View>
-          <View style={styles.container}>
-            <Image source={require('../img/bg2.jpg')} style={styles.image}/>
-            <Text style={styles.welcome}>
-              人生不断向前的秘诀{'\n'}
-              就是忘记从那里来 记得到哪里去
-            </Text>
-          </View>
-          <View style={styles.container}>
-            <Image source={require('../img/bg3.jpg')} style={styles.image}/>
-            <Text style={styles.welcome}>
-              天下物流，唯快不破{'\n'}
-            </Text>
-          </View>
-          <View style={styles.container}>
-            <Image source={require('../img/bg1.jpg')} style={styles.image}/>
-            <Text style={styles.welcome}>
-              欢迎使用JetGo无人机{'\n'}
-              我在，阻隔不再
-            </Text>
-            <TouchableHighlight style={{
-              backgroundColor: '#313131',
-              width: 200,
-              marginTop: 10,
-              height: 54,
-              borderWidth: 0.3,
-              borderColor: '#a09f9f',
-              borderRadius: 4,
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              color: '#55ACEE',
-              margin: 18,
-            }} onPress={()=> {
-              this.pageJump()
-            }}>
-              <Text style={{color: '#fff', fontSize: 20,}}>启动</Text>
-            </TouchableHighlight>
-          </View>
-
-        </ViewPagerAndroid>
-        <View style={styles.slider}>
-          <View style={styles.ol}>
-            <View style={page == 0 ? styles.currt : styles.li}></View>
-            <View style={page == 1 ? styles.currt : styles.li}></View>
-            <View style={page == 2 ? styles.currt : styles.li}></View>
-            <View style={page == 3 ? styles.currt : styles.li}></View>
-          </View>
-        </View>
-      </View>
-    );
   }
+
 }
+
 const styles = StyleSheet.create({
-  bg: {
+  slide: {
     flex: 1,
-    backgroundColor: '#CCFF66',
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#9DD6EB',
+    padding: 15,
   },
-  image: {
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-  },
-  welcome: {
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  slider: {
+  header: {
+    flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  ol: {
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    height: 20,
-    width: 80,
-    justifyContent: 'space-around',
+  pic: {
+    width: 75 * 2,
+    height: 63 * 2,
+  },
+  text: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  info: {
+    flex: 0.5,
     alignItems: 'center',
-    flexDirection: 'row',
-    borderRadius: 10,
-    margin: 20,
+    padding: 40
   },
-  li: {
-    backgroundColor: 'rgba(255,255,255,1.0)',
-    height: 10,
-    width: 10,
-    borderRadius: 5,
+  title: {
+    color: '#fff',
+    fontSize: 30,
+    paddingBottom: 20,
   },
-  currt: {
-    backgroundColor: 'rgba(255,255,255,1.0)',
-    height: 10,
-    width: 15,
-    borderRadius: 5,
+  description: {
+    color: '#fff',
+    fontSize: 20,
   },
 });
