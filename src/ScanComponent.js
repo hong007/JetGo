@@ -28,11 +28,11 @@ import getFlight from './getFlight';
 import Main from './Main';
 import NetUtil from './NetUtil';
 import GridChild from './GridChild';
-import BarcodeScanner from './BarcodeScanner';
+// import BarcodeScanner from './BarcodeScanner';
+import BarcodeScannerBoth from './BarcodeScannerBoth';
 import Ctrl from './Ctrl';
 import ModalComp from './ModalComp';
 import ReactNative from 'react-native';
-
 
 var Token;
 var orderTypeList = [];
@@ -387,8 +387,11 @@ export default class ScanComponent extends React.Component {
                     <View style={scanStyle.TextInputView}>
                       <TextInput style={scanStyle.TextInput}
                                  underlineColorAndroid='transparent'
+                                 returnKeyType='done'
+                                 autoCapitalize="none"
+
                                  placeholder='扫码或输入无人机上的二维码'
-                                 keyboardType="numeric"
+                                 keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
                                  clearButtonMode="unless-editing"
                                  value={this.state.scannText}
                                  onChangeText={
@@ -409,8 +412,8 @@ export default class ScanComponent extends React.Component {
                           }}
                           onPress={()=> {
                             this.props.navigator.push({
-                              name: 'BarcodeScanner',
-                              component: BarcodeScanner
+                              name: 'BarcodeScannerBoth',
+                              component: BarcodeScannerBoth
                             });
                           }}></Text></Image>
                       <Text style={{height: 0,}}>{this.state.scannText}</Text>
@@ -447,7 +450,6 @@ export default class ScanComponent extends React.Component {
                         transparent={true}
                         visible={this.state.girdModalVisible}
                         onRequestClose={() => {
-                          alert("Modal has been closed.")
                         }}
                       >
                         <View style={{
@@ -512,8 +514,11 @@ export default class ScanComponent extends React.Component {
                             textAlign: 'right'
                           }]}
                           underlineColorAndroid='transparent'
+                          returnKeyType='done'
+                          autoCapitalize="none"
+
                           placeholder='1公斤'
-                          keyboardType="numeric"
+                          keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
                           clearButtonMode="unless-editing"
                           placeholderTextColor='#a09f9f'
                           onFocus={
@@ -579,8 +584,11 @@ export default class ScanComponent extends React.Component {
             <View style={scanStyle.TextInputView}>
               <TextInput style={scanStyle.TextInput}
                          underlineColorAndroid='transparent'
+                         returnKeyType='done'
+                         autoCapitalize="none"
+
                          placeholder='扫码或输入无人机上的二维码'
-                         keyboardType="numeric"
+                         keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
                          clearButtonMode="unless-editing"
                          value={this.state.scannText}
                          onChangeText={
@@ -596,8 +604,8 @@ export default class ScanComponent extends React.Component {
                 <Text style={{backgroundColor: 'transparent', height: 44 * Ctrl.pxToDp(), width: 44 * Ctrl.pxToDp()}}
                       onPress={()=> {
                         this.props.navigator.push({
-                          name: 'BarcodeScanner',
-                          component: BarcodeScanner
+                          name: 'BarcodeScannerBoth',
+                          component: BarcodeScannerBoth
                         });
                       }}></Text></Image>
               <Text style={{height: 0,}}>{this.state.scannText}</Text>
@@ -634,7 +642,6 @@ export default class ScanComponent extends React.Component {
                 transparent={true}
                 visible={this.state.girdModalVisible}
                 onRequestClose={() => {
-                  alert("Modal has been closed.")
                 }}
               >
                 <View style={{
@@ -693,8 +700,11 @@ export default class ScanComponent extends React.Component {
                 <TextInput
                   style={[scanStyle.TextInput, {marginRight: 10, width: 60 * Ctrl.pxToDp(), textAlign: 'right'}]}
                   underlineColorAndroid='transparent'
+                  returnKeyType='done'
+                  autoCapitalize="none"
+
                   placeholder='1公斤'
-                  keyboardType="numeric"
+                  keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
                   clearButtonMode="unless-editing"
                   placeholderTextColor='#a09f9f'
                   onFocus={

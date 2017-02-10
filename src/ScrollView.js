@@ -365,7 +365,7 @@ export default class ScanComponent extends React.Component {
                 </View>
                 <View style={scanStyle.TextInputView}>
                   <TextInput style={scanStyle.TextInput}
-                             underlineColorAndroid='transparent'
+                             underlineColorAndroid='transparent'  returnKeyType ='done'
                              placeholder='扫码或输入无人机上的二维码'
                              keyboardType="numeric"
                              clearButtonMode="unless-editing"
@@ -482,7 +482,7 @@ export default class ScanComponent extends React.Component {
                     <Text style={routeStyle.rTextLeft}>物品重量</Text>
                     <TextInput
                       style={[scanStyle.TextInput, {marginRight: 10, width: 60 * Ctrl.pxToDp(), textAlign: 'right'}]}
-                      underlineColorAndroid='transparent'
+                      underlineColorAndroid='transparent'  returnKeyType ='done'
                       placeholder='1公斤'
                       keyboardType="numeric"
                       clearButtonMode="unless-editing"
