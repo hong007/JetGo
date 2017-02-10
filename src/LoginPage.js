@@ -67,9 +67,11 @@ export default class LoginPage extends Component {
 
   onPressCallback() {
     let _this = this;
-    this.setState({
-      isLoadModalVisible: true
-    });
+    if (Platform.OS === "android") {
+      this.setState({
+        isLoadModalVisible: true
+      });
+    }
     let url = "http://jieyan.xyitech.com/login/?username=" + this.userName + "&password=" + this.passWord;
 
     console.log('登录信息是 ', url)
@@ -80,7 +82,7 @@ export default class LoginPage extends Component {
         AsyncStorage.setItem("LOGIN_USERNAME", this.userName);
         AsyncStorage.setItem("LOGIN_USERPWD", this.passWord);
         AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
-        this.timer = setTimeout(
+        _this.timer = setTimeout(
           ()=> {
             toastShort('登录成功');
             _this.setState({

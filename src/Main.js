@@ -54,8 +54,6 @@ export default class Main extends React.Component {
       isLogin: true,
       showLeadingModal: false,
       isRouteTrue: false,
-
-      isLoadModalVisible: false,
     };
   }
 
@@ -433,7 +431,6 @@ export default class Main extends React.Component {
 
           </View>
         </Modal>
-        <ModalComp modalValue={this.state.isLoadModalVisible}/>
       </SideMenu>
     );
   }

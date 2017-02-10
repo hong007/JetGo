@@ -10,6 +10,7 @@ import{
   Picker,
   Image,
   TextInput,
+  Platform,
   DeviceEventEmitter,
   AsyncStorage,
   Dimensions,
@@ -97,9 +98,12 @@ class PickerComponent extends React.Component {
     });
     // console.log("取得的站点id是", index);
     let _this = this;
-    _this.setState({
-      isLoadModalVisible: true
-    });
+    console.log("请求之前打开模态框");
+    if (Platform.OS === "android") {
+      _this.setState({
+        isLoadModalVisible: true
+      });
+    }
     _this.timer = setTimeout(
       ()=> {
         _this.setState({
@@ -135,6 +139,14 @@ class PickerComponent extends React.Component {
                 airportsEndData: TempStation,
                 isLoadModalVisible: false
               });
+              _this.timer = setTimeout(
+                ()=> {
+                  _this.setState({
+                    isLoadModalVisible: false
+                  });
+                }, 300
+              );
+              console.log("请求成功关闭模态框");
               DeviceEventEmitter.emit("routeChange", true);
 
             } else {
@@ -261,10 +273,10 @@ const PickerStyle = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 5,
   },
-  ModalItem:{
+  ModalItem: {
     borderRadius: 5,
-    borderWidth:1,
-    borderColor:'#fff',
+    borderWidth: 1,
+    borderColor: '#fff',
   },
   pickerText: {
     padding: 15 * Ctrl.pxToDp(),

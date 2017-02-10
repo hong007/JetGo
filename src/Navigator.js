@@ -58,7 +58,7 @@ export default class navigator extends Component {
   componentDidMount() {
     StatusBar.setBackgroundColor('#000', true);
     SplashScreen.hide();
-    AsyncStorage.setItem("ISFIRSTTIMESTART", true);
+    AsyncStorage.setItem("ISFIRSTTIMESTART", 'true');
   }
 
   // 检查是否更新
