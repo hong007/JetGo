@@ -137,7 +137,7 @@ export default class getFlight extends React.Component {
 
   _orderPressIn() {
     let _this = this;
-    if (_this.state.totalChecked == 6) {
+    if (_this.state.totalChecked == 4) {
       let count = 0;
       if (!_this.state.flightTimerStatus) {
         this.timer = setInterval(
