@@ -90,7 +90,7 @@ export default class BarcodeScanner extends Component {
           </View>
         </View>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-          <Text>当前版本号是：{_updateConfig.version}</Text>
+          <Text>当前版本号是：{_updateConfig.version}  运营版</Text>
         </View>
       </View>
     );

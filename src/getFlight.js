@@ -411,12 +411,12 @@ export default class getFlight extends React.Component {
             <SwitchComp text='放置起降区中心'
                         initialChecked={this.state.initialChecked}
                         callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            <SwitchComp text='飞控解锁'
-                        initialChecked={this.state.initialChecked}
-                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            <SwitchComp text='遥控器自主状态'
-                        initialChecked={this.state.initialChecked}
-                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+            {/*<SwitchComp text='飞控解锁'*/}
+                        {/*initialChecked={this.state.initialChecked}*/}
+                        {/*callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>*/}
+            {/*<SwitchComp text='遥控器自主状态'*/}
+                        {/*initialChecked={this.state.initialChecked}*/}
+                        {/*callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>*/}
             <SwitchComp text='起降区无人进入'
                         initialChecked={this.state.initialChecked}
                         callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
