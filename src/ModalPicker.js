@@ -99,11 +99,11 @@ class PickerComponent extends React.Component {
     // console.log("取得的站点id是", index);
     let _this = this;
     console.log("请求之前打开模态框");
-    if (Platform.OS === "android") {
-      _this.setState({
-        isLoadModalVisible: true
-      });
-    }
+    // if (Platform.OS === "android") {
+    // _this.setState({
+    //   isLoadModalVisible: true
+    // });
+    // }
     _this.timer = setTimeout(
       ()=> {
         _this.setState({
@@ -124,6 +124,9 @@ class PickerComponent extends React.Component {
             routes = JSON.parse(routes);
             console.log('routes list is ', routes, '  ', typeof routes);
             if (routes.length > 0) {
+              _this.setState({
+                isLoadModalVisible: true
+              });
               let TempStation = [];
               for (let i = 0; i < routes.length; i++) {
                 let singleStation = {};
@@ -137,35 +140,36 @@ class PickerComponent extends React.Component {
               _this.setState({
                 // start_airports_load: true,
                 airportsEndData: TempStation,
-                isLoadModalVisible: false
+                // isLoadModalVisible: false,
               });
-              _this.timer = setTimeout(
-                ()=> {
-                  _this.setState({
-                    isLoadModalVisible: false
-                  });
-                }, 300
-              );
+
               console.log("请求成功关闭模态框");
               DeviceEventEmitter.emit("routeChange", true);
 
             } else {
-              _this.setState({
-                stationEnd: '--请选择--',
-                airportsEndData: [],
-                isLoadModalVisible: false,
-              });
-              toastShort('该站点没有对应航路，请重试');
-              DeviceEventEmitter.emit("routeChange", false);
+              _this.timer = setTimeout(
+                ()=> {
+                  _this.setState({
+                    stationEnd: '--请选择--',
+                    airportsEndData: [],
+                    isLoadModalVisible: false,
+                  });
+                  toastShort('该站点没有对应航路，请重试');
+                  DeviceEventEmitter.emit("routeChange", false);
+                }, 1000
+              );
             }
-
           } else {
-            _this.setState({
-              airportsEndData: [],
-              isLoadModalVisible: false
-            });
-            toastShort('获取航路失败请重试');
-            DeviceEventEmitter.emit("routeChange", false);
+            _this.timer = setTimeout(
+              ()=> {
+                _this.setState({
+                  airportsEndData: [],
+                  isLoadModalVisible: false
+                });
+                toastShort('获取航路失败请重试');
+                DeviceEventEmitter.emit("routeChange", false);
+              }, 1000
+            );
           }
         });
       }
@@ -173,12 +177,17 @@ class PickerComponent extends React.Component {
   }
 
   chooseAirPortsEnd(index, value) {
-    this.setState({
-      stationEnd: value,
-    });
+    let _this = this;
+    _this.timer = setTimeout(
+      ()=> {
+        _this.setState({
+          stationEnd: value,
+          isLoadModalVisible: false,
+        });
+      }, 1000
+    );
     AsyncStorage.setItem("ROUTE_ID", index);
     console.log('存储的航路id是', index);
-
   }
 
   render() {

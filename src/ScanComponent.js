@@ -375,7 +375,7 @@ export default class ScanComponent extends React.Component {
               <ScrollView style={{flex: 1,}} ref='scroll' keyboardShouldPersistTaps={true}>
                 <View style={{
                   flex: 1,
-                  height: Dimensions.get('window').height - (Platform.OS === 'android' ? 80 : 50)
+                  height: Dimensions.get('window').height - (Platform.OS === 'android' ? 80 : 70)
                 }} onStartShouldSetResponderCapture={(e) => {
                   let target = e.nativeEvent.target;
                   if (target !== ReactNative.findNodeHandle(this.refs.hour)) {
@@ -383,7 +383,6 @@ export default class ScanComponent extends React.Component {
                   }
                 }}>
                   <View style={{flex: 1,}}>
-
                     <View style={scanStyle.TextInputView}>
                       <TextInput style={scanStyle.TextInput}
                                  underlineColorAndroid='transparent'
@@ -392,7 +391,7 @@ export default class ScanComponent extends React.Component {
 
                                  placeholder='扫码或输入无人机上的二维码'
                                  keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
-                                 clearButtonMode="unless-editing"
+                                 clearButtonMode="never"
                                  value={this.state.scannText}
                                  onChangeText={
                                    (scannText) => {
@@ -589,7 +588,7 @@ export default class ScanComponent extends React.Component {
 
                          placeholder='扫码或输入无人机上的二维码'
                          keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
-                         clearButtonMode="unless-editing"
+                         clearButtonMode="never"
                          value={this.state.scannText}
                          onChangeText={
                            (scannText) => {
@@ -818,7 +817,7 @@ const scanStyle = StyleSheet.create({
     color: '#a09f9f',
     paddingLeft: 16,
     paddingRight: 16,
-    marginTop: 20,
+    marginTop: 20*Ctrl.pxToDp(),
     backgroundColor: '#fff',
     marginBottom: 1
   },
