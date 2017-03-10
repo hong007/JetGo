@@ -229,7 +229,7 @@ export default class getFlight extends React.Component {
     var isChecked = this.state.checked ? 'yes' : 'no';
     if (this.state.detailDataLoaded) {
       return (
-        <ScrollView>
+        <ScrollView style={{backgroundColor:'#f7f7f7'}}>
           <View style={CommonStyle.container}>
             <View style={CommonStyle.navigationBar}>
               <View style={CommonStyle.onbackArea}>

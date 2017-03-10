@@ -91,7 +91,7 @@ export default class LoginPage extends Component {
           ()=> {
             _this.pageJump();
           },
-          300
+          1000
         );
       } else {
         _this.Timer = setTimeout(

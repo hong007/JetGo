@@ -299,8 +299,9 @@ export default class ScanComponent extends React.Component {
               // alert("提交失败，请重试！");
               toastShort('提交失败，请重试!');
             } else {
+              console.log("返回的信息是  ", responseText, "  数据类型是  ", typeof responseText, "  订单id是 ", responseText.id);
+
               let curdata = JSON.parse(responseText);
-              console.log("返回的信息是  ", curdata, "  数据类型是  ", typeof curdata, "  订单id是 ", curdata.id);
               if (curdata.err == '0') {
                 // console.log("存储缓存中的ORDER_ID是  ", JSON.stringify(curdata.id));
                 // AsyncStorage.setItem("ORDER_ID", JSON.stringify(curdata.id));

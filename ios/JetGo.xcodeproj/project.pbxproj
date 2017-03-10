@@ -23,9 +23,9 @@
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2924708DEC02451CB6C3EDAC /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E8D13A1B104FA1BC0F077B /* libSplashScreen.a */; };
-		482F45561E6ED298004AFDF5 /* ios.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 482F45541E6ED298004AFDF5 /* ios.jsbundle */; };
-		482F45571E6ED298004AFDF5 /* ios.jsbundle.meta in Resources */ = {isa = PBXBuildFile; fileRef = 482F45551E6ED298004AFDF5 /* ios.jsbundle.meta */; };
 		485643071E28F2660041A934 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 485643061E28F1A20041A934 /* libART.a */; };
+		48FBB6781E727AFA00F625C9 /* ios.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 48FBB6761E727AFA00F625C9 /* ios.jsbundle */; };
+		48FBB6791E727AFA00F625C9 /* ios.jsbundle.meta in Resources */ = {isa = PBXBuildFile; fileRef = 48FBB6771E727AFA00F625C9 /* ios.jsbundle.meta */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		99693372C5EF4CF996EBC920 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73FF880196A74421A34C3286 /* libRCTCamera.a */; };
@@ -217,9 +217,9 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		32E8D13A1B104FA1BC0F077B /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		3667913003DC44AE822FBDE5 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
-		482F45541E6ED298004AFDF5 /* ios.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ios.jsbundle; sourceTree = "<group>"; };
-		482F45551E6ED298004AFDF5 /* ios.jsbundle.meta */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ios.jsbundle.meta; sourceTree = "<group>"; };
 		485643011E28F1A20041A934 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
+		48FBB6761E727AFA00F625C9 /* ios.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ios.jsbundle; sourceTree = "<group>"; };
+		48FBB6771E727AFA00F625C9 /* ios.jsbundle.meta */ = {isa = PBXFileReference; lastKnownFileType = file; path = ios.jsbundle.meta; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		73FF880196A74421A34C3286 /* libRCTCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTCamera.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -342,9 +342,9 @@
 		13B07FAE1A68108700A75B9A /* JetGo */ = {
 			isa = PBXGroup;
 			children = (
-				482F45541E6ED298004AFDF5 /* ios.jsbundle */,
-				482F45551E6ED298004AFDF5 /* ios.jsbundle.meta */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
+				48FBB6761E727AFA00F625C9 /* ios.jsbundle */,
+				48FBB6771E727AFA00F625C9 /* ios.jsbundle.meta */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -515,7 +515,8 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = 6HELHLB743;
+						DevelopmentTeam = 427DG8BP43;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
@@ -770,9 +771,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				482F45561E6ED298004AFDF5 /* ios.jsbundle in Resources */,
+				48FBB6781E727AFA00F625C9 /* ios.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				482F45571E6ED298004AFDF5 /* ios.jsbundle.meta in Resources */,
+				48FBB6791E727AFA00F625C9 /* ios.jsbundle.meta in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -841,7 +842,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 6HELHLB743;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 427DG8BP43;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -865,8 +867,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 6HELHLB743;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = JetGoTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -878,6 +881,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JetGo.app/JetGo";
 			};
 			name = Release;
@@ -886,19 +890,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: phi007@126.com (627C24G2GD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: 天远 洪 (745895SAQ3)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 427DG8BP43;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = JetGo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xunyi.jetgo;
 				PRODUCT_NAME = JetGo;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -910,19 +915,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: phi007@126.com (627C24G2GD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: HANGZHOU XUNYI NETWORK TECHNOLOGY CO., LTD. (427DG8BP43)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 427DG8BP43;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = JetGo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.xunyi.jetgo;
 				PRODUCT_NAME = JetGo;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -944,9 +952,10 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: phi007@126.com (627C24G2GD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: phi007@126.com (627C24G2GD)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: 天远 洪 (745895SAQ3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: 天远 洪 (745895SAQ3)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 427DG8BP43;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -971,7 +980,7 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -995,9 +1004,10 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: phi007@126.com (627C24G2GD)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: phi007@126.com (627C24G2GD)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: HANGZHOU XUNYI NETWORK TECHNOLOGY CO., LTD. (427DG8BP43)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: HANGZHOU XUNYI NETWORK TECHNOLOGY CO., LTD. (427DG8BP43)";
 				COPY_PHASE_STRIP = YES;
+				DEVELOPMENT_TEAM = 427DG8BP43;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1016,9 +1026,9 @@
 					"$(SRCROOT)/../node_modules/react-native-splash-screen/ios",
 					"$(SRCROOT)/../node_modules/react-native-camera/ios",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=*]" = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=*]" = JetgoDistribution;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

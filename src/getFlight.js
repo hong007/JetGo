@@ -220,12 +220,15 @@ export default class getFlight extends React.Component {
         });
         if (planeCount <= 0) {
           clearInterval(_this.timer);
+          _this.timer = setTimeout(
+            ()=> {
+              _this.CreateOrder();
+            },1000)
           _this.setState({
             modalGetFlightCountDown: false,
           })
           // alert(12);
           console.log('飞机起飞指令发送！');
-          _this.CreateOrder();
           if (Platform.OS === "android") {
             toastShort('飞机起飞指令发送！');
           }
@@ -237,11 +240,11 @@ export default class getFlight extends React.Component {
 
   CreateOrder() {
     let _this = this;
-    if (Platform.OS === "android") {
+    // if (Platform.OS === "android") {
       _this.setState({
         isLoadModalVisible: true
       });
-    }
+    // }
     _this.timer = setTimeout(
       ()=> {
         _this.setState({
@@ -259,17 +262,57 @@ export default class getFlight extends React.Component {
         // if(responseText&&)
         let curdata = JSON.parse(responseText);
         console.log('发送起飞指令返回数据 ', curdata);
-        // alert('发送起飞指令返回数据 '+JSON.stringify(curdata));
-        if (curdata.err == '0') {
+        // alert('发送起飞指令返回数据 ' + curdata + ' err  is  ' + JSON.stringify(curdata.err) + ' ' + curdata.err);
+        // AlertIOS.alert(
+        //   '起飞返回数据',
+        //   '当前运单状态错误',
+        //   [
+        //     {
+        //       text: '确定', onPress(){
+        //       _this.setState({
+        //         isLoadModalVisible: false,
+        //         planeFlightCount: 10,
+        //
+        //         flightTimerStatus: false,
+        //         countFull: false,
+        //         fill: 0,
+        //       });
+        //       _this.refs.circularProgress.performLinearAnimation(0, 100);
+        //     }
+        //     }
+        //   ]
+        // );
+        if (curdata.err == 0) {
+          console.log('返回起飞成功 ', curdata);
           if (curdata.state == 2) {
-            console.log('起飞成功后 ', curdata);
+            console.log('起飞成功后，状态更改 ', curdata);
             _this.timer = setTimeout(
               ()=> {
                 _this.setState({
                   isLoadModalVisible: false
                 });
                 _this.pageJump('order');
-              }, 300
+              }, 1000
+            );
+          } else {
+            AlertIOS.alert(
+              '起飞失败',
+              '当前运单状态错误',
+              [
+                {
+                  text: '确定', onPress(){
+                  _this.setState({
+                    isLoadModalVisible: false,
+                    planeFlightCount: 10,
+
+                    flightTimerStatus: false,
+                    countFull: false,
+                    fill: 0,
+                  });
+                  _this.refs.circularProgress.performLinearAnimation(0, 100);
+                }
+                }
+              ]
             );
           }
         } else if (curdata.err == 5) {
@@ -315,8 +358,6 @@ export default class getFlight extends React.Component {
               ]
             );
           }
-
-
           console.log('起飞失败返回信息是  ', curdata.msg, '  ', curdata.err)
         } else {
           if (Platform.OS === 'anroid') {
@@ -360,7 +401,6 @@ export default class getFlight extends React.Component {
               ]
             );
           }
-
           console.log('起飞失败返回信息是  ', curdata.msg, '  ', curdata.err)
         }
       }
