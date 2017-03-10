@@ -137,7 +137,7 @@ export default class getFlight extends React.Component {
 
   _orderPressIn() {
     let _this = this;
-    if (_this.state.totalChecked == 5) {
+    if (_this.state.totalChecked == 6) {
       let count = 0;
       if (!_this.state.flightTimerStatus) {
         this.timer = setInterval(
@@ -242,7 +242,8 @@ export default class getFlight extends React.Component {
       }, 20000
     );
     let curId = this.state.detailData.order.id;
-    let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
+    // let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
+    let url = "http://jieyan.xyitech.com/order/_autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
     console.log("发送的起飞指令是 ", url)
     NetUtil.postJson(url, (responseText)=> {
         // if(responseText&&)
@@ -414,9 +415,9 @@ export default class getFlight extends React.Component {
             <SwitchComp text='飞控解锁'
                         initialChecked={this.state.initialChecked}
                         callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            {/*<SwitchComp text='遥控器自主状态'*/}
-                        {/*initialChecked={this.state.initialChecked}*/}
-                        {/*callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>*/}
+            <SwitchComp text='遥控器自主状态'
+                        initialChecked={this.state.initialChecked}
+                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
             <SwitchComp text='起降区无人进入'
                         initialChecked={this.state.initialChecked}
                         callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
