@@ -24,8 +24,8 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2924708DEC02451CB6C3EDAC /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E8D13A1B104FA1BC0F077B /* libSplashScreen.a */; };
 		485643071E28F2660041A934 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 485643061E28F1A20041A934 /* libART.a */; };
-		48FBB6781E727AFA00F625C9 /* ios.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 48FBB6761E727AFA00F625C9 /* ios.jsbundle */; };
-		48FBB6791E727AFA00F625C9 /* ios.jsbundle.meta in Resources */ = {isa = PBXBuildFile; fileRef = 48FBB6771E727AFA00F625C9 /* ios.jsbundle.meta */; };
+		48A39BAF1E7659D8000AEDD7 /* ios.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 48A39BAD1E7659D8000AEDD7 /* ios.jsbundle */; };
+		48A39BB01E7659D8000AEDD7 /* ios.jsbundle.meta in Resources */ = {isa = PBXBuildFile; fileRef = 48A39BAE1E7659D8000AEDD7 /* ios.jsbundle.meta */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		76FB4824112F4A3092894CEA /* libRNSpinkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A52AFFE03544009A4C3D4A /* libRNSpinkit.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -227,8 +227,8 @@
 		3667913003DC44AE822FBDE5 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		3BEFC19F984C4E43BB5ADFA7 /* RNSpinkit.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNSpinkit.xcodeproj; path = "../node_modules/react-native-spinkit/ios/RNSpinkit.xcodeproj"; sourceTree = "<group>"; };
 		485643011E28F1A20041A934 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
-		48FBB6761E727AFA00F625C9 /* ios.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ios.jsbundle; sourceTree = "<group>"; };
-		48FBB6771E727AFA00F625C9 /* ios.jsbundle.meta */ = {isa = PBXFileReference; lastKnownFileType = file; path = ios.jsbundle.meta; sourceTree = "<group>"; };
+		48A39BAD1E7659D8000AEDD7 /* ios.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ios.jsbundle; sourceTree = "<group>"; };
+		48A39BAE1E7659D8000AEDD7 /* ios.jsbundle.meta */ = {isa = PBXFileReference; lastKnownFileType = file; path = ios.jsbundle.meta; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		73FF880196A74421A34C3286 /* libRCTCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTCamera.a; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -353,9 +353,9 @@
 		13B07FAE1A68108700A75B9A /* JetGo */ = {
 			isa = PBXGroup;
 			children = (
+				48A39BAD1E7659D8000AEDD7 /* ios.jsbundle */,
+				48A39BAE1E7659D8000AEDD7 /* ios.jsbundle.meta */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				48FBB6761E727AFA00F625C9 /* ios.jsbundle */,
-				48FBB6771E727AFA00F625C9 /* ios.jsbundle.meta */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -802,9 +802,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				48FBB6781E727AFA00F625C9 /* ios.jsbundle in Resources */,
+				48A39BAF1E7659D8000AEDD7 /* ios.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				48FBB6791E727AFA00F625C9 /* ios.jsbundle.meta in Resources */,
+				48A39BB01E7659D8000AEDD7 /* ios.jsbundle.meta in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
