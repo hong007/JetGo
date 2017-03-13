@@ -31,7 +31,7 @@ import GridChild from './GridChild';
 // import BarcodeScanner from './BarcodeScanner';
 import BarcodeScannerBoth from './BarcodeScannerBoth';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 import ReactNative from 'react-native';
 
 var Token;
@@ -557,7 +557,7 @@ export default class ScanComponent extends React.Component {
                     }}>
                       <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp(),}}>提交</Text>
                     </TouchableOpacity>
-                    <ModalComp modalValue={this.state.isLoadModalVisible}/>
+                    <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
                   </View>
                 </View>
               </ScrollView>
@@ -719,8 +719,7 @@ export default class ScanComponent extends React.Component {
                   }
                 />
                 <Text style={{height: 0,}}>{this.state.packageWeight}</Text>
-                <ModalComp modalValue={this.state.isLoadModalVisible}/>
-
+                <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
               </View>
             </View>
           </View>

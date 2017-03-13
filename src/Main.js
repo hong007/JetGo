@@ -17,6 +17,7 @@ import {
   BackAndroid,
   AsyncStorage,
   ScrollView,
+  RefreshControl,
   DeviceEventEmitter,
   TouchableOpacity,
   DrawerLayoutAndroid,
@@ -44,7 +45,6 @@ import OnlineHelp from './OnlineHelp';
 import Lawyer from './Lawyer';
 import AboutUS from './AboutUS';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
 
 export default class Main extends React.Component {
   constructor(props) {
@@ -55,6 +55,8 @@ export default class Main extends React.Component {
       isLogin: true,
       showLeadingModal: false,
       isRouteTrue: false,
+
+      isRefreshing: false,
     };
   }
 
@@ -231,6 +233,21 @@ export default class Main extends React.Component {
         component: LoginPage,
       });
     }
+  }
+
+  // 下拉刷新
+  _onRefresh() {
+    let _this = this;
+    _this.setState({
+      isRefreshing: true,
+    });
+    _this.timer = setTimeout(
+      ()=> {
+        _this.setState({
+          isRefreshing: false,
+        });
+      }, 2000
+    )
   }
 
   render() {
@@ -439,11 +456,20 @@ export default class Main extends React.Component {
       )
     } else {
       return (
-        <ScrollView style={{backgroundColor: '#1b1b1b',}}>
-          <SideMenu
-            menu={navigationView}
-            isOpen={this.state.isOpen}
-            onChange={(isOpen) => this.updateMenuState(isOpen)}>
+        <SideMenu
+          menu={navigationView}
+          isOpen={this.state.isOpen}
+          onChange={(isOpen) => this.updateMenuState(isOpen)}>
+          <ScrollView style={{backgroundColor: '#1b1b1b',}}
+                      refreshControl={
+                        <RefreshControl
+                          refreshing={this.state.isRefreshing}
+                          onRefresh={this._onRefresh.bind(this)}
+                          tintColor="red"
+                          colors={['#ff0000', '#00ff00', '#0000ff', '#3ad564']}
+                          progressBackgroundColor="gray"
+                        />
+                      }>
             <View style={[CommonStyle.container, {zIndex: 99999}]}>
               <View style={CommonStyle.navigationBar}>
                 <View style={CommonStyle.onbackArea}>
@@ -565,8 +591,8 @@ export default class Main extends React.Component {
                 </TouchableOpacity>
               </View>
             </Modal>
-          </SideMenu>
-        </ScrollView>
+          </ScrollView>
+        </SideMenu>
       );
     }
   }

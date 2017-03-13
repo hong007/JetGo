@@ -15,6 +15,7 @@
     "react-native-modal-picker": "0.0.16",
     "react-native-root-toast": "^1.0.3",
     "react-native-side-menu": "^0.20.1",
+    "react-native-spinkit": "^0.1.5",
     "react-native-splash-screen": "^1.0.9"
   },
   "jest": {

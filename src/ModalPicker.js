@@ -20,7 +20,7 @@ import ModalPicker from 'react-native-modal-picker'
 
 import NetUtil from './NetUtil';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 
 class PickerComponent extends React.Component {
@@ -229,7 +229,7 @@ class PickerComponent extends React.Component {
             </ModalPicker>
             <View style={PickerStyle.bgEPoint}></View>
           </View>
-          <ModalComp modalValue={this.state.isLoadModalVisible}/>
+          <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
         </View>
       )
     } else {
@@ -270,7 +270,7 @@ class PickerComponent extends React.Component {
             </ModalPicker>
             <View style={PickerStyle.bgEPoint}></View>
           </View>
-          <ModalComp modalValue={this.state.isLoadModalVisible}/>
+          <LoadingViewComp  loadingType="Bounce" modalValue={this.state.isLoadModalVisible}/>
         </View>
       )
     }

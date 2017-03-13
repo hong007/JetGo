@@ -25,7 +25,7 @@ import Main from './Main';
 import NetUtil from './NetUtil';
 import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 export default class LoginPage extends Component {
   constructor(props) {
@@ -124,7 +124,8 @@ export default class LoginPage extends Component {
   render() {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
-    return (<ScrollView style={{backgroundColor: '#313131',}}>
+    return (
+      <ScrollView style={{backgroundColor: '#313131',}}>
         <View style={LoginStyles.loginview}>
           <Text style={{fontSize: 22 * Ctrl.pxToDp(), color: '#fff',}}>用户登录</Text>
           <View style={{paddingTop: 38,}}>
@@ -138,7 +139,7 @@ export default class LoginPage extends Component {
             }}/>
             <Button name='登录' onPressCallback={()=>this.onPressCallback()}/>
           </View>
-          <ModalComp modalValue={this.state.isLoadModalVisible}/>
+          <LoadingViewComp loadingType="Circle" modalValue={this.state.isLoadModalVisible}/>
         </View>
       </ScrollView>
     )

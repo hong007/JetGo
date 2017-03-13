@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import LoginPage from './LoginPage';
 import Main from './Main';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 export default class HelloJetGo extends React.Component {
   constructor(props) {
@@ -122,7 +122,7 @@ export default class HelloJetGo extends React.Component {
     let page = this.state.page;
     if (!this.state.isLogin) {
       return (
-        <ModalComp modalValue={this.state.isLoadModalVisible}/>
+        <LoadingViewComp modalValue={this.state.isLoadModalVisible}/>
       )
     }
     return (

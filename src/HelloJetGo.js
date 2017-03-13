@@ -19,7 +19,7 @@ const windowsHeight = Dimensions.get('window').height;
 import AppIntro from 'react-native-app-intro';
 import LoginPage from './LoginPage';
 import Main from './Main';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 export default class HelloJetGo extends Component {
   constructor(props) {
@@ -128,7 +128,7 @@ export default class HelloJetGo extends Component {
     console.warn('YellowBox is disabled.');
     if (!this.state.isLogin) {
       return (
-        <ModalComp modalValue={this.state.isLoadModalVisible}/>
+        <LoadingViewComp loadingType="Bounce" modalValue={this.state.isLoadModalVisible}/>
       )
     } else {
       return (

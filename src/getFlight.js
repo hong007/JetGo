@@ -33,7 +33,7 @@ import Main from './Main';
 import RealtimeOrder from './RealtimeOrder';
 import DialPhone from './DialPhone';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 var Token;
 
@@ -576,7 +576,7 @@ export default class getFlight extends React.Component {
                 </TouchableOpacity>
               </View>
             </Modal>
-            <ModalComp modalValue={this.state.isLoadModalVisible}/>
+            <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
           </View>
         </ScrollView>
       )

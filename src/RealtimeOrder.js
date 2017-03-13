@@ -29,7 +29,7 @@ import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
 import DialPhone from './DialPhone';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 var Token;
 
@@ -319,7 +319,7 @@ export default class getFlight extends React.Component {
                               }}>
               <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>确认收货</Text>
             </TouchableOpacity>
-            <ModalComp modalValue={this.state.isLoadModalVisible}/>
+            <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
           </View>
         </ScrollView>
       )
