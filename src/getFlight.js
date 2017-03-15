@@ -223,7 +223,7 @@ export default class getFlight extends React.Component {
           _this.timer = setTimeout(
             ()=> {
               _this.CreateOrder();
-            },1000)
+            }, 1000)
           _this.setState({
             modalGetFlightCountDown: false,
           })
@@ -241,9 +241,9 @@ export default class getFlight extends React.Component {
   CreateOrder() {
     let _this = this;
     // if (Platform.OS === "android") {
-      _this.setState({
-        isLoadModalVisible: true
-      });
+    _this.setState({
+      isLoadModalVisible: true
+    });
     // }
     _this.timer = setTimeout(
       ()=> {
@@ -317,7 +317,7 @@ export default class getFlight extends React.Component {
           }
         } else if (curdata.err == 5) {
           let planeStatus = curdata.msg;
-          if (Platform.OS === 'anroid') {
+          if (Platform.OS === 'android') {
             Alert.alert(
               '起飞失败',
               planeStatus,
@@ -360,7 +360,7 @@ export default class getFlight extends React.Component {
           }
           console.log('起飞失败返回信息是  ', curdata.msg, '  ', curdata.err)
         } else {
-          if (Platform.OS === 'anroid') {
+          if (Platform.OS === 'android') {
             Alert.alert(
               '起飞失败',
               curdata.msg,
@@ -405,6 +405,21 @@ export default class getFlight extends React.Component {
         }
       }
     );
+  }
+
+  _canselFlightCount() {
+    let _this = this;
+    _this.setState({
+      isLoadModalVisible: false,
+      modalGetFlightCountDown: false,
+      planeFlightCount: 10,
+
+      flightTimerStatus: false,
+      countFull: false,
+      fill: 0,
+    });
+    _this.refs.circularProgress.performLinearAnimation(0, 100);
+    clearInterval(this.timer);
   }
 
   pageJump(value) {
@@ -573,6 +588,22 @@ export default class getFlight extends React.Component {
                   color: '#fff',
                 }}>
                   <Text style={{color: '#fff', fontSize: 24 * Ctrl.pxToDp()}}>{this.state.planeFlightCount}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: (Platform.OS === 'android' ? 0 : 20),
+                    width: 80,
+                    height: 40,
+                    paddingRight: 18,
+                    paddingTop: 15,
+                    alignItems: 'flex-end',
+                  }}
+                  onPress={()=> {
+                    this._canselFlightCount()
+                  }}>
+                  <Text style={{color: '#EB753A'}}>取消</Text>
                 </TouchableOpacity>
               </View>
             </Modal>
