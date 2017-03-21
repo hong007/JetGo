@@ -253,7 +253,7 @@ export default class getFlight extends React.Component {
       }, 20000
     );
     let curId = this.state.detailData.order.id;
-    let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
+    let url = "http://jieyan.xyitech.com/order/_autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
     console.log("发送的起飞指令是 ", url)
     NetUtil.postJson(url, (responseText)=> {
         // _this.setState({
