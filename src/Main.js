@@ -46,6 +46,8 @@ import Lawyer from './Lawyer';
 import AboutUS from './AboutUS';
 import Ctrl from './Ctrl';
 
+import CustomMarkers from './CustomMarkers';
+
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
@@ -470,8 +472,8 @@ export default class Main extends React.Component {
                           progressBackgroundColor="gray"
                         />
                       }>
-            <View style={[CommonStyle.container, {zIndex: 99999}]}>
-              <View style={CommonStyle.navigationBar}>
+            <View style={[CommonStyle.container, {zIndex: 1}]}>
+              <View style={[CommonStyle.navigationBar, {zIndex: 1}]}>
                 <View style={CommonStyle.onbackArea}>
                   <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                     onPress={()=>this._sideMunuToggle()}>
@@ -487,7 +489,7 @@ export default class Main extends React.Component {
                   </TouchableOpacity>
                 </View>
               </View>
-
+              <CustomMarkers />
               <View style={{flex: 4, marginTop: 20, padding: 18,}}>
                 <PickerComponent refs="picker"/>
               </View>
@@ -512,17 +514,17 @@ export default class Main extends React.Component {
               }}>
                 <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp(),}}>我要寄件</Text>
               </TouchableOpacity>
-              <Image style={{
-                zIndex: -1,
-                position: 'absolute',
-                top: 34,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                width: Dimensions.get('window').width,
-                height: Dimensions.get('window').height,
-              }} source={require('../img/bg.png')}>
-              </Image>
+              {/*<Image style={{*/}
+              {/*zIndex: -1,*/}
+              {/*position: 'absolute',*/}
+              {/*top: 34,*/}
+              {/*left: 0,*/}
+              {/*right: 0,*/}
+              {/*bottom: 0,*/}
+              {/*width: Dimensions.get('window').width,*/}
+              {/*height: Dimensions.get('window').height,*/}
+              {/*}} source={require('../img/bg.png')}>*/}
+              {/*</Image>*/}
             </View>
             <Modal
               animationType={"fade"}
