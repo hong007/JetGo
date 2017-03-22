@@ -50,7 +50,9 @@ class PolylineCreator extends React.Component {
       flightposition: [
         {
           "longitude": "120.00386047363281",
-          "latitude": "30.27760124206543"
+          "latitude": "30.27760124206543",
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.002,
         }
       ],
       polylines: [
@@ -75,8 +77,8 @@ class PolylineCreator extends React.Component {
         let curdata = result;
         Token = result[0][1];
         let curfid = result[1][1];
-        _this._drawFlightPicture(curfid);
         _this._drawFlightLine(curfid);
+        _this._drawFlightPicture(curfid);
         // alert("返回数据是  " + curdata + "  " + "  数据类型是  " + typeof curdata + "   token是" + Token + "  DETAIL_ID  是    " + curfid);
       }
     })
@@ -139,7 +141,12 @@ class PolylineCreator extends React.Component {
             latitudeDelta: 0.02,
             longitudeDelta: 0.002,
           },
-          flightposition: Lnglat[0],
+          flightposition: {
+            latitude: Lnglat[0].latitude,
+            longitude: Lnglat[0].longitude,
+            latitudeDelta: 0.02,
+            longitudeDelta: 0.002,
+          },
         })
         console.log('Lnglat  is ', Lnglat, ' this.state.polylines  is ', this.state.polylines, this.state.flightposition)
       } else {
@@ -211,7 +218,9 @@ class PolylineCreator extends React.Component {
             flightposition: [
               {
                 "longitude": infos['lon_gps'],
-                "latitude": infos['lat_gps']
+                "latitude": infos['lat_gps'],
+                latitudeDelta: 0.02,
+                longitudeDelta: 0.002,
               }
             ],
           })
@@ -244,7 +253,7 @@ class PolylineCreator extends React.Component {
     return (
       <ScrollView style={{backgroundColor: '#f7f7f7'}}>
         <View style={[CommonStyle.container, {zIndex: 1}]}>
-          <View style={[CommonStyle.navigationBar, {zIndex: 1,backgroundColor:'transparent'}]}>
+          <View style={[CommonStyle.navigationBar, {zIndex: 1, backgroundColor: 'transparent'}]}>
             <View style={CommonStyle.onbackArea}>
               <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                 onPress={() => this.pageJump()}
@@ -257,6 +266,7 @@ class PolylineCreator extends React.Component {
             <MapView
               provider={this.props.provider}
               style={styles.map}
+              initialRegion={this.state.region}
               region={this.state.region}
               scrollEnabled={false}
             >
@@ -282,6 +292,8 @@ class PolylineCreator extends React.Component {
                   this.marker1 = ref
                 }}
                 coordinate={this.state.flightposition[0]}
+                centerOffset={{x: -0, y: -6}}
+                anchor={{x: 0.84, y: 1}}
                 image={flagFlightImg}
                 onPress={()=> {
                   this._markerPress()
@@ -325,8 +337,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height:Dimensions.get('window').height,
-    width:Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    width: Dimensions.get('window').width,
   },
   map: {
     // ...StyleSheet.absoluteFillObject,
