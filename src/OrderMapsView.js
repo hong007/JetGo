@@ -301,7 +301,6 @@ class PolylineCreator extends React.Component {
             provider={this.props.provider}
             style={styles.map}
             region={this.state.region}
-            scrollEnabled={false}
             onRegionChange={(e)=> {
               this._onRegionChangeComplete(e)
             }}
