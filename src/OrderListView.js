@@ -285,7 +285,6 @@ export default class OrderListView extends React.Component {
             <TouchableOpacity style={{
               alignItems: 'flex-start',
               justifyContent: 'center',
-              paddingRight: 18,
               flexDirection: 'row',
             }} onPress={() => this.setState({showChooseOrderModal: true})}>
               <Image source={require('../img/order_type.png')}/>
@@ -460,7 +459,6 @@ export default class OrderListView extends React.Component {
             <TouchableOpacity style={{
               alignItems: 'flex-start',
               justifyContent: 'center',
-              paddingRight: 18,
               flexDirection: 'row',
             }} onPress={() => this.setState({showChooseOrderModal: true})}>
               <Image source={require('../img/order_type.png')}/>

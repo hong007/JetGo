@@ -13,7 +13,6 @@ import {
   StatusBar,
   AsyncStorage,
   BackAndroid,
-  ScrollView,
   TouchableOpacity,
 } from 'react-native';
 
@@ -33,7 +32,7 @@ const LATITUDE = 30.27760124206543;
 const LONGITUDE = 120.00386047363281;
 const LATITUDE_DELTA = 0.0922;
 
-var Token;
+var Token, orderState, infos, flightId;
 
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let ws = new WebSocket('ws://jieyan.xyitech.com/control/create');
@@ -44,17 +43,15 @@ class PolylineCreator extends React.Component {
       region: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.002,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
       },
-      flightposition: [
-        {
-          "longitude": "120.00386047363281",
-          "latitude": "30.27760124206543",
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.002,
-        }
-      ],
+      flightposition: {
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      },
       polylines: [
         {
           "longitude": "120.00386047363281",
@@ -64,6 +61,8 @@ class PolylineCreator extends React.Component {
       editing: null,
 
       showCallout: false,
+
+      flightId:'',
     };
   }
 
@@ -78,7 +77,6 @@ class PolylineCreator extends React.Component {
         Token = result[0][1];
         let curfid = result[1][1];
         _this._drawFlightLine(curfid);
-        _this._drawFlightPicture(curfid);
         // alert("返回数据是  " + curdata + "  " + "  数据类型是  " + typeof curdata + "   token是" + Token + "  DETAIL_ID  是    " + curfid);
       }
     })
@@ -126,6 +124,8 @@ class PolylineCreator extends React.Component {
       if (curdata.err == 0) {
         let routeDetail = JSON.parse(curdata.order.route.route.detail);
         // let routeDetail = curdata.order.route.route.detail;
+        orderState = curdata.order.state;
+        flightId = curdata.order.fid;
         for (var lnglat in routeDetail) {
           let TempLnglat = {
             longitude: routeDetail['' + lnglat].lng,
@@ -133,21 +133,44 @@ class PolylineCreator extends React.Component {
           }
           Lnglat.push(TempLnglat);
         }
-        _this.setState({
-          polylines: Lnglat,
-          region: {
-            latitude: Lnglat[0].latitude,
-            longitude: Lnglat[0].longitude,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.002,
-          },
-          flightposition: {
-            latitude: Lnglat[0].latitude,
-            longitude: Lnglat[0].longitude,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.002,
-          },
-        })
+        let length = Lnglat.length;
+        // 运单已送达，未确认收货
+        if (orderState == 5) {
+          _this.setState({
+            polylines: Lnglat,
+            region: {
+              latitude: Lnglat[0].latitude,
+              longitude: Lnglat[0].longitude,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            },
+            flightposition: {
+              latitude: Lnglat[length - 1].latitude,
+              longitude: Lnglat[length - 1].longitude,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            },
+            flightId:flightId,
+          })
+        } else {
+          _this._drawFlightPicture(flightId);
+          _this.setState({
+            polylines: Lnglat,
+            region: {
+              latitude: Lnglat[0].latitude,
+              longitude: Lnglat[0].longitude,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            },
+            flightposition: {
+              latitude: Lnglat[0].latitude,
+              longitude: Lnglat[0].longitude,
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            },
+            flightId:flightId,
+          })
+        }
         console.log('Lnglat  is ', Lnglat, ' this.state.polylines  is ', this.state.polylines, this.state.flightposition)
       } else {
         alert("请求数据失败！")
@@ -168,7 +191,6 @@ class PolylineCreator extends React.Component {
       if (res.data == 'undefined') {
         return;
       }
-      let flightId = id;
       let gettype = Object.prototype.toString;
       let resdt, msgid;
       let flight = [];
@@ -186,9 +208,10 @@ class PolylineCreator extends React.Component {
       if (msgid == 5) {
         begin += 1;
         let uid = resdt[begin];
+        console.log('msgid is ', msgid, '  uid is ', uid, ' flightId is ', flightId);
         if (uid == flightId) {
           begin += 1;
-          let infos = {};
+          infos = {};
           infos['time_std_s'] = resdt[begin];
           begin += 1;
           infos['fix_type'] = resdt[begin];
@@ -215,15 +238,14 @@ class PolylineCreator extends React.Component {
           // flight[uid]['gps_raw'] = infos;
           // console.log('有GPS返回 重新定位了飞机')
           _this.setState({
-            flightposition: [
-              {
-                "longitude": infos['lon_gps'],
-                "latitude": infos['lat_gps'],
-                latitudeDelta: 0.02,
-                longitudeDelta: 0.002,
-              }
-            ],
+            flightposition: {
+              "longitude": infos['lon_gps'],
+              "latitude": infos['lat_gps'],
+              latitudeDelta: LATITUDE_DELTA,
+              longitudeDelta: LONGITUDE_DELTA,
+            },
           })
+          console.log('flightposition is ', _this.state.flightposition)
         }
       } else {
         return;
@@ -249,76 +271,89 @@ class PolylineCreator extends React.Component {
     }
   }
 
+  _onRegionChangeComplete(e) {
+    let _this = this;
+    _this.setState({
+      region: {
+        "longitude": e.longitude,
+        "latitude": e.latitude,
+        latitudeDelta: e.latitudeDelta,
+        longitudeDelta: e.longitudeDelta,
+      },
+    })
+    console.info('region change is ', e)
+  }
+
   render() {
     return (
-      <ScrollView style={{backgroundColor: '#f7f7f7'}}>
-        <View style={[CommonStyle.container, {zIndex: 1}]}>
-          <View style={[CommonStyle.navigationBar, {zIndex: 1, backgroundColor: 'transparent'}]}>
-            <View style={CommonStyle.onbackArea}>
-              <TouchableOpacity style={CommonStyle.onbackAreaCont}
-                                onPress={() => this.pageJump()}
-              >
-                <Image source={require('../img/ic_back.png')}/>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.container}>
-            <MapView
-              provider={this.props.provider}
-              style={styles.map}
-              initialRegion={this.state.region}
-              region={this.state.region}
-              scrollEnabled={false}
+      <View style={[CommonStyle.container, {zIndex: 1}]}>
+        <View style={[CommonStyle.navigationBar, {zIndex: 1, backgroundColor: 'transparent'}]}>
+          <View style={CommonStyle.onbackArea}>
+            <TouchableOpacity style={CommonStyle.onbackAreaCont}
+                              onPress={() => this.pageJump()}
             >
-              <MapView.Polyline
-                coordinates={this.state.polylines}
-                strokeColor="#f00"
-                fillColor="rgba(255,0,0,0.5)"
-                strokeWidth={1}
-              />
-              {this.state.polylines.map(marker=>(
-                <MapView.Marker
-                  coordinate={marker}
-                  key={marker.key}
-                  pinColor="#00f"
-                  centerOffset={{x: -0, y: -6}}
-                  image={MARKER_BLUE_SRC}
-                >
-                </MapView.Marker>
-              ))}
-
-              <MapView.Marker
-                ref={ref=> {
-                  this.marker1 = ref
-                }}
-                coordinate={this.state.flightposition[0]}
-                centerOffset={{x: -0, y: -6}}
-                anchor={{x: 0.84, y: 1}}
-                image={flagFlightImg}
-                onPress={()=> {
-                  this._markerPress()
-                }}
-              >
-                <MapView.Callout tooltip style={styles.customView}>
-                  <CustomCallout>
-                    <Text>捷雁无人机正在配送中</Text>
-                  </CustomCallout>
-                </MapView.Callout>
-              </MapView.Marker>
-            </MapView>
-            <View style={styles.buttonContainer}>
-              {this.state.editing && (
-                <TouchableOpacity
-                  onPress={() => this.finish()}
-                  style={[styles.bubble, styles.button]}
-                >
-                  <Text>Finish</Text>
-                </TouchableOpacity>
-              )}
-            </View>
+              <Image source={require('../img/ic_back.png')}/>
+            </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
+        <View style={styles.container}>
+          <MapView
+            provider={this.props.provider}
+            style={styles.map}
+            region={this.state.region}
+            scrollEnabled={false}
+            onRegionChange={(e)=> {
+              this._onRegionChangeComplete(e)
+            }}
+          >
+            <MapView.Polyline
+              coordinates={this.state.polylines}
+              strokeColor="#f00"
+              fillColor="rgba(255,0,0,0.5)"
+              strokeWidth={1}
+            />
+            {this.state.polylines.map(marker=>(
+              <MapView.Marker
+                coordinate={marker}
+                key={marker.key}
+                pinColor="#00f"
+                centerOffset={{x: -0, y: -6}}
+                image={MARKER_BLUE_SRC}
+              >
+              </MapView.Marker>
+            ))}
+
+            <MapView.Marker
+              ref={ref=> {
+                this.marker1 = ref
+              }}
+              coordinate={this.state.flightposition}
+              centerOffset={{x: 2, y: -6}}
+              anchor={{x: 0.84, y: 1}}
+              image={flagFlightImg}
+              onPress={()=> {
+                this._markerPress()
+              }}
+            >
+              <MapView.Callout tooltip style={styles.customView}>
+                <CustomCallout>
+                  <Text>捷雁无人机{this.state.flightId}正在配送中</Text>
+                </CustomCallout>
+              </MapView.Callout>
+            </MapView.Marker>
+          </MapView>
+          <View style={styles.buttonContainer}>
+            {this.state.editing && (
+              <TouchableOpacity
+                onPress={() => this.finish()}
+                style={[styles.bubble, styles.button]}
+              >
+                <Text>Finish</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </View>
     );
   }
 }

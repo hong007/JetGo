@@ -20,6 +20,7 @@ const CommonStyle = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
     paddingLeft: 18,
+    paddingRight: 18,
     paddingTop: 5,
     paddingBottom: 5,
     height: (Platform.OS === 'android' ? 42 : 44),
@@ -52,7 +53,7 @@ const CommonStyle = StyleSheet.create({
   titleRightText:{
     alignItems: 'flex-start',
     justifyContent: 'center',
-    paddingRight: 18,
+    // paddingRight: 18,
   },
   content: {
     flex: 1,
