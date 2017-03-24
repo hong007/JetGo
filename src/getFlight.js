@@ -245,13 +245,15 @@ export default class getFlight extends React.Component {
       isLoadModalVisible: true
     });
     // }
-    _this.timer = setTimeout(
-      ()=> {
-        _this.setState({
-          isLoadModalVisible: false
-        });
-      }, 20000
-    );
+    // _this.timer = setTimeout(
+    //   ()=> {
+    //     // _this.setState({
+    //     //   isLoadModalVisible: false
+    //     // });
+    //     _this._canselFlightCount();
+    //     console.log('为嘛弹框自己消失，老实说，是不是你干的？')
+    //   }, 20000
+    // );
     let curId = this.state.detailData.order.id;
     let url = "http://jieyan.xyitech.com/order/_autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
     console.log("发送的起飞指令是 ", url)
@@ -262,26 +264,6 @@ export default class getFlight extends React.Component {
         // if(responseText&&)
         let curdata = JSON.parse(responseText);
         console.log('发送起飞指令返回数据 ', curdata);
-        // alert('发送起飞指令返回数据 ' + curdata + ' err  is  ' + JSON.stringify(curdata.err) + ' ' + curdata.err);
-        // AlertIOS.alert(
-        //   '起飞返回数据',
-        //   '当前运单状态错误',
-        //   [
-        //     {
-        //       text: '确定', onPress(){
-        //       _this.setState({
-        //         isLoadModalVisible: false,
-        //         planeFlightCount: 10,
-        //
-        //         flightTimerStatus: false,
-        //         countFull: false,
-        //         fill: 0,
-        //       });
-        //       _this.refs.circularProgress.performLinearAnimation(0, 100);
-        //     }
-        //     }
-        //   ]
-        // );
         if (curdata.err == 0) {
           console.log('返回起飞成功 ', curdata);
           if (curdata.state == 2) {
