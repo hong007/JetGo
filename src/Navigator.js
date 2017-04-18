@@ -44,7 +44,7 @@ export default class navigator extends Component {
   componentWillMount() {
     let _this = this;
     console.log('是否取得存储值,取得得存储值是')
-    _this._checkIfUpdate();
+    // _this._checkIfUpdate();
     AsyncStorage.getItem('ISFIRSTTIMESTART'), function (errs, result) {
       if (!errs) {
         console.log('是否取得存储值,取得得存储值是',result)

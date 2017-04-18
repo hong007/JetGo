@@ -49,7 +49,7 @@ export default class getFlight extends React.Component {
 
       isLoadModalVisible: false,
       modalGetFlightCountDown: false,
-      planeFlightCount: 10,
+      planeFlightCount: 5,
 
       fill: 0,
       flightTimerStatus: false,
@@ -207,7 +207,7 @@ export default class getFlight extends React.Component {
 
   _confirmPlaneFlight() {
     // let planeCount = value;
-    let planeCount = 10;
+    let planeCount = 5;
     let _this = this;
     _this.setState({
       modalGetFlightCountDown: true,
@@ -285,7 +285,7 @@ export default class getFlight extends React.Component {
                   text: '确定', onPress(){
                   _this.setState({
                     isLoadModalVisible: false,
-                    planeFlightCount: 10,
+                    planeFlightCount: 5,
 
                     flightTimerStatus: false,
                     countFull: false,
@@ -308,7 +308,7 @@ export default class getFlight extends React.Component {
                   text: '确定', onPress(){
                   _this.setState({
                     isLoadModalVisible: false,
-                    planeFlightCount: 10,
+                    planeFlightCount: 5,
 
                     flightTimerStatus: false,
                     countFull: false,
@@ -328,7 +328,7 @@ export default class getFlight extends React.Component {
                   text: '确定', onPress(){
                   _this.setState({
                     isLoadModalVisible: false,
-                    planeFlightCount: 10,
+                    planeFlightCount: 5,
 
                     flightTimerStatus: false,
                     countFull: false,
@@ -351,7 +351,7 @@ export default class getFlight extends React.Component {
                   text: '确定', onPress(){
                   _this.setState({
                     isLoadModalVisible: false,
-                    planeFlightCount: 10,
+                    planeFlightCount: 5,
 
                     flightTimerStatus: false,
                     countFull: false,
@@ -371,7 +371,7 @@ export default class getFlight extends React.Component {
                   text: '确定', onPress(){
                   _this.setState({
                     isLoadModalVisible: false,
-                    planeFlightCount: 10,
+                    planeFlightCount: 5,
 
                     flightTimerStatus: false,
                     countFull: false,
@@ -394,7 +394,7 @@ export default class getFlight extends React.Component {
     _this.setState({
       isLoadModalVisible: false,
       modalGetFlightCountDown: false,
-      planeFlightCount: 10,
+      planeFlightCount: 5,
 
       flightTimerStatus: false,
       countFull: false,
@@ -518,7 +518,7 @@ export default class getFlight extends React.Component {
                 width={10}
                 fill={this.state.fill}
                 tintColor="#EB753A"
-                backgroundColor="#313131">
+                backgroundColor="#f7f7f7">
                 {
                   (fill) => (
                     <TouchableOpacity style={{
