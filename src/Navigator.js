@@ -30,23 +30,35 @@ import NetUtil from './NetUtil';
 import SplashScreen from 'react-native-splash-screen';
 import _updateConfig from '../package.json';
 
-
 export default class navigator extends Component {
   constructor(props) {
     super(props);
     this.state = {
       defaultName: '',
       defaultComponent: '',
+
+      isFirstTimeStart: false,
     };
   }
 
   componentWillMount() {
-    // this._checkIfUpdate();
+    let _this = this;
+    console.log('是否取得存储值,取得得存储值是')
+    // _this._checkIfUpdate();
+    AsyncStorage.getItem('ISFIRSTTIMESTART'), function (errs, result) {
+      if (!errs) {
+        console.log('是否取得存储值,取得得存储值是',result)
+        _this.setState({
+          isFirstTimeStart: true,
+        })
+      }
+    }
   }
 
   componentDidMount() {
     StatusBar.setBackgroundColor('#000', true);
     SplashScreen.hide();
+    AsyncStorage.setItem("ISFIRSTTIMESTART", 'true');
   }
 
   // 检查是否更新
@@ -97,9 +109,10 @@ export default class navigator extends Component {
   }
 
   render() {
-    if (Platform.OS != "android") {
-      let defaultName = 'APPStart';
-      let defaultComponent = APPStart;
+    if (!this.state.isFirstTimeStart) {
+      console.log(' 第一次启动')
+      let defaultName = 'HelloJetGo';
+      let defaultComponent = HelloJetGo;
       // let defaultName = 'Main';
       // let defaultComponent = Main;
       return (
@@ -115,10 +128,9 @@ export default class navigator extends Component {
         />
       );
     } else {
-      let defaultName = 'HelloJetGo';
-      let defaultComponent = HelloJetGo;
-      // let defaultName = 'Main';
-      // let defaultComponent = Main;
+      console.log('已经登录')
+      let defaultName = 'Main';
+      let defaultComponent = Main;
       return (
         <Navigator
           initialRoute={{name: defaultName, component: defaultComponent}}

@@ -83,12 +83,12 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 22
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0.0"
         ndk {
@@ -134,6 +134,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-maps')
+    compile project(':react-native-spinkit')
+    compile project(':react-native-camera')
     compile project(':react-native-splash-screen')
     compile project(':react-native-barcodescanner')
     compile fileTree(dir: "libs", include: ["*.jar"])

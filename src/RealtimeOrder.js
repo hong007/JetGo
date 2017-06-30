@@ -15,16 +15,22 @@ import  {
   Platform,
   StatusBar,
   Dimensions,
-  ToastAndroid,
   BackAndroid,
   AsyncStorage,
+  ScrollView,
   ProgressBarAndroid,
 } from 'react-native';
+import CommonStyle from './CommonStyle';
+import {toastShort} from './common/ToastUtil';
+import ReactNative from 'react-native';
+
+
 import NetUtil from './NetUtil';
 import OrderListView from './OrderListView';
+import OrderMapsView from './OrderMapsView';
 import DialPhone from './DialPhone';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 var Token;
 
@@ -62,10 +68,11 @@ export default class getFlight extends React.Component {
       BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
       _this.pageJump();
       return true;
-    }else{
+    } else {
       return true;
     }
   }
+
   componentDidMount() {
     // StatusBar.setBackgroundColor('#000', true);
     Ctrl.setStatusBar();
@@ -212,8 +219,19 @@ export default class getFlight extends React.Component {
     //   _this.setState({
     //     isLoadModalVisible: false,
     //   });
-    //   ToastAndroid.show('暂时无法确认，请稍后重试！', ToastAndroid.SHORT);
+    //   toastShort('暂时无法确认，请稍后重试！');
     // }
+  }
+  _orderOpenInMaps(){
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+    clearInterval(this.timer);
+    this.props.navigator.push({
+      name: 'OrderMapsView',
+      component: OrderMapsView,
+      params: {
+        title: 'OrderMapsView'
+      },
+    });
   }
 
 
@@ -222,143 +240,218 @@ export default class getFlight extends React.Component {
     console.warn('YellowBox is disabled.');
     var isChecked = this.state.checked ? 'yes' : 'no';
     if (this.state.detailDataLoaded) {
-      return (
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: '#f7f7f7'
-        }}>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-            paddingLeft: 18,
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-              <TouchableOpacity style={{
-                height: 44,
-                width: 44,
-                paddingTop: 15,
-              }}
-                                onPress={() => this.pageJump()}
-              >
-                <Image source={require('../img/ic_back.png')}/>
-              </TouchableOpacity>
-            </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
-            </View>
-            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
-            </View>
-          </View>
-          <View style={routeStyle.rContianer}>
-            <View style={{}}>
-              <Image style={{
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                width: Dimensions.get('window').width,
-                height: 153 * Ctrl.pxToDp(),
-              }}
-                     source={require('../img/orderrealtime.png')}><Text
-                style={{
-                  textAlign: 'center',
-                  color: '#fff',
-                  marginBottom: 50 * Ctrl.pxToDp(),
-                  fontSize: 14 * Ctrl.pxToDp(),
-                  backgroundColor: 'transparent'
-                }}>预计<Text
-                style={{fontSize: 22 * Ctrl.pxToDp(),}}
-                value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>
-            </View>
-            <View style={{backgroundColor: '#f7f7f7', height: 180 * Ctrl.pxToDp()}}>
-              <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                         title={this.state.detailData.order.route.airport[1].contact_name+' '+this.state.detailData.order.route.airport[1].phone}/>
-              <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
-                <Text
-                  style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
-                <Text
-                  style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
-              </View>
-
-              <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
-                <Image source={require('../img/flight.png')}/>
-                <View style={{
-                  flex: 3,
-                  height: 95 * Ctrl.pxToDp(),
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <View style={[routeStyle.rItem, {height: 20 * Ctrl.pxToDp()}]}>
-                    <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
-                  </View>
-                  <View style={[routeStyle.rItem, {height: 16 * Ctrl.pxToDp()}]}>
-                    <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
-                    <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
-                  </View>
-
-                  <View style={[routeStyle.rItem, {height: 16 * Ctrl.pxToDp()}]}>
-                    <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
-                    <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
-                  </View>
+      if(Platform.OS==='android') {
+        return (
+          <ScrollView style={{backgroundColor: '#f7f7f7'}}>
+            <View style={CommonStyle.container}>
+              <View style={CommonStyle.navigationBar}>
+                <View style={CommonStyle.onbackArea}>
+                  <TouchableOpacity style={CommonStyle.onbackAreaCont}
+                                    onPress={() => this.pageJump()}
+                  >
+                    <Image source={require('../img/ic_back.png')}/>
+                  </TouchableOpacity>
+                </View>
+                <View style={CommonStyle.title}>
+                  <Text style={CommonStyle.titleText}>实时运单</Text>
+                </View>
+                <View style={CommonStyle.titleRight}>
                 </View>
               </View>
-            </View>
-            <View style={{alignItems: 'center', justifyContent: 'center', height: 150 * Ctrl.pxToDp(),}}>
-              <Image style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: 70 * Ctrl.pxToDp(),
-                resizeMode: Image.resizeMode.contain
-              }}
-                     source={require('../img/flight02.png')}><Text
-                style={{textAlign: 'center'}}>距离投递点<Text style={{
-                fontSize: 22 * Ctrl.pxToDp(),
-                color: '#313131',
-              }}>{this.state.durationValue}&nbsp;&nbsp;</Text>公里</Text></Image>
-            </View>
-          </View>
+              <View style={routeStyle.rContianer}>
+                <View style={{}}>
+                  <Image style={{
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    width: Dimensions.get('window').width,
+                    height: 153 * Ctrl.pxToDp(),
+                  }}
+                         source={require('../img/orderrealtime.png')}><Text
+                    style={{
+                      textAlign: 'center',
+                      color: '#fff',
+                      marginBottom: 50 * Ctrl.pxToDp(),
+                      fontSize: 14 * Ctrl.pxToDp(),
+                      backgroundColor: 'transparent'
+                    }}>预计<Text
+                    style={{fontSize: 22 * Ctrl.pxToDp(),}}
+                    value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>
+                </View>
+                <View style={{backgroundColor: '#f7f7f7', height: 180 * Ctrl.pxToDp()}}>
+                  <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
+                             title={this.state.detailData.order.route.airport[1].contact_name + ' ' + this.state.detailData.order.route.airport[1].phone}/>
+                  <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
+                    <Text
+                      style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
+                    <Text
+                      style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
+                  </View>
 
-          <TouchableOpacity style={this.state.buttonStatus ? routeStyle.button2 : routeStyle.button1} onPress={()=> {
-            this.orderConfirm()
-          }}>
-            <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>确认收货</Text>
-          </TouchableOpacity>
-          <ModalComp modalValue={this.state.isLoadModalVisible}/>
-        </View>
-      )
+                  <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
+                    <Image source={require('../img/flight.png')}/>
+                    <View style={{
+                      flex: 3,
+                      height: 95 * Ctrl.pxToDp(),
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <View style={[routeStyle.rItem, {height: 20 * Ctrl.pxToDp()}]}>
+                        <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
+                      </View>
+                      <View style={[routeStyle.rItem, {height: 16 * Ctrl.pxToDp()}]}>
+                        <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
+                        <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
+                      </View>
+
+                      <View style={[routeStyle.rItem, {height: 16 * Ctrl.pxToDp()}]}>
+                        <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
+                        <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+                <View style={{alignItems: 'center', justifyContent: 'center', height: 150 * Ctrl.pxToDp(),}}>
+                  <Image style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: 70 * Ctrl.pxToDp(),
+                    resizeMode: Image.resizeMode.contain
+                  }}
+                         source={require('../img/flight02.png')}><Text
+                    style={{textAlign: 'center'}}>距离投递点<Text style={{
+                    fontSize: 22 * Ctrl.pxToDp(),
+                    color: '#313131',
+                  }}>{this.state.durationValue}&nbsp;&nbsp;</Text>公里</Text></Image>
+                </View>
+              </View>
+
+              <TouchableOpacity style={this.state.buttonStatus ? routeStyle.button2 : routeStyle.button1}
+                                onPress={()=> {
+                                  this.orderConfirm()
+                                }}>
+                <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>确认收货</Text>
+              </TouchableOpacity>
+              <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
+            </View>
+          </ScrollView>
+        )
+      }else{
+        return (
+          <ScrollView style={{backgroundColor: '#f7f7f7'}}>
+            <View style={CommonStyle.container}>
+              <View style={CommonStyle.navigationBar}>
+                <View style={CommonStyle.onbackArea}>
+                  <TouchableOpacity style={CommonStyle.onbackAreaCont}
+                                    onPress={() => this.pageJump()}
+                  >
+                    <Image source={require('../img/ic_back.png')}/>
+                  </TouchableOpacity>
+                </View>
+                <View style={CommonStyle.title}>
+                  <Text style={CommonStyle.titleText}>实时运单</Text>
+                </View>
+                <View style={CommonStyle.titleRight}>
+                  <Text style={[CommonStyle.titleRightText, {color: '#EB753A',}]}
+                        onPress={()=> {
+                          this._orderOpenInMaps()
+                        }}>地图</Text>
+                </View>
+              </View>
+              <View style={routeStyle.rContianer}>
+                <View style={{}}>
+                  <Image style={{
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    width: Dimensions.get('window').width,
+                    height: 153 * Ctrl.pxToDp(),
+                  }}
+                         source={require('../img/orderrealtime.png')}><Text
+                    style={{
+                      textAlign: 'center',
+                      color: '#fff',
+                      marginBottom: 50 * Ctrl.pxToDp(),
+                      fontSize: 14 * Ctrl.pxToDp(),
+                      backgroundColor: 'transparent'
+                    }}>预计<Text
+                    style={{fontSize: 22 * Ctrl.pxToDp(),}}
+                    value={this.state.durationValue}>{this.state.durationValue}&nbsp;&nbsp;</Text>分钟后到达</Text></Image>
+                </View>
+                <View style={{backgroundColor: '#f7f7f7', height: 180 * Ctrl.pxToDp()}}>
+                  <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
+                             title={this.state.detailData.order.route.airport[1].contact_name + ' ' + this.state.detailData.order.route.airport[1].phone}/>
+                  <View style={[routeStyle.rItem, {marginBottom: 1,}]}>
+                    <Text
+                      style={[routeStyle.rTextLeft, {flex: 2}]}>运单编号:&nbsp;&nbsp;&nbsp;{(this.state.detailData.order.serial_no == '') ? this.state.detailData.order.id : this.state.detailData.order.serial_no}</Text>
+                    <Text
+                      style={[routeStyle.rTextRight, {flex: 1}]}>{Ctrl.orderState(this.state.detailData.order.state)}</Text>
+                  </View>
+
+                  <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
+                    <Image source={require('../img/flight.png')}/>
+                    <View style={{
+                      flex: 3,
+                      height: 95 * Ctrl.pxToDp(),
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
+                      <View style={[routeStyle.rItem, {height: 20 * Ctrl.pxToDp()}]}>
+                        <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
+                      </View>
+                      <View style={[routeStyle.rItem, {height: 16 * Ctrl.pxToDp()}]}>
+                        <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
+                        <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
+                      </View>
+
+                      <View style={[routeStyle.rItem, {height: 16 * Ctrl.pxToDp()}]}>
+                        <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
+                        <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
+                      </View>
+                    </View>
+                  </View>
+                </View>
+                <View style={{alignItems: 'center', justifyContent: 'center', height: 150 * Ctrl.pxToDp(),}}>
+                  <Image style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: 70 * Ctrl.pxToDp(),
+                    resizeMode: Image.resizeMode.contain
+                  }}
+                         source={require('../img/flight02.png')}><Text
+                    style={{textAlign: 'center'}}>距离投递点<Text style={{
+                    fontSize: 22 * Ctrl.pxToDp(),
+                    color: '#313131',
+                  }}>{this.state.durationValue}&nbsp;&nbsp;</Text>公里</Text></Image>
+                </View>
+              </View>
+
+              <TouchableOpacity style={this.state.buttonStatus ? routeStyle.button2 : routeStyle.button1}
+                                onPress={()=> {
+                                  this.orderConfirm()
+                                }}>
+                <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>确认收货</Text>
+              </TouchableOpacity>
+              <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
+            </View>
+          </ScrollView>
+        )
+      }
     } else {
       return (
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: '#f7f7f7'
-        }}>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-            paddingLeft: 18,
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-              <TouchableOpacity style={{
-                height: 44,
-                width: 44,
-                paddingTop: 15,
-              }}
+        <View style={CommonStyle.container}>
+          <View style={CommonStyle.navigationBar}>
+            <View style={CommonStyle.onbackArea}>
+              <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                 onPress={() => this.pageJump()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
             </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>实时运单</Text>
+            <View style={CommonStyle.title}>
+              <Text style={CommonStyle.titleText}>实时运单</Text>
             </View>
-            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            <View style={CommonStyle.titleRight}>
             </View>
           </View>
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>

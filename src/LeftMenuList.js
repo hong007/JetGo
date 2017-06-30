@@ -22,7 +22,6 @@ import Lawyer from './Lawyer';
 import AboutUS from './AboutUS';
 import Ctrl from './Ctrl';
 
-
 export default class LeftMenuList extends Component {
   constructor(props) {
     super(props);

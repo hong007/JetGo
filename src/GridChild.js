@@ -8,6 +8,8 @@ import  {
     StyleSheet,
     TouchableOpacity
 } from 'react-native';
+import Ctrl from './Ctrl';
+
 export default class GridChild extends React.Component {
     constructor(props) {
         super(props);
@@ -31,37 +33,41 @@ export default class GridChild extends React.Component {
 }
 const gridStyles = StyleSheet.create({
     gridItem: {
-        width: 75,
-        height: 38,
+        width: 75*Ctrl.pxToDp(),
+        height: 38*Ctrl.pxToDp(),
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         backgroundColor: '#fff',
         marginLeft: 10,
-        marginTop: 10,
+        marginTop: 10*Ctrl.pxToDp(),
         borderRadius: 2.4,
-        paddingTop: 8,
+        paddingTop: 10*Ctrl.pxToDp(),
+        paddingBottom: 10*Ctrl.pxToDp(),
         borderColor:'#ededed',
         borderWidth:1,
     },
     gridItemChoosed: {
-        width: 75,
-        height: 38,
+        width: 75*Ctrl.pxToDp(),
+        height: 38*Ctrl.pxToDp(),
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         backgroundColor: '#313131',
         marginLeft: 10,
-        marginTop: 10,
+        marginTop: 10*Ctrl.pxToDp(),
         borderRadius: 2.4,
-        paddingTop: 8,
+        paddingTop: 10*Ctrl.pxToDp(),
+        paddingBottom: 10*Ctrl.pxToDp(),
     },
     gridText: {
-        width: 75,
+        width: 75*Ctrl.pxToDp(),
         color: '#a09f9f',
         textAlign: 'center',
+        backgroundColor:'transparent',
     },
     gridTextChoosed: {
-        width: 75,
+        width: 75*Ctrl.pxToDp(),
         textAlign: 'center',
         color: '#fff',
+        backgroundColor:'transparent',
     }
 })

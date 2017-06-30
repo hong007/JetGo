@@ -10,17 +10,17 @@ import{
   Picker,
   Image,
   TextInput,
+  Platform,
   DeviceEventEmitter,
-  ToastAndroid,
   AsyncStorage,
   Dimensions,
 } from 'react-native';
-
+import {toastShort} from './common/ToastUtil';
 import ModalPicker from 'react-native-modal-picker'
 
 import NetUtil from './NetUtil';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 
 class PickerComponent extends React.Component {
@@ -84,7 +84,7 @@ class PickerComponent extends React.Component {
             _this.setState({
               isLoadModalVisible: false
             });
-            ToastAndroid.show('获取航路失败请重试', ToastAndroid.SHORT);
+            toastShort('获取航路失败请重试');
             DeviceEventEmitter.emit("routeChange", false);
           }
         });
@@ -98,9 +98,12 @@ class PickerComponent extends React.Component {
     });
     // console.log("取得的站点id是", index);
     let _this = this;
-    _this.setState({
-      isLoadModalVisible: true
-    });
+    console.log("请求之前打开模态框");
+    // if (Platform.OS === "android") {
+    // _this.setState({
+    //   isLoadModalVisible: true
+    // });
+    // }
     _this.timer = setTimeout(
       ()=> {
         _this.setState({
@@ -121,6 +124,9 @@ class PickerComponent extends React.Component {
             routes = JSON.parse(routes);
             console.log('routes list is ', routes, '  ', typeof routes);
             if (routes.length > 0) {
+              _this.setState({
+                isLoadModalVisible: true
+              });
               let TempStation = [];
               for (let i = 0; i < routes.length; i++) {
                 let singleStation = {};
@@ -134,27 +140,36 @@ class PickerComponent extends React.Component {
               _this.setState({
                 // start_airports_load: true,
                 airportsEndData: TempStation,
-                isLoadModalVisible: false
+                // isLoadModalVisible: false,
               });
+
+              console.log("请求成功关闭模态框");
               DeviceEventEmitter.emit("routeChange", true);
 
             } else {
-              _this.setState({
-                stationEnd: '--请选择--',
-                airportsEndData: [],
-                isLoadModalVisible: false,
-              });
-              ToastAndroid.show('该站点没有对应航路，请重试', ToastAndroid.SHORT);
-              DeviceEventEmitter.emit("routeChange", false);
+              _this.timer = setTimeout(
+                ()=> {
+                  _this.setState({
+                    stationEnd: '--请选择--',
+                    airportsEndData: [],
+                    isLoadModalVisible: false,
+                  });
+                  toastShort('该站点没有对应航路，请重试');
+                  DeviceEventEmitter.emit("routeChange", false);
+                }, 1000
+              );
             }
-
           } else {
-            _this.setState({
-              airportsEndData: [],
-              isLoadModalVisible: false
-            });
-            ToastAndroid.show('获取航路失败请重试', ToastAndroid.SHORT);
-            DeviceEventEmitter.emit("routeChange", false);
+            _this.timer = setTimeout(
+              ()=> {
+                _this.setState({
+                  airportsEndData: [],
+                  isLoadModalVisible: false
+                });
+                toastShort('获取航路失败请重试');
+                DeviceEventEmitter.emit("routeChange", false);
+              }, 1000
+            );
           }
         });
       }
@@ -162,20 +177,24 @@ class PickerComponent extends React.Component {
   }
 
   chooseAirPortsEnd(index, value) {
-    this.setState({
-      stationEnd: value,
-    });
+    let _this = this;
+    _this.timer = setTimeout(
+      ()=> {
+        _this.setState({
+          stationEnd: value,
+          isLoadModalVisible: false,
+        });
+      }, 1000
+    );
     AsyncStorage.setItem("ROUTE_ID", index);
     console.log('存储的航路id是', index);
-
   }
 
   render() {
     if (this.state.airports_status) {
       return (
         <View style={PickerStyle.Container}>
-          <View>
-            <Text style={PickerStyle.bgSPoint}> </Text>
+          <View style={PickerStyle.ModalItem}>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15}}
               data={this.state.airportsData}
@@ -192,9 +211,9 @@ class PickerComponent extends React.Component {
                   borderColor: '#F2F2F2',
                 }]}>{this.state.stationStart}</Text>
             </ModalPicker>
+            <View style={PickerStyle.bgSPoint}></View>
           </View>
-          <View>
-            <Text style={PickerStyle.bgEPoint}> </Text>
+          <View style={PickerStyle.ModalItem}>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15,}}
               data={this.state.airportsEndData}
@@ -208,15 +227,15 @@ class PickerComponent extends React.Component {
               <Text
                 style={PickerStyle.pickerText}>{this.state.stationEnd}</Text>
             </ModalPicker>
+            <View style={PickerStyle.bgEPoint}></View>
           </View>
-          <ModalComp modalValue={this.state.isLoadModalVisible}/>
+          <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
         </View>
       )
     } else {
       return (
         <View style={PickerStyle.Container}>
-          <View>
-            <Text style={PickerStyle.bgSPoint}> </Text>
+          <View style={PickerStyle.ModalItem}>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15,}}
               data={this.state.airportsData}
@@ -233,9 +252,9 @@ class PickerComponent extends React.Component {
                   borderColor: '#F2F2F2',
                 }]}>{this.state.stationStart}</Text>
             </ModalPicker>
+            <View style={PickerStyle.bgSPoint}></View>
           </View>
-          <View>
-            <Text style={PickerStyle.bgEPoint}> </Text>
+          <View style={PickerStyle.ModalItem}>
             <ModalPicker
               optionStyle={{height: 60 * Ctrl.pxToDp(), paddingTop: 15}}
               data={this.state.airportsEndData}
@@ -249,8 +268,9 @@ class PickerComponent extends React.Component {
               <Text
                 style={PickerStyle.pickerText}>{this.state.stationEnd}</Text>
             </ModalPicker>
+            <View style={PickerStyle.bgEPoint}></View>
           </View>
-          <ModalComp modalValue={this.state.isLoadModalVisible}/>
+          <LoadingViewComp  loadingType="Bounce" modalValue={this.state.isLoadModalVisible}/>
         </View>
       )
     }
@@ -261,6 +281,11 @@ const PickerStyle = StyleSheet.create({
     height: 100 * Ctrl.pxToDp(),
     backgroundColor: '#fff',
     borderRadius: 5,
+  },
+  ModalItem: {
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#fff',
   },
   pickerText: {
     padding: 15 * Ctrl.pxToDp(),

@@ -1,46 +1,52 @@
 package com.jetgo;
 
-import android.app.Application;
-import android.util.Log;
+  import android.app.Application;
+  import android.util.Log;
 
-import com.facebook.react.ReactApplication;
-import com.cboy.rn.splashscreen.SplashScreenReactPackage;
-import com.eguma.barcodescanner.BarcodeScannerPackage;
-import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.ReactNativeHost;
-import com.facebook.react.ReactPackage;
-import com.facebook.react.shell.MainReactPackage;
-import com.facebook.soloader.SoLoader;
+  import com.facebook.react.ReactApplication;
+  import com.airbnb.android.react.maps.MapsPackage;
+  import com.react.rnspinkit.RNSpinkitPackage;
+  import com.lwansbrough.RCTCamera.RCTCameraPackage;
+  import com.cboy.rn.splashscreen.SplashScreenReactPackage;
+  import com.eguma.barcodescanner.BarcodeScannerPackage;
+  import com.facebook.react.ReactInstanceManager;
+  import com.facebook.react.ReactNativeHost;
+  import com.facebook.react.ReactPackage;
+  import com.facebook.react.shell.MainReactPackage;
+  import com.facebook.soloader.SoLoader;
 
-import java.util.Arrays;
-import java.util.List;
+  import java.util.Arrays;
+  import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
+  public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    @Override
-    protected boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
-    }
-
-    @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-          new SplashScreenReactPackage(),
-          new BarcodeScannerPackage()
-      );
-    }
-  };
-
   @Override
-  public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
+  protected boolean getUseDeveloperSupport() {
+  return BuildConfig.DEBUG;
   }
 
   @Override
-  public void onCreate() {
+  protected List<ReactPackage> getPackages() {
+  return Arrays.<ReactPackage>asList(
+    new MainReactPackage(),
+    new MapsPackage(),
+    new RNSpinkitPackage(),
+    new RCTCameraPackage(),
+    new SplashScreenReactPackage(),
+    new BarcodeScannerPackage()
+    );
+    }
+    };
+
+    @Override
+    public ReactNativeHost getReactNativeHost() {
+    return mReactNativeHost;
+    }
+
+    @Override
+    public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-  }
-}
+    }
+    }

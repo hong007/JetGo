@@ -12,7 +12,6 @@ import  {
   Picker,
   Modal,
   StatusBar,
-  ToastAndroid,
   BackAndroid,
   AsyncStorage,
   Dimensions,
@@ -22,15 +21,18 @@ import  {
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
+import CommonStyle from './CommonStyle';
+import {toastShort} from './common/ToastUtil';
+
 import getFlight from './getFlight';
 import Main from './Main';
 import NetUtil from './NetUtil';
 import GridChild from './GridChild';
-import BarcodeScanner from './BarcodeScanner';
+// import BarcodeScanner from './BarcodeScanner';
+import BarcodeScannerBoth from './BarcodeScannerBoth';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 import ReactNative from 'react-native';
-
 
 var Token;
 var orderTypeList = [];
@@ -122,7 +124,7 @@ export default class ScanComponent extends React.Component {
             AsyncStorage.setItem("SINGLE_ROUTE", JSON.stringify(curdata.route));
           } else {
             // alert("没有该航路，请重试");
-            ToastAndroid.show('没有该航路，请重试', ToastAndroid.SHORT);
+            toastShort('没有该航路，请重试');
           }
         });
         // alert(route_id)
@@ -230,12 +232,12 @@ export default class ScanComponent extends React.Component {
         if (!reg.test(pWeight)) {
           // alert(123)
           // alert("重量必须为数字，不能含有中英文字符");
-          ToastAndroid.show('重量必须为数字，不能含有中英文字符!', ToastAndroid.SHORT);
+          toastShort('重量必须为数字，不能含有中英文字符!');
           return false;
         }
         if (pWeight > 5) {
           // alert("包裹重量不能大于5公斤");
-          ToastAndroid.show('包裹重量不能大于5公斤!', ToastAndroid.SHORT);
+          toastShort('包裹重量不能大于5公斤!');
           return false;
         }
         // if(typeof pWeight!="number"){
@@ -277,10 +279,10 @@ export default class ScanComponent extends React.Component {
         // alert("提交的信息是  " + url);
         if (_this.state.scannText == "") {
           // alert("飞机id不能为空");
-          ToastAndroid.show('飞机id不能为空!', ToastAndroid.SHORT);
+          toastShort('飞机id不能为空!');
         } else if (!_this.state.scannText) {
           // alert("飞机id不存在");
-          ToastAndroid.show('飞机id不存在!', ToastAndroid.SHORT);
+          toastShort('飞机id不存在!');
         } else {
           _this.setState({
             isLoadModalVisible: true
@@ -295,10 +297,11 @@ export default class ScanComponent extends React.Component {
           NetUtil.postJson(url, (responseText)=> {
             if (!responseText || responseText == "") {
               // alert("提交失败，请重试！");
-              ToastAndroid.show('提交失败，请重试!', ToastAndroid.SHORT);
+              toastShort('提交失败，请重试!');
             } else {
+              console.log("返回的信息是  ", responseText, "  数据类型是  ", typeof responseText, "  订单id是 ", responseText.id);
+
               let curdata = JSON.parse(responseText);
-              console.log("返回的信息是  ", curdata, "  数据类型是  ", typeof curdata, "  订单id是 ", curdata.id);
               if (curdata.err == '0') {
                 // console.log("存储缓存中的ORDER_ID是  ", JSON.stringify(curdata.id));
                 // AsyncStorage.setItem("ORDER_ID", JSON.stringify(curdata.id));
@@ -320,7 +323,7 @@ export default class ScanComponent extends React.Component {
                     });
                   }, 2000
                 )
-                ToastAndroid.show(curdata.msg, ToastAndroid.SHORT);
+                toastShort(curdata.msg);
               }
             }
           })
@@ -355,40 +358,25 @@ export default class ScanComponent extends React.Component {
       if (!this.state.isPackageType) {
         if (this.state.ShowSubmitButtonStatus) {
           return (
-            <View style={{
-              flex: 1,
-              flexDirection: 'column',
-              backgroundColor: '#f7f7f7'
-            }}>
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-                backgroundColor: '#fff',
-                paddingLeft: 18,
-                paddingTop: 5,
-                paddingBottom: 5,
-              }}>
-                <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-                  <TouchableOpacity style={{
-                    height: 44,
-                    width: 44,
-                    paddingTop: 15,
-                  }}
+            <View style={CommonStyle.container}>
+              <View style={CommonStyle.navigationBar}>
+                <View style={CommonStyle.onbackArea}>
+                  <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                     onPress={() => this._onBack()}
                   >
                     <Image source={require('../img/ic_back.png')}/>
                   </TouchableOpacity>
                 </View>
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-                  <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+                <View style={CommonStyle.title}>
+                  <Text style={CommonStyle.titleText}>飞机扫码</Text>
                 </View>
-                <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+                <View style={CommonStyle.titleRight}>
                 </View>
               </View>
               <ScrollView style={{flex: 1,}} ref='scroll' keyboardShouldPersistTaps={true}>
                 <View style={{
                   flex: 1,
-                  height: Dimensions.get('window').height - (Platform.OS === 'android' ? 80 : 50)
+                  height: Dimensions.get('window').height - (Platform.OS === 'android' ? 80 : 70)
                 }} onStartShouldSetResponderCapture={(e) => {
                   let target = e.nativeEvent.target;
                   if (target !== ReactNative.findNodeHandle(this.refs.hour)) {
@@ -396,13 +384,15 @@ export default class ScanComponent extends React.Component {
                   }
                 }}>
                   <View style={{flex: 1,}}>
-
                     <View style={scanStyle.TextInputView}>
                       <TextInput style={scanStyle.TextInput}
                                  underlineColorAndroid='transparent'
+                                 returnKeyType='done'
+                                 autoCapitalize="none"
+
                                  placeholder='扫码或输入无人机上的二维码'
-                                 keyboardType="numeric"
-                                 clearButtonMode="unless-editing"
+                                 keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
+                                 clearButtonMode="never"
                                  value={this.state.scannText}
                                  onChangeText={
                                    (scannText) => {
@@ -422,8 +412,8 @@ export default class ScanComponent extends React.Component {
                           }}
                           onPress={()=> {
                             this.props.navigator.push({
-                              name: 'BarcodeScanner',
-                              component: BarcodeScanner
+                              name: 'BarcodeScannerBoth',
+                              component: BarcodeScannerBoth
                             });
                           }}></Text></Image>
                       <Text style={{height: 0,}}>{this.state.scannText}</Text>
@@ -460,7 +450,6 @@ export default class ScanComponent extends React.Component {
                         transparent={true}
                         visible={this.state.girdModalVisible}
                         onRequestClose={() => {
-                          alert("Modal has been closed.")
                         }}
                       >
                         <View style={{
@@ -525,8 +514,11 @@ export default class ScanComponent extends React.Component {
                             textAlign: 'right'
                           }]}
                           underlineColorAndroid='transparent'
+                          returnKeyType='done'
+                          autoCapitalize="none"
+
                           placeholder='1公斤'
-                          keyboardType="numeric"
+                          keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
                           clearButtonMode="unless-editing"
                           placeholderTextColor='#a09f9f'
                           onFocus={
@@ -565,7 +557,7 @@ export default class ScanComponent extends React.Component {
                     }}>
                       <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp(),}}>提交</Text>
                     </TouchableOpacity>
-                    <ModalComp modalValue={this.state.isLoadModalVisible}/>
+                    <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
                   </View>
                 </View>
               </ScrollView>
@@ -574,42 +566,30 @@ export default class ScanComponent extends React.Component {
         }
       } else {
         return (
-          <View style={{
-            flex: 1,
-            flexDirection: 'column',
-            backgroundColor: '#f7f7f7'
-          }}>
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'center',
-              backgroundColor: '#fff',
-              paddingLeft: 18,
-              paddingTop: 5,
-              paddingBottom: 5,
-            }}>
-              <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-                <TouchableOpacity style={{
-                  height: 44,
-                  width: 44,
-                  paddingTop: 15,
-                }}
+          <View style={CommonStyle.container}>
+            <View style={CommonStyle.navigationBar}>
+              <View style={CommonStyle.onbackArea}>
+                <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                   onPress={() => this._onBack()}
                 >
                   <Image source={require('../img/ic_back.png')}/>
                 </TouchableOpacity>
               </View>
-              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-                <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
+              <View style={CommonStyle.title}>
+                <Text style={CommonStyle.titleText}>飞机扫码</Text>
               </View>
-              <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+              <View style={CommonStyle.titleRight}>
               </View>
             </View>
             <View style={scanStyle.TextInputView}>
               <TextInput style={scanStyle.TextInput}
                          underlineColorAndroid='transparent'
+                         returnKeyType='done'
+                         autoCapitalize="none"
+
                          placeholder='扫码或输入无人机上的二维码'
-                         keyboardType="numeric"
-                         clearButtonMode="unless-editing"
+                         keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
+                         clearButtonMode="never"
                          value={this.state.scannText}
                          onChangeText={
                            (scannText) => {
@@ -624,8 +604,8 @@ export default class ScanComponent extends React.Component {
                 <Text style={{backgroundColor: 'transparent', height: 44 * Ctrl.pxToDp(), width: 44 * Ctrl.pxToDp()}}
                       onPress={()=> {
                         this.props.navigator.push({
-                          name: 'BarcodeScanner',
-                          component: BarcodeScanner
+                          name: 'BarcodeScannerBoth',
+                          component: BarcodeScannerBoth
                         });
                       }}></Text></Image>
               <Text style={{height: 0,}}>{this.state.scannText}</Text>
@@ -662,7 +642,6 @@ export default class ScanComponent extends React.Component {
                 transparent={true}
                 visible={this.state.girdModalVisible}
                 onRequestClose={() => {
-                  alert("Modal has been closed.")
                 }}
               >
                 <View style={{
@@ -721,8 +700,11 @@ export default class ScanComponent extends React.Component {
                 <TextInput
                   style={[scanStyle.TextInput, {marginRight: 10, width: 60 * Ctrl.pxToDp(), textAlign: 'right'}]}
                   underlineColorAndroid='transparent'
+                  returnKeyType='done'
+                  autoCapitalize="none"
+
                   placeholder='1公斤'
-                  keyboardType="numeric"
+                  keyboardType={Platform.OS === "android" ? "numeric" : "numbers-and-punctuation"}
                   clearButtonMode="unless-editing"
                   placeholderTextColor='#a09f9f'
                   onFocus={
@@ -737,8 +719,7 @@ export default class ScanComponent extends React.Component {
                   }
                 />
                 <Text style={{height: 0,}}>{this.state.packageWeight}</Text>
-                <ModalComp modalValue={this.state.isLoadModalVisible}/>
-
+                <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
               </View>
             </View>
           </View>
@@ -770,7 +751,7 @@ export default class ScanComponent extends React.Component {
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
             </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+            <View style={CommonStyle.title}>
               <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机扫码</Text>
             </View>
             <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
@@ -836,7 +817,7 @@ const scanStyle = StyleSheet.create({
     color: '#a09f9f',
     paddingLeft: 16,
     paddingRight: 16,
-    marginTop: 20,
+    marginTop: 20*Ctrl.pxToDp(),
     backgroundColor: '#fff',
     marginBottom: 1
   },

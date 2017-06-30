@@ -15,14 +15,17 @@ import  {
   Platform,
   Switch,
   Modal,
+  AlertIOS,
   BackAndroid,
+  ScrollView,
   StatusBar,
-  ToastAndroid,
   AsyncStorage,
   TouchableWithoutFeedback,
 } from 'react-native';
 import LeftMenuList from './LeftMenuList';
 import {AnimatedCircularProgress}  from 'react-native-circular-progress';
+import CommonStyle from './CommonStyle';
+import {toastShort} from './common/ToastUtil';
 
 import NetUtil from './NetUtil';
 import SwitchComp from './SwitchComp';
@@ -30,7 +33,7 @@ import Main from './Main';
 import RealtimeOrder from './RealtimeOrder';
 import DialPhone from './DialPhone';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 var Token;
 
@@ -46,7 +49,7 @@ export default class getFlight extends React.Component {
 
       isLoadModalVisible: false,
       modalGetFlightCountDown: false,
-      planeFlightCount: 10,
+      planeFlightCount: 5,
 
       fill: 0,
       flightTimerStatus: false,
@@ -179,7 +182,7 @@ export default class getFlight extends React.Component {
         countFull: false,
         fill: 0,
       });
-      ToastAndroid.show('你想飞？必须全部点中哦😯！', ToastAndroid.SHORT);
+      toastShort('你想飞？必须全部点中哦😯！');
     }
   }
 
@@ -204,7 +207,7 @@ export default class getFlight extends React.Component {
 
   _confirmPlaneFlight() {
     // let planeCount = value;
-    let planeCount = 10;
+    let planeCount = 5;
     let _this = this;
     _this.setState({
       modalGetFlightCountDown: true,
@@ -217,12 +220,18 @@ export default class getFlight extends React.Component {
         });
         if (planeCount <= 0) {
           clearInterval(_this.timer);
+          _this.timer = setTimeout(
+            ()=> {
+              _this.CreateOrder();
+            }, 1000)
           _this.setState({
             modalGetFlightCountDown: false,
           })
           // alert(12);
           console.log('飞机起飞指令发送！');
-          this.CreateOrder();
+          if (Platform.OS === "android") {
+            toastShort('飞机起飞指令发送！');
+          }
         }
       }, 1000
     )
@@ -231,75 +240,168 @@ export default class getFlight extends React.Component {
 
   CreateOrder() {
     let _this = this;
+    // if (Platform.OS === "android") {
     _this.setState({
-      isLoadModalVisible: true,
+      isLoadModalVisible: true
     });
-    _this.timer = setTimeout(
-      ()=> {
-        _this.setState({
-          isLoadModalVisible: false
-        });
-      }, 20000
-    );
+    // }
+    // _this.timer = setTimeout(
+    //   ()=> {
+    //     // _this.setState({
+    //     //   isLoadModalVisible: false
+    //     // });
+    //     _this._canselFlightCount();
+    //     console.log('为嘛弹框自己消失，老实说，是不是你干的？')
+    //   }, 20000
+    // );
     let curId = this.state.detailData.order.id;
-    // let url = "http://jieyan.xyitech.com/order/autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
     let url = "http://jieyan.xyitech.com/order/_autoTakeOff?token=" + Token + "&id=" + curId + "&state=2";
     console.log("发送的起飞指令是 ", url)
     NetUtil.postJson(url, (responseText)=> {
+        // _this.setState({
+        //   isLoadModalVisible: true
+        // });
         // if(responseText&&)
         let curdata = JSON.parse(responseText);
         console.log('发送起飞指令返回数据 ', curdata);
-        // alert('发送起飞指令返回数据 '+JSON.stringify(curdata));
-        if (curdata.err == '0') {
+        if (curdata.err == 0) {
+          console.log('返回起飞成功 ', curdata);
           if (curdata.state == 2) {
-            console.log('起飞成功后 ', curdata);
+            console.log('起飞成功后，状态更改 ', curdata);
             _this.timer = setTimeout(
               ()=> {
                 _this.setState({
                   isLoadModalVisible: false
                 });
                 _this.pageJump('order');
-              }, 300
+              }, 1000
+            );
+          } else {
+            AlertIOS.alert(
+              '起飞失败',
+              '当前运单状态错误',
+              [
+                {
+                  text: '确定', onPress(){
+                  _this.setState({
+                    isLoadModalVisible: false,
+                    planeFlightCount: 5,
+
+                    flightTimerStatus: false,
+                    countFull: false,
+                    fill: 0,
+                  });
+                  _this.refs.circularProgress.performLinearAnimation(0, 100);
+                }
+                }
+              ]
             );
           }
         } else if (curdata.err == 5) {
           let planeStatus = curdata.msg;
-          Alert.alert(
-            '起飞失败',
-            planeStatus,
-            [
-              {text: '确定',}
-            ]
-          );
-          this.refs.circularProgress.performLinearAnimation(0, 100);
-          _this.setState({
-            isLoadModalVisible: false,
-            planeFlightCount: 10,
+          if (Platform.OS === 'android') {
+            Alert.alert(
+              '起飞失败',
+              planeStatus,
+              [
+                {
+                  text: '确定', onPress(){
+                  _this.setState({
+                    isLoadModalVisible: false,
+                    planeFlightCount: 5,
 
-            flightTimerStatus: false,
-            countFull: false,
-            fill: 0,
-          });
+                    flightTimerStatus: false,
+                    countFull: false,
+                    fill: 0,
+                  });
+                  _this.refs.circularProgress.performLinearAnimation(0, 100);
+                }
+                }
+              ]
+            );
+          } else {
+            AlertIOS.alert(
+              '起飞失败',
+              planeStatus,
+              [
+                {
+                  text: '确定', onPress(){
+                  _this.setState({
+                    isLoadModalVisible: false,
+                    planeFlightCount: 5,
+
+                    flightTimerStatus: false,
+                    countFull: false,
+                    fill: 0,
+                  });
+                  _this.refs.circularProgress.performLinearAnimation(0, 100);
+                }
+                }
+              ]
+            );
+          }
+          console.log('起飞失败返回信息是  ', curdata.msg, '  ', curdata.err)
         } else {
-          Alert.alert(
-            '起飞失败',
-            curdata.msg,
-            [
-              {text: '确定',}
-            ]
-          );
-          this.refs.circularProgress.performLinearAnimation(0, 100);
-          _this.setState({
-            isLoadModalVisible: false,
-            planeFlightCount: 10,
+          if (Platform.OS === 'android') {
+            Alert.alert(
+              '起飞失败',
+              curdata.msg,
+              [
+                {
+                  text: '确定', onPress(){
+                  _this.setState({
+                    isLoadModalVisible: false,
+                    planeFlightCount: 5,
 
-            flightTimerStatus: false,
-            countFull: false,
-            fill: 0,
-          });
+                    flightTimerStatus: false,
+                    countFull: false,
+                    fill: 0,
+                  });
+                  _this.refs.circularProgress.performLinearAnimation(0, 100);
+                }
+                }
+              ]
+            );
+          } else {
+            AlertIOS.alert(
+              '起飞失败',
+              curdata.msg,
+              [
+                {
+                  text: '确定', onPress(){
+                  _this.setState({
+                    isLoadModalVisible: false,
+                    planeFlightCount: 5,
+
+                    flightTimerStatus: false,
+                    countFull: false,
+                    fill: 0,
+                  });
+                  _this.refs.circularProgress.performLinearAnimation(0, 100);
+                }
+                }
+              ]
+            );
+          }
+          console.log('起飞失败返回信息是  ', curdata.msg, '  ', curdata.err)
         }
       }
     );
+  }
+
+  _canselFlightCount() {
+    let _this = this;
+    _this.setState({
+      isLoadModalVisible: false,
+      modalGetFlightCountDown: false,
+      planeFlightCount: 5,
+
+      flightTimerStatus: false,
+      countFull: false,
+      fill: 0,
+    });
+    _this.refs.circularProgress.performLinearAnimation(0, 100);
+    clearInterval(this.timer);
   }
 
   pageJump(value) {
@@ -330,198 +432,186 @@ export default class getFlight extends React.Component {
     var isChecked = this.state.checked ? 'yes' : 'no';
     if (this.state.detailDataLoaded) {
       return (
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: '#f7f7f7'
-        }}>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-            paddingLeft: 18,
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-              <TouchableOpacity style={{
-                height: 44,
-                width: 44,
-                paddingTop: 15,
-              }}
-                                onPress={() => this.pageJump()}
-              >
-                <Image source={require('../img/ic_back.png')}/>
-              </TouchableOpacity>
-            </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
-            </View>
-            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
-            </View>
-          </View>
-          <View style={routeStyle.rContianer}>
-            <View style={[routeStyle.rItem, {marginBottom: 1, marginTop: 1, height: 44 * Ctrl.pxToDp()}]}>
-              <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
-            </View>
-            <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
-              <Image source={require('../img/flight.png')}/>
-              <View style={{
-                height: 95 * Ctrl.pxToDp(),
-                flex: 3,
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <View style={[routeStyle.rItem, {
-                  height: 20,
-                  marginBottom: 5 * Ctrl.pxToDp()
-                }]}>
-                  <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
-                  <Text style={routeStyle.rTextRight}><Text
-                    style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
-                    style={routeStyle.rTextName}>公里</Text></Text>
-                </View>
-                <View style={[routeStyle.rItem, {height: 22,}]}>
-                  <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
-                  <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
-                </View>
-
-                <View style={[routeStyle.rItem, {height: 22,}]}>
-                  <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
-                  <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
-                  <Text style={routeStyle.rTextRight}><Text
-                    style={[routeStyle.rTextValue, {
-                      fontSize: 22,
-                      color: '#E98B21'
-                    }]}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
-                    style={routeStyle.rTextName}>分钟</Text></Text>
-                </View>
+        <ScrollView style={{backgroundColor: '#f7f7f7'}}>
+          <View style={CommonStyle.container}>
+            <View style={CommonStyle.navigationBar}>
+              <View style={CommonStyle.onbackArea}>
+                <TouchableOpacity style={CommonStyle.onbackAreaCont}
+                                  onPress={() => this.pageJump()}
+                >
+                  <Image source={require('../img/ic_back.png')}/>
+                </TouchableOpacity>
               </View>
+              <View style={CommonStyle.title}>
+                <Text style={CommonStyle.titleText}>飞机起飞</Text>
+              </View>
+              <View style={CommonStyle.titleRight}>
+              </View>
+            </View>
+            <View style={routeStyle.rContianer}>
+              <View style={[routeStyle.rItem, {marginBottom: 1, marginTop: 1, height: 44 * Ctrl.pxToDp()}]}>
+                <Text style={routeStyle.rTextLeft}>运单编号:&nbsp;&nbsp;&nbsp;{this.state.detailData.order.id}</Text>
+              </View>
+              <View style={[routeStyle.rItem, {height: 95 * Ctrl.pxToDp()}]}>
+                <Image source={require('../img/flight.png')}/>
+                <View style={{
+                  height: 95 * Ctrl.pxToDp(),
+                  flex: 3,
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <View style={[routeStyle.rItem, {
+                    height: 20,
+                    marginBottom: 5 * Ctrl.pxToDp()
+                  }]}>
+                    <Text style={routeStyle.rTextLeft}>型号:&nbsp;&nbsp;{this.state.detailData.order.fid}</Text>
+                    <Text style={routeStyle.rTextRight}><Text
+                      style={routeStyle.rTextValue}>{(this.state.detailData.order.route.route.distance / 1000).toFixed(0)}</Text><Text
+                      style={routeStyle.rTextName}>公里</Text></Text>
+                  </View>
+                  <View style={[routeStyle.rItem, {height: 22,}]}>
+                    <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/spoint.png')}/>
+                    <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[0].name}</Text>
+                  </View>
+
+                  <View style={[routeStyle.rItem, {height: 22,}]}>
+                    <Image style={{width: 7, height: 11, marginRight: 5,}} source={require('../img/epoint.png')}/>
+                    <Text style={routeStyle.rTextLeft}>{this.state.detailData.order.route.airport[1].name}</Text>
+                    <Text style={routeStyle.rTextRight}><Text
+                      style={[routeStyle.rTextValue, {
+                        fontSize: 22,
+                        color: '#E98B21'
+                      }]}>{(this.state.detailData.order.route.route.duration / 60).toFixed(0)}</Text><Text
+                      style={routeStyle.rTextName}>分钟</Text></Text>
+                  </View>
+                </View>
+
+              </View>
+              <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
+                         title={this.state.detailData.order.route.airport[1].contact_name + ' ' + this.state.detailData.order.route.airport[1].phone}/>
+              <Text style={routeStyle.rTitle}>飞前准备</Text>
+              <SwitchComp text='货物已装载完成'
+                          initialChecked={this.state.initialChecked}
+                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+              <SwitchComp text='电池已安装完成'
+                          initialChecked={this.state.initialChecked}
+                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+              <SwitchComp text='放置起降区中心'
+                          initialChecked={this.state.initialChecked}
+                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+              <SwitchComp text='飞控解锁'
+                          initialChecked={this.state.initialChecked}
+                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+              <SwitchComp text='遥控器自主状态'
+                          initialChecked={this.state.initialChecked}
+                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
+              <SwitchComp text='起降区无人进入'
+                          initialChecked={this.state.initialChecked}
+                          callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
 
             </View>
-            <DialPhone url={'tel:' + this.state.detailData.order.route.airport[1].phone}
-                       title={this.state.detailData.order.route.airport[1].contact_name + ' ' + this.state.detailData.order.route.airport[1].phone}/>
-            <Text style={routeStyle.rTitle}>飞前准备</Text>
-            <SwitchComp text='货物已装载完成'
-                        initialChecked={this.state.initialChecked}
-                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            <SwitchComp text='电池已安装完成'
-                        initialChecked={this.state.initialChecked}
-                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            <SwitchComp text='放置起降区中心'
-                        initialChecked={this.state.initialChecked}
-                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            <SwitchComp text='飞控解锁'
-                        initialChecked={this.state.initialChecked}
-                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            <SwitchComp text='遥控器自主状态'
-                        initialChecked={this.state.initialChecked}
-                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-            <SwitchComp text='起降区无人进入'
-                        initialChecked={this.state.initialChecked}
-                        callbackParent={(initialChecked)=>this.onChildChanged(initialChecked)}/>
-
-          </View>
-          <View style={{alignItems: 'center', padding: 10,}}>
-            <AnimatedCircularProgress
-              ref='circularProgress'
-              size={120 * Ctrl.pxToDp()}
-              width={10}
-              fill={this.state.fill}
-              tintColor="#EB753A"
-              backgroundColor="#313131">
-              {
-                (fill) => (
-                  <TouchableOpacity style={{
-                    position: 'absolute',
-                    top: 20 * Ctrl.pxToDp(),
-                    left: 20 * Ctrl.pxToDp(),
-                    textAlign: 'center',
-                    backgroundColor: '#313131',
-                    height: 80 * Ctrl.pxToDp(),
-                    width: 80 * Ctrl.pxToDp(),
-                    borderRadius: 40 * Ctrl.pxToDp(),
-                    borderWidth: 0.3,
-                    borderColor: '#a09f9f',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    color: '#fff',
-                  }} onPressIn={this._orderPressIn.bind(this)} onPressOut={this._orderPressOut.bind(this)}>
-                    <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>起飞</Text>
-                  </TouchableOpacity>
-                )
-              }
-            </AnimatedCircularProgress>
-            <Text style={{
-              color: '#313131',
-              marginTop: 10,
-              textAlign: 'center',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>长按3秒</Text>
-          </View>
-          < Modal
-            animationType={"fade"}
-            transparent={true}
-            visible={this.state.modalGetFlightCountDown
-            }
-          >
-            <View
-              style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', alignItems: 'center',}}>
-              <TouchableOpacity style={{
-                backgroundColor: '#313131',
-                marginTop: 20,
-                height: 100 * Ctrl.pxToDp(),
-                width: 100 * Ctrl.pxToDp(),
-                borderRadius: 50 * Ctrl.pxToDp(),
-                borderWidth: 0.3,
-                borderColor: '#a09f9f',
-                justifyContent: 'center',
+            <View style={{alignItems: 'center', padding: 10,}}>
+              <AnimatedCircularProgress
+                ref='circularProgress'
+                size={120 * Ctrl.pxToDp()}
+                width={10}
+                fill={this.state.fill}
+                tintColor="#EB753A"
+                backgroundColor="#f7f7f7">
+                {
+                  (fill) => (
+                    <TouchableOpacity style={{
+                      position: 'absolute',
+                      top: 20 * Ctrl.pxToDp(),
+                      left: 20 * Ctrl.pxToDp(),
+                      textAlign: 'center',
+                      backgroundColor: '#313131',
+                      height: 80 * Ctrl.pxToDp(),
+                      width: 80 * Ctrl.pxToDp(),
+                      borderRadius: 40 * Ctrl.pxToDp(),
+                      borderWidth: 0.3,
+                      borderColor: '#a09f9f',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      color: '#fff',
+                    }} onPressIn={this._orderPressIn.bind(this)} onPressOut={this._orderPressOut.bind(this)}>
+                      <Text style={{color: '#fff', fontSize: 17 * Ctrl.pxToDp()}}>起飞</Text>
+                    </TouchableOpacity>
+                  )
+                }
+              </AnimatedCircularProgress>
+              <Text style={{
+                color: '#313131',
+                marginTop: 10,
+                textAlign: 'center',
                 alignItems: 'center',
-                color: '#fff',
-              }}>
-                <Text style={{color: '#fff', fontSize: 24 * Ctrl.pxToDp()}}>{this.state.planeFlightCount}</Text>
-              </TouchableOpacity>
+                justifyContent: 'center',
+              }}>长按3秒</Text>
             </View>
-          </Modal>
-          <ModalComp modalValue={this.state.isLoadModalVisible}/>
-        </View>
+            < Modal
+              animationType={"fade"}
+              transparent={true}
+              visible={this.state.modalGetFlightCountDown
+              }
+            >
+              <View
+                style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.3)', justifyContent: 'center', alignItems: 'center',}}>
+                <TouchableOpacity style={{
+                  backgroundColor: '#313131',
+                  marginTop: 20 * Ctrl.pxToDp(),
+                  height: 100 * Ctrl.pxToDp(),
+                  width: 100 * Ctrl.pxToDp(),
+                  borderRadius: 50 * Ctrl.pxToDp(),
+                  borderWidth: 0.3,
+                  borderColor: '#a09f9f',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  color: '#fff',
+                }}>
+                  <Text style={{color: '#fff', fontSize: 24 * Ctrl.pxToDp()}}>{this.state.planeFlightCount}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: (Platform.OS === 'android' ? 0 : 20),
+                    width: 80,
+                    height: 40,
+                    paddingRight: 18,
+                    paddingTop: 15,
+                    alignItems: 'flex-end',
+                  }}
+                  onPress={()=> {
+                    this._canselFlightCount()
+                  }}>
+                  <Text style={{color: '#EB753A'}}>取消</Text>
+                </TouchableOpacity>
+              </View>
+            </Modal>
+            <LoadingViewComp loadingType="ThreeBounce" modalValue={this.state.isLoadModalVisible}/>
+          </View>
+        </ScrollView>
       )
     } else {
       return (
-        <View style={{
-          flex: 1,
-          flexDirection: 'column',
-          backgroundColor: '#f7f7f7'
-        }}>
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            backgroundColor: '#fff',
-            paddingLeft: 18,
-            paddingTop: 5,
-            paddingBottom: 5,
-          }}>
-            <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-              <TouchableOpacity style={{
-                height: 44,
-                width: 44,
-                paddingTop: 15,
-              }}
+        <View style={CommonStyle.container}>
+          <View style={CommonStyle.navigationBar}>
+            <View style={CommonStyle.onbackArea}>
+              <TouchableOpacity style={CommonStyle.onbackAreaCont}
                                 onPress={() => this.pageJump()}
               >
                 <Image source={require('../img/ic_back.png')}/>
               </TouchableOpacity>
             </View>
-            <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-              <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>飞机起飞</Text>
+            <View style={CommonStyle.title}>
+              <Text style={CommonStyle.titleText}>飞机起飞</Text>
             </View>
-            <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+            <View style={CommonStyle.titleRight}>
             </View>
           </View>
 
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
+          <View style={CommonStyle.title}>
             <Text>加载数据中......</Text>
           </View>
         </View>

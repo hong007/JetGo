@@ -1,9 +1,6 @@
 /**
  * Created by hongty on 2016/11/29.
  */
-/**
- * Created by hongty on 2016/11/29.
- */
 import React, {Component} from 'react';
 import {
   AppRegistry,
@@ -19,10 +16,15 @@ import {
   TouchableOpacity
 } from 'react-native';
 import _updateConfig from '../package.json';
+import CommonStyle from './CommonStyle';
+import RefreshControlComp from './common/RefreshControlComp';
 
 export default class BarcodeScanner extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isRefreshing: false,
+    }
   }
 
   componentWillMount() {
@@ -33,6 +35,17 @@ export default class BarcodeScanner extends Component {
     BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
   }
 
+<<<<<<< HEAD
+  componentWillMount() {
+    BackAndroid.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  componentWillUnmount() {
+    BackAndroid.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+=======
+>>>>>>> xydev
   onBackAndroid = () => {
     let _this = this;
     let curTitle = _this.props.title;
@@ -59,6 +72,7 @@ export default class BarcodeScanner extends Component {
 
   render() {
     return (
+<<<<<<< HEAD
       <View style={{
         flex: 1,
         flexDirection: 'column',
@@ -78,11 +92,18 @@ export default class BarcodeScanner extends Component {
               width: 44,
               paddingTop: 15,
             }}
+=======
+      <View style={CommonStyle.container}>
+        <View style={CommonStyle.navigationBar}>
+          <View style={CommonStyle.onbackArea}>
+            <TouchableOpacity style={CommonStyle.onbackAreaCont}
+>>>>>>> xydev
                               onPress={() => this._onBack()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
           </View>
+<<<<<<< HEAD
           <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
             <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>关于捷雁</Text>
           </View>
@@ -91,6 +112,16 @@ export default class BarcodeScanner extends Component {
         </View>
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
           <Text>当前版本号是：{_updateConfig.version}  运营版</Text>
+=======
+          <View style={CommonStyle.title}>
+            <Text style={CommonStyle.titleText}>关于捷雁</Text>
+          </View>
+          <View style={CommonStyle.titleRight}>
+          </View>
+        </View>
+        <View style={CommonStyle.content}>
+          <RefreshControlComp contentText={'当前版本号是：'+_updateConfig.version}/>
+>>>>>>> xydev
         </View>
       </View>
     );

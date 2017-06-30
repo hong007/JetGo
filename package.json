@@ -1,6 +1,6 @@
 {
   "name": "JetGo",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -9,8 +9,14 @@
   "dependencies": {
     "react": "15.3.2",
     "react-native": "0.39.0",
+    "react-native-app-intro": "^1.1.5",
     "react-native-barcodescanner": "^3.1.1",
     "react-native-circular-progress": "0.0.8",
+    "react-native-maps": "^0.12.4",
+    "react-native-modal-picker": "0.0.16",
+    "react-native-root-toast": "^1.0.3",
+    "react-native-side-menu": "^0.20.1",
+    "react-native-spinkit": "^0.1.5",
     "react-native-splash-screen": "^1.0.9"
   },
   "jest": {

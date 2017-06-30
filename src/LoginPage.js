@@ -12,19 +12,20 @@ import {
   TextInput,
   Platform,
   BackAndroid,
+  ScrollView,
   StatusBar,
-  ToastAndroid,
   AsyncStorage,
   ProgressBarAndroid,
   TouchableOpacity
 } from 'react-native';
+import {toastShort} from './common/ToastUtil';
 import EditView from './EditView';
 import Button from './Button';
 import Main from './Main';
 import NetUtil from './NetUtil';
 import LoadingViewProgress from './LoadingViewProgress';
 import Ctrl from './Ctrl';
-import ModalComp from './ModalComp';
+import LoadingViewComp from './LoadingViewComp';
 
 export default class LoginPage extends Component {
   constructor(props) {
@@ -67,9 +68,11 @@ export default class LoginPage extends Component {
 
   onPressCallback() {
     let _this = this;
+    // if (Platform.OS === "android") {
     this.setState({
       isLoadModalVisible: true
     });
+    // }
     let url = "http://jieyan.xyitech.com/login/?username=" + this.userName + "&password=" + this.passWord;
 
     console.log('登录信息是 ', url)
@@ -80,15 +83,15 @@ export default class LoginPage extends Component {
         AsyncStorage.setItem("LOGIN_USERNAME", this.userName);
         AsyncStorage.setItem("LOGIN_USERPWD", this.passWord);
         AsyncStorage.setItem("LOGIN_TOKEN", curdata.token);
-        this.timer = setTimeout(
+        toastShort('登录成功');
+        _this.setState({
+          isLoadModalVisible: false
+        });
+        _this.timer = setTimeout(
           ()=> {
-            ToastAndroid.show('登录成功', ToastAndroid.SHORT);
-            _this.setState({
-              isLoadModalVisible: false
-            });
             _this.pageJump();
           },
-          300
+          1000
         );
       } else {
         _this.Timer = setTimeout(
@@ -96,7 +99,7 @@ export default class LoginPage extends Component {
             _this.setState({
               isLoadModalVisible: false
             });
-            ToastAndroid.show('用户名或密码错误，请重试', ToastAndroid.SHORT);
+            toastShort('用户名或密码错误，请重试');
           }, 800
         );
       }
@@ -122,21 +125,23 @@ export default class LoginPage extends Component {
     console.disableYellowBox = true;
     console.warn('YellowBox is disabled.');
     return (
-      <View style={LoginStyles.loginview}>
-        <Text style={{fontSize: 22 * Ctrl.pxToDp(), color: '#fff',}}>用户登录</Text>
-        <View style={{paddingTop: 38,}}>
-          <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>用户名</Text>
-          <EditView name='' onChangeText={(text) => {
-            this.userName = text;
-          }}/>
-          <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>密码</Text>
-          <EditView name='password' onChangeText={(text) => {
-            this.passWord = text;
-          }}/>
-          <Button name='登录' onPressCallback={()=>this.onPressCallback()}/>
+      <ScrollView style={{backgroundColor: '#313131',}}>
+        <View style={LoginStyles.loginview}>
+          <Text style={{fontSize: 22 * Ctrl.pxToDp(), color: '#fff',}}>用户登录</Text>
+          <View style={{paddingTop: 38,}}>
+            <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>用户名</Text>
+            <EditView name='' onChangeText={(text) => {
+              this.userName = text;
+            }}/>
+            <Text style={{color: '#a09f9f', marginTop: 20, fontSize: 14 * Ctrl.pxToDp()}}>密码</Text>
+            <EditView name='password' onChangeText={(text) => {
+              this.passWord = text;
+            }}/>
+            <Button name='登录' onPressCallback={()=>this.onPressCallback()}/>
+          </View>
+          <LoadingViewComp loadingType="Circle" modalValue={this.state.isLoadModalVisible}/>
         </View>
-        <ModalComp modalValue={this.state.isLoadModalVisible}/>
-      </View>
+      </ScrollView>
     )
   }
 }

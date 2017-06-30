@@ -67,6 +67,7 @@ const switchStyle = StyleSheet.create({
 
   rTextRightValue: {
     flex: 1,
+    marginTop:2,
     alignItems: 'flex-end',
     justifyContent: 'center',
     textAlign: 'right',

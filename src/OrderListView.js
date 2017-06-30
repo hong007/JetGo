@@ -13,13 +13,14 @@ import{
   StatusBar,
   Dimensions,
   BackAndroid,
-  ToastAndroid,
   AsyncStorage,
   RefreshControl,
   TouchableOpacity,
   TouchableHighlight,
 } from 'react-native';
-// import ListViewItem from './ListViewItem';
+import CommonStyle from './CommonStyle';
+import {toastShort} from './common/ToastUtil';
+
 import NetUtil from './NetUtil';
 import Detail from './Detail';
 import RealtimeOrder from './RealtimeOrder';
@@ -75,7 +76,7 @@ export default class OrderListView extends React.Component {
         },
       });
       return true;
-    }else{
+    } else {
       return true;
     }
   }
@@ -115,7 +116,7 @@ export default class OrderListView extends React.Component {
     }
     NetUtil.postJson(url, (responseText)=> {
       if (!responseText || responseText == "") {
-        ToastAndroid.show('错误，请重试', ToastAndroid.SHORT);
+        toastShort('错误，请重试');
       } else {
         // let curdata = responseText;
         // console.log("默认信息是 ",responseText,'  数据类型是',typeof responseText);
@@ -163,7 +164,7 @@ export default class OrderListView extends React.Component {
 
         } else {
           // alert("错误，请重试");
-          ToastAndroid.show('错误，请重试', ToastAndroid.SHORT);
+          toastShort('错误，请重试');
         }
       }
     })
@@ -268,39 +269,26 @@ export default class OrderListView extends React.Component {
 
   renderLoadingView() {
     return (
-      <View style={{flex: 1, flexDirection: 'column',}}>
-        <View style={{
-          backgroundColor: '#fff',
-          flexDirection: 'row',
-          alignItem: 'flex-start',
-          justifyContent: 'center',
-          paddingBottom: 5,
-          paddingTop: 5,
-          paddingLeft: 18,
-        }}>
-          <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-            <TouchableOpacity style={{
-              height: 44,
-              width: 44,
-              paddingTop: 15,
-            }}
+      <View style={CommonStyle.container}>
+        <View style={CommonStyle.navigationBar}>
+          <View style={CommonStyle.onbackArea}>
+            <TouchableOpacity style={CommonStyle.onbackAreaCont}
                               onPress={() => this._onBack()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
+          <View style={CommonStyle.title}>
+            <Text style={CommonStyle.titleText}>我的运单</Text>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+          <View style={CommonStyle.titleRight}>
             <TouchableOpacity style={{
               alignItems: 'flex-start',
               justifyContent: 'center',
-              paddingRight: 18,
               flexDirection: 'row',
             }} onPress={() => this.setState({showChooseOrderModal: true})}>
               <Image source={require('../img/order_type.png')}/>
-              <Text style={{marginTop: -2,}}>&nbsp;筛选</Text>
+              <Text style={{marginTop: -2,}}>&nbsp;{this.state.chooseTypeText}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -455,35 +443,22 @@ export default class OrderListView extends React.Component {
       return this.renderLoadingView();
     }
     return (
-      <View style={{flex: 1, flexDirection: 'column',}}>
-        <View style={{
-          backgroundColor: '#fff',
-          flexDirection: 'row',
-          alignItem: 'flex-start',
-          justifyContent: 'center',
-          paddingLeft: 18,
-          paddingTop: 5,
-          paddingBottom: 5,
-        }}>
-          <View style={{flex: 1, alignItems: 'flex-start', justifyContent: 'center',}}>
-            <TouchableOpacity style={{
-              height: 44,
-              width: 44,
-              paddingTop: 15,
-            }}
+      <View style={CommonStyle.container}>
+        <View style={CommonStyle.navigationBar}>
+          <View style={CommonStyle.onbackArea}>
+            <TouchableOpacity style={CommonStyle.onbackAreaCont}
                               onPress={() => this._onBack()}
             >
               <Image source={require('../img/ic_back.png')}/>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>
-            <Text style={{textAlign: 'center', color: '#313131', fontSize: 18,}}>我的运单</Text>
+          <View style={CommonStyle.title}>
+            <Text style={CommonStyle.titleText}>我的运单</Text>
           </View>
-          <View style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+          <View style={CommonStyle.titleRight}>
             <TouchableOpacity style={{
               alignItems: 'flex-start',
               justifyContent: 'center',
-              paddingRight: 18,
               flexDirection: 'row',
             }} onPress={() => this.setState({showChooseOrderModal: true})}>
               <Image source={require('../img/order_type.png')}/>
@@ -507,11 +482,10 @@ export default class OrderListView extends React.Component {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: 40,
+                marginTop: (Platform.OS === 'android' ? 40 : 54),
                 borderRadius: 3,
-                padding: 10 * Ctrl.pxToDp(),
-                paddingTop: 5 * Ctrl.pxToDp(),
-                paddingBottom: 5 * Ctrl.pxToDp(),
+                paddingTop: 8 * Ctrl.pxToDp(),
+                paddingBottom: 6 * Ctrl.pxToDp(),
                 backgroundColor: '#fff'
               }}>
                 <View style={{}}>
@@ -524,7 +498,9 @@ export default class OrderListView extends React.Component {
                     zIndex: 9999,
                     borderBottomWidth: 1,
                     borderBottomColor: '#f7f7f7',
-                    width: 100 * Ctrl.pxToDp(),
+                    width: 110 * Ctrl.pxToDp(),
+                    height: 30 * Ctrl.pxToDp(),
+                    paddingBottom:10*Ctrl.pxToDp(),
                     marginBottom: 1,
                   }} onPress={()=> {
                     this._chooseOrderType(false)
@@ -540,7 +516,9 @@ export default class OrderListView extends React.Component {
                     justifyContent: 'flex-end',
                     alignItems: 'flex-end',
                     zIndex: 9999,
-                    width: 100 * Ctrl.pxToDp(),
+                    width: 110 * Ctrl.pxToDp(),
+                    height: 30 * Ctrl.pxToDp(),
+                    paddingBottom:5*Ctrl.pxToDp(),
                   }} onPress={()=> {
                     this._chooseOrderType(true)
                   }}>

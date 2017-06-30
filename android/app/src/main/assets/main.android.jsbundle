@@ -77137,7 +77137,11 @@ fontSize:17*_Ctrl2.default.pxToDp(),
 color:'#55ACEE',
 margin:18}});
 }, 568, null, "JetGo/src/RealtimeOrder.js");
+<<<<<<< HEAD
 __d(/* JetGo/src/ModalComp.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
+=======
+__d(/* JetGo/src/LoadingViewComp.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});
+>>>>>>> xydev
 
 
 
@@ -77189,7 +77193,11 @@ _react2.default.createElement(_reactNative.Image,{source:require(570 /* ../img/l
 
 
 }}]);return ModalComp;}(_react2.default.Component);exports.default=ModalComp;
+<<<<<<< HEAD
 }, 569, null, "JetGo/src/ModalComp.js");
+=======
+}, 569, null, "JetGo/src/LoadingViewComp.js");
+>>>>>>> xydev
 __d(/* JetGo/img/loading.gif */function(global, require, module, exports) {module.exports = require(173 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/img","width":32,"height":32,"scales":[1],"hash":"50c5e3e79b276c92df6cc52caeb464f0","name":"loading","type":"gif"});
 }, 570, null, "JetGo/img/loading.gif");
 __d(/* JetGo/img/orderrealtime.png */function(global, require, module, exports) {module.exports = require(173 /* react-native/Libraries/Image/AssetRegistry */).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/img","width":375,"height":153,"scales":[1,2,3],"hash":"3806230ab745696bc61c7798c8f01631","name":"orderrealtime","type":"png"});
