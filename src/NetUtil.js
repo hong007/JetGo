@@ -3,7 +3,10 @@
  */
 let NetUtil = {
   postJson(url, callback){
-    fetch(url, callback)
+    // let debugUrl = `${url}&v=sandbox`;
+    let debugUrl = `${url}`;
+    // console.log('debugUrl is ',debugUrl)
+    fetch(debugUrl, callback)
       .then((response) => response.text())
       .then((responseText) => {
         //  callback(JSON.parse(responseText));
